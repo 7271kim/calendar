@@ -1,0 +1,69 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+.hidden-block {
+  overflow: hidden;
+  border: 0;
+  margin: -1px;
+  width: 1px;
+  height: 1px;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+}
+.hidden-inline {
+  overflow: hidden;
+  display: inline-block;
+  border: 0;
+  margin: -1px;
+  width: 1px;
+  height: 1px;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+}
+.main-section {
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.main-section .row {
+  display: flex;
+}
+.main-section .title-wrapper {
+  margin: 15px 0px 15px 0px;
+}
+.main-section .title-wrapper div {
+  flex: none;
+}
+.main-section .title-wrapper .month {
+  display: flex;
+  flex: none;
+}
+.main-section .title-wrapper .month .month-arrow-left {
+  cursor: pointer;
+  display: flex;
+}
+.main-section .title-wrapper .month .month-title {
+  cursor: pointer;
+  margin: 0 10px 0 10px;
+  line-height: 30px;
+}
+.main-section .title-wrapper .month .month-arrow-right {
+  cursor: pointer;
+  display: flex;
+}
+.main-section .title-wrapper .calendar-icon {
+  margin-left: auto;
+  cursor: pointer;
+}
+.main-section .title-wrapper .cross {
+  margin: 0px 10px 0px 25px;
+  cursor: pointer;
+}
+.main-section .day {
+  flex: 1;
+}
