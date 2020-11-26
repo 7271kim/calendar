@@ -32,13 +32,15 @@ body{
     min-height: 100%;
     display: flex;
     flex-direction: column;
+    background-color:  rgba(197, 224, 220, 0.2);
     
     .row{
         display: flex;
+        margin: 0px 15px 0px 15px;
     }
 
     .title-wrapper{
-        margin: 15px 0px 15px 0px;
+        margin: 15px;
 
         div{
             flex: none;
@@ -75,8 +77,42 @@ body{
         }
 
     }
+    .week {
+        display: flex;
+        background-color: rgba(236, 229, 206, 0.5);
+
+        .day-of-week {
+            flex: 1;
+            text-align: center;
+        }
+    }
     .day{
+        display: flex;
+        flex-direction: column;
         flex: 1;
+        background-color: rgba(255, 251,213, 0.3);
+        margin-bottom: 15px;
+
+        .one-week{
+            display: flex;
+            flex: 1;
+
+            .day-warpper {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                
+                .day-dec {
+                    flex: 1;
+
+                    .important {
+                        color: rgba(217,98,129);
+                        background: rgba(243,251,255);
+                        word-break: break-word;
+                    }
+                }
+            }
+        }
     }
 
 }

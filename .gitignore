@@ -4,6 +4,7 @@
 **/.settings
 **/.project
 **/.classpath
+**/debug.log
 **/.vlt
 **/node_modules
 **/.vlt-sync.log
