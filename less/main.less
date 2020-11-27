@@ -30,6 +30,7 @@ body{
 .main-section{
     height: 100%;
     min-height: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     background-color:  rgba(197, 224, 220, 0.2);
@@ -90,28 +91,45 @@ body{
     .day{
         display: flex;
         flex-direction: column;
+        overflow: hidden;
         flex: 1;
-        background-color: rgba(255, 251,213, 0.3);
         margin-bottom: 15px;
-        font-family: 'flower google';
-        font-size: 1.25em;
+        font-size: 15px;
 
         .one-week{
             display: flex;
             flex: 1;
+            height: 25%;
+            overflow: hidden;
 
             .day-warpper {
-                display: flex;
-                flex-direction: column;
                 flex: 1;
-                
+                max-width: 14.29%;
+                padding: 7px;
                 .day-dec {
-                    flex: 1;
-
+                    p {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        margin: 1px 0px 1px 0px;
+                        padding: 3px 8px;
+                        border: 1px solid transparent;
+                        padding-right: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+                    .post{
+                        background-color: #039be5;
+                        color: white;
+                       
+                    }
                     .important {
-                        color: rgba(217,98,129);
-                        background: rgba(243,251,255);
-                        word-break: break-word;
+                        color:  white;
+                        background: rgba(217,98,129);
+                    }
+
+                    .schedule{
+                        color:  black;
                     }
                 }
             }
