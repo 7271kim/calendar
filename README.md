@@ -3,6 +3,7 @@ calendar 만들어보기
 
 ## less 설치 
 $ npm install -g less
+
 $ npm install -g less-watch-compiler
 
 less-watch-compiler.config.json 파일 작성
