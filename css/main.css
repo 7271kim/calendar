@@ -96,6 +96,16 @@ body {
   max-width: 14.29%;
   padding: 7px;
 }
+.main-section .day .one-week .day-warpper .day-title {
+  display: flex;
+  cursor: pointer;
+}
+.main-section .day .one-week .day-warpper .day-title span {
+  margin-left: auto;
+}
+.main-section .day .one-week .day-warpper .day-title span img {
+  width: 10px;
+}
 .main-section .day .one-week .day-warpper .day-dec p {
   white-space: nowrap;
   overflow: hidden;
