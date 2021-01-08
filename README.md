@@ -1,5 +1,5 @@
 # calendar
-calendar 만들어보기222222
+calendar 만들어보기
 
 ## less 설치 
 $ npm install -g less
