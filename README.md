@@ -1,5 +1,5 @@
 # calendar
-calendar 만들어보기 job1 push
+calendar 만들어보기 job1 push2
 
 ## less 설치 
 $ npm install -g less
