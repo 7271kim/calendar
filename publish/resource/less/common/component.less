@@ -1,0 +1,30 @@
+@import "font.less";
+@import "normalize.less";
+
+html,body {
+	height: 100%;
+}
+body{
+    margin: 0;
+    font-family: 'NanumGothic bold';
+}
+.hidden-block {
+    overflow: hidden;
+    border: 0;
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+}
+
+.hidden-inline {
+    overflow: hidden;
+    display: inline-block;
+    border: 0;
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+}

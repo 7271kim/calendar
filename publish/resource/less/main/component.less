@@ -1,0 +1,124 @@
+@import "const.less";
+
+.main-section{
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color:  rgba(197, 224, 220, 0.2);
+    
+    .row{
+        display: flex;
+        margin: 0px 15px 0px 15px;
+    }
+
+    .title-wrapper{
+        margin: 15px;
+
+        div{
+            flex: none;
+        }
+        .month{
+            display: flex;
+            flex: none;
+            
+            .month-arrow-left{
+                cursor: pointer;
+                display: flex;
+            }
+
+            .month-title{
+                cursor: pointer;
+                margin: 0 10px 0 10px;
+                line-height: @title-wrapper-height;
+            }
+
+            .month-arrow-right{
+                cursor: pointer;
+                display: flex;
+            }
+        }
+
+        .calendar-icon{
+            margin-left: auto;
+            cursor: pointer;
+        }
+
+        .cross {
+            margin: 0px 10px 0px 25px;
+            cursor: pointer;
+        }
+
+    }
+    .week {
+        display: flex;
+        background-color: rgba(236, 229, 206, 0.5);
+
+        .day-of-week {
+            flex: 1;
+            text-align: center;
+            line-height: 30px;
+        }
+    }
+    .day{
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        flex: 1;
+        margin-bottom: 15px;
+        font-size: 15px;
+
+        .one-week{
+            display: flex;
+            flex: 1;
+            height: 25%;
+            overflow: hidden;
+
+            .day-warpper {
+                flex: 1;
+                max-width: 14.29%;
+                padding: 7px;
+                .day-title{
+                    display: flex;
+                    cursor: pointer;
+                    
+                    span{
+                        margin-left: auto;
+                        img{
+
+                            width: 10px;
+                        }
+                    }
+                }
+                .day-dec {
+                    p {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        margin: 1px 0px 1px 0px;
+                        padding: 3px 8px;
+                        border: 1px solid transparent;
+                        padding-right: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+                    .post{
+                        background-color: #039be5;
+                        color: white;
+                       
+                    }
+                    .important {
+                        color:  white;
+                        background: rgba(217,98,129);
+                    }
+
+                    .schedule{
+                        color:  black;
+                    }
+                }
+            }
+        }
+    }
+
+}

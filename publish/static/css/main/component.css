@@ -1,0 +1,103 @@
+.main-section {
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(197, 224, 220, 0.2);
+}
+.main-section .row {
+  display: flex;
+  margin: 0px 15px 0px 15px;
+}
+.main-section .title-wrapper {
+  margin: 15px;
+}
+.main-section .title-wrapper div {
+  flex: none;
+}
+.main-section .title-wrapper .month {
+  display: flex;
+  flex: none;
+}
+.main-section .title-wrapper .month .month-arrow-left {
+  cursor: pointer;
+  display: flex;
+}
+.main-section .title-wrapper .month .month-title {
+  cursor: pointer;
+  margin: 0 10px 0 10px;
+  line-height: 30px;
+}
+.main-section .title-wrapper .month .month-arrow-right {
+  cursor: pointer;
+  display: flex;
+}
+.main-section .title-wrapper .calendar-icon {
+  margin-left: auto;
+  cursor: pointer;
+}
+.main-section .title-wrapper .cross {
+  margin: 0px 10px 0px 25px;
+  cursor: pointer;
+}
+.main-section .week {
+  display: flex;
+  background-color: rgba(236, 229, 206, 0.5);
+}
+.main-section .week .day-of-week {
+  flex: 1;
+  text-align: center;
+  line-height: 30px;
+}
+.main-section .day {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+  margin-bottom: 15px;
+  font-size: 15px;
+}
+.main-section .day .one-week {
+  display: flex;
+  flex: 1;
+  height: 25%;
+  overflow: hidden;
+}
+.main-section .day .one-week .day-warpper {
+  flex: 1;
+  max-width: 14.29%;
+  padding: 7px;
+}
+.main-section .day .one-week .day-warpper .day-title {
+  display: flex;
+  cursor: pointer;
+}
+.main-section .day .one-week .day-warpper .day-title span {
+  margin-left: auto;
+}
+.main-section .day .one-week .day-warpper .day-title span img {
+  width: 10px;
+}
+.main-section .day .one-week .day-warpper .day-dec p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1px 0px 1px 0px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  padding-right: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.main-section .day .one-week .day-warpper .day-dec .post {
+  background-color: #039be5;
+  color: white;
+}
+.main-section .day .one-week .day-warpper .day-dec .important {
+  color: white;
+  background: rgba(217, 98, 129);
+}
+.main-section .day .one-week .day-warpper .day-dec .schedule {
+  color: black;
+}
