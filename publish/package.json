@@ -1,0 +1,32 @@
+{
+  "name": "calendar",
+  "version": "1.0.0",
+  "description": "달력 만들기",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "less": "^4.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "connect-livereload": "^0.6.1",
+    "livereload": "^0.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index",
+    "less-watcher": "node less-watcher.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7271kim/calendar.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/7271kim/calendar/issues"
+  },
+  "homepage": "https://github.com/7271kim/calendar#readme"
+}

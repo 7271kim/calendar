@@ -1,14 +1,12 @@
 # calendar
 calendar 만들어보기
 
-## less 설치 
-$ npm install -g less
+## 개발 환경 세팅 
 
-$ npm install -g less-watch-compiler
-
-less-watch-compiler.config.json 파일 작성
-
-$ less-watch-compiler 실행
+### Front 마크업 개발 시 
+$ cd publish
+$ npm install
+$ npm start
 
 
 #### 괜찮았던 참고 사이트들 정리 
