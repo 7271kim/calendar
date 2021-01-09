@@ -3,7 +3,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
-const watcher = require('./less-watcher');
+const watcher = require('./less-js-watcher');
 const livereload = require('livereload');
 const livereloadMiddleware = require('connect-livereload');
 

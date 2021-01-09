@@ -7,7 +7,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "less": "^4.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "uglify-js": "^3.12.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.7",
@@ -28,5 +29,10 @@
   "bugs": {
     "url": "https://github.com/7271kim/calendar/issues"
   },
-  "homepage": "https://github.com/7271kim/calendar#readme"
+  "homepage": "https://github.com/7271kim/calendar#readme",
+  "nodemonConfig": {
+    "ignore": [
+      "js/*"
+    ]
+  }
 }
