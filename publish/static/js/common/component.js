@@ -13,6 +13,7 @@
  * - removeOnlyCurrentNode( currentNode ) : DOM 노드 중 현재 자신 노드만 제거. 즉 parent <-> 자기자식 연결.
  * - AtoBMoveChilden( targetNode, removeNode ) : removeNode의 자식들을 targetNode에 추가 
  * - removeAllChilden( currentNode ) : 현재 자기 노드의 모든 자식 노드 제거
+ * - hasClass( node ) : 특정 노트에 class 존재하는지 확인
  */
 
 class StringUtils {
@@ -71,7 +72,6 @@ class NodeUtils {
             }
         }
     }
-
 }
 
 export { StringUtils, ArrayUtils, NodeUtils, ObjectUtils};
