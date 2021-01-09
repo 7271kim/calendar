@@ -7,6 +7,16 @@
     <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="/img/android-icon-192x192.png">
     <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <script type="text/javascript" src="/js/etc/jquery.js"></script>
+    <script type="text/javascript" src="/js/etc/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/etc/moment-with-locales.js"></script>
+    <script type="text/javascript" src="/js/etc/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="/css/etc/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/etc/bootstrap-datetimepicker.css" type="text/css">
+    <link rel="stylesheet" href="/css/etc/font-awesome.css" type="text/css">
+
     <link rel="stylesheet" href="/css/common/component.css" type="text/css">
     <link rel="stylesheet" href="/css/main/component.css" type="text/css">
 </head>
@@ -19,6 +29,14 @@
             <div class="month">
                 <span class="month-arrow-left"><img src="/img/arrow-left.svg" alt="왼쪽 화살표"></span>
                 <span class="month-title">2020년 11월</span>
+                <div class="container-date-picker">
+                    <div id="datetimepicker-notime" data-target-input="nearest">
+                        <input type="text" class="datetimepicker-input hidden" data-target="#datetimepicker-notime"/>
+                        <div class="calendar-togle" data-target="#datetimepicker-notime" data-toggle="datetimepicker-notime">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
                 <span class="month-arrow-right"><img src="/img/arrow-right.svg" alt="오른쪽 화살표"></span>
             </div>
             <div class="calendar-icon">

@@ -28,80 +28,103 @@ async function _compileJs( folder , productionConfig = 'dev'){
     if( !fs.existsSync(targetFolder)  ){
         fs.mkdirSync(targetFolder);
     }
-
     
     const files = await getAllFiles( targetFile );
     if(files.length > 0){
         console.log('******************JS 컴파일 시작*********************');
-        const fileBuffers = files.reduce( ( result, file ) => { 
-            result.push(file.data)
-            result.push(Buffer.from('\r\n\r\n'));
-            console.log(file.path);
-            return result;
-        } , [] );
-        
-        let jsConcatText = Buffer.concat(fileBuffers).toString();
-
-        if( productionConfig !== 'dev' ){
-            // 옵션 관련 https://github.com/mishoo/UglifyJS#minify-options
-            const jsConcatText = uglifyJS.minify(jsConcatText , {
-                compress : {
-                    drop_console : true
-                },
-                mangle : {
-                    eval : true,
-                    toplevel: true
-                }
-            }).code;
-        }
-
-        fs.writeFile(path.join(targetFolder,`component.js`), jsConcatText, function(err) {
-            if(err) {
-                console.log(err);
-            } else {
-                console.log("File was successfully saved.");
+        if( folder === 'etc' ){
+            for( const file of files ){
+                console.log(path.join(targetFolder,file.name));
+                fs.writeFile(path.join(targetFolder,file.name), file.data.toString(), function(err) {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("File was successfully saved.");
+                    }
+                });
             }
-        });
+        } else {
+            const fileBuffers = files.reduce( ( result, file ) => { 
+                result.push(file.data)
+                result.push(Buffer.from('\r\n\r\n'));
+                console.log(file.path);
+                return result;
+            } , [] );
+            
+            let jsConcatText = Buffer.concat(fileBuffers).toString();
+
+            if( productionConfig !== 'dev' ){
+                // 옵션 관련 https://github.com/mishoo/UglifyJS#minify-options
+                const jsConcatText = uglifyJS.minify(jsConcatText , {
+                    compress : {
+                        drop_console : true
+                    },
+                    mangle : {
+                        eval : true,
+                        toplevel: true
+                    }
+                }).code;
+            }
+
+            fs.writeFile(path.join(targetFolder,`component.js`), jsConcatText, function(err) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("File was successfully saved.");
+                }
+            });
+        }
 
         console.log('*******************JS 컴파일 끝********************');
     }
 }
 
-function _compileLess( folder , productionConfig = 'dev'){
+async function _compileLess( folder , productionConfig = 'dev'){
     const lessPath = path.join(__dirname,'resource','less');
 
     const targetFile = path.join( lessPath, folder, 'component.less' );
     const targetFolder = path.join(__dirname,'static','css',folder);
-    
     if( !fs.existsSync(targetFolder)  ){
         fs.mkdirSync(targetFolder);
     }
 
-    if( fs.existsSync(targetFile) ){
-        console.log('******************LESS 컴파일 시작*********************');
-
-        let commandLine = 'lessc ';
-
-        commandLine += targetFile + ' ' + path.join(targetFolder,'component.css');
-
-        if( productionConfig != 'dev' ){
-            commandLine += ' -x';
+    if( folder === 'etc' ){
+        const files = await getAllFiles( path.join( lessPath, folder ));
+        for( const file of files ){
+            fs.writeFile(path.join(targetFolder,file.name), file.data.toString(), function(err) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("File was successfully saved.");
+                }
+            });
         }
-
-        exec( commandLine, function (error, stdout, stderr) {
-            if (error !== null) {
-                console.log(error);
-            }
-
-            if (stdout) {
-                console.error(stdout);
-            }
-        });
-        console.log(commandLine);
-
-        console.log('*******************LESS 컴파일 끝********************');
-    }
+    } else {
+        if( fs.existsSync(targetFile) ){
+            console.log('******************LESS 컴파일 시작*********************');
     
+            let commandLine = 'lessc ';
+    
+            commandLine += targetFile + ' ' + path.join(targetFolder,'component.css');
+    
+            if( productionConfig != 'dev' ){
+                commandLine += ' -x';
+            }
+    
+            exec( commandLine, function (error, stdout, stderr) {
+                if (error !== null) {
+                    console.log(error);
+                }
+    
+                if (stdout) {
+                    console.error(stdout);
+                }
+            });
+            console.log(commandLine);
+    
+            console.log('*******************LESS 컴파일 끝********************');
+        }
+    }
 }
 
 /**

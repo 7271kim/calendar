@@ -29,6 +29,15 @@
   margin: 0 10px 0 10px;
   line-height: 30px;
 }
+.main-section .title-wrapper .month .container-date-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-section .title-wrapper .month .container-date-picker .calendar-togle {
+  cursor: pointer;
+}
 .main-section .title-wrapper .month .month-arrow-right {
   cursor: pointer;
   display: flex;
@@ -63,6 +72,8 @@
   line-height: 50px;
   font-family: 'NanumGothic';
   font-size: 14px;
+  width: 100%;
+  text-align: center;
 }
 .main-section .title-wrapper .calendar-icon .group-popup .current {
   font-family: 'NanumGothic bold';

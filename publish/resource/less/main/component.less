@@ -34,6 +34,18 @@
                 line-height: @title-wrapper-height;
             }
 
+            .container-date-picker{
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .calendar-togle {
+                    cursor: pointer;
+                }
+                
+            }
+
             .month-arrow-right{
                 cursor: pointer;
                 display: flex;
@@ -70,6 +82,8 @@
                     line-height: 50px;
                     font-family: 'NanumGothic';
                     font-size: 14px;
+                    width: 100%;
+                    text-align: center;
                 }
                 .current{
                     font-family: 'NanumGothic bold';
