@@ -1,6 +1,11 @@
+import { JTemplate } from "/js/common/component.js";
+
 (()=>{
+    const templateData =  JTemplate.HTMLWrapperparsing( 'mainpageComponent' );
+
     const calendarIcon = document.getElementById('icon-popup');
     const calendarIconPop = document.getElementById('icon-popup-target');
+    const monthTitleIcon = document.getElementById('title-calendar-icon');
     const monthTitle = document.getElementsByClassName('month-title')[0];
 
     settingEvent();
@@ -18,17 +23,13 @@
         })
 
         calendarIconPop.addEventListener('click' , ionPopupClick);
+        monthTitle.addEventListener('click' , openDatePicker);
         calendarIconPop.addEventListener('mouseout' ,addHiddenClass);
         calendarIconPop.addEventListener('mouseover' , removeHiddenClass);
     }
 
     function openDatePicker(e){
-        $('#datePicker').datepicker('show');
-        var popup =$(this).offset();
-        var popupTop = popup.top - 100;
-        $('.ui-datepicker').css({
-            'top' : popupTop
-        });
+        monthTitleIcon.click();
     }
 
     function addHiddenClass(e){
@@ -92,8 +93,48 @@
 				down: "fa fa-arrow-down"
 			}
         });//datepicker end */
+
+         //$('#datetimepicker1').datetimepicker({});
+        /*  $('#datetimepicker-notime').datetimepicker({
+            pickTime:true, // 시간선택 옵션 여부
+            pickDate:true, // 날짜선택 옵션 여부 위와 둘중 하나는 선택해야한다.
+            useMinutes: true,
+            useSeconds: true,
+            useCurrent: true, // 달력 클릭 시 현재 날짜 기본 선택
+            calendarWeeks : false, // 좌측에 주 나오는 것 
+            showToday : true, // 오늘 아래 화살표 표시
+            collapse : true, // 접히는 형식
+            sideBySide : false, // 옆으로 나열 
+            language : 'ko',
+            direction : 'auto', // 방향인 듯 up, bottom, auto 가능,
+            showTodayButton : true, // 오늘로 돌아가는 버튼.(3.1.3 버전에 없어서 커스텀)
+            autoclose : true, // 클릭시 자동으로 닫히는 설정(3.1.3 버전에 없어서 커스텀)
+            //width: 300,
+            //orientation: 'left', // left, right 가능
+            icons : {
+                time: 'glyphicon glyphicon-time',
+                date: 'glyphicon glyphicon-calendar',
+                up: 'glyphicon glyphicon-chevron-up',
+                down: 'glyphicon glyphicon-chevron-down',
+                previous: 'glyphicon glyphicon-chevron-left',
+                next: 'glyphicon glyphicon-chevron-right',
+                today: 'glyphicon glyphicon-screenshot',
+                clear: 'glyphicon glyphicon-trash',
+                close: 'glyphicon glyphicon-remove'
+            },
+            minViewMode : '', // months, years 가능, 해당 이하 dept로 못들어간다 
+            viewMode : '', // months, years 가능, 해당 뎁스부터 시작
+            disabledDates : ['2015-08-25', '2015-08-26'], // 선택 못하는 날짜
+            enabledDates :[],  //해당 날짜만 선택하게 하기
+            //minDate : new Date('2021-01-10'), // 특정 범위로 제한 
+            //maxDate : new Date('2021-01-20')// 특정 범위로 제한 
+            //defaultDate : new Date(), // 시작 날짜 
+            minuteStepping: 1 //분 올리는 단위
+            //format: "yyyy mm dd HH:mm:ss " //데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 ) 정할 시 뭔가 time 선택이 잘 안되긴 함,
+            //daysOfWeekDisabled : [0,6],	//선택 불가능한 요일 설정 0 : 일요일 ~ 6 : 토요일
+
+        }); */
     }
-    //$('#datetimepicker1').datetimepicker({});
-    $('#datetimepicker-notime').datetimepicker();
+   
 })();   
 

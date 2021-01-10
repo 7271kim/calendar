@@ -139,6 +139,9 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+.jtemplates {
+  display: none;
+}
 html,
 body {
   height: 100%;

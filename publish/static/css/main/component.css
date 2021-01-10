@@ -37,6 +37,7 @@
 }
 .main-section .title-wrapper .month .container-date-picker .calendar-togle {
   cursor: pointer;
+  margin-right: 10px;
 }
 .main-section .title-wrapper .month .month-arrow-right {
   cursor: pointer;
