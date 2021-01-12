@@ -24,6 +24,25 @@ class DatePicker {
 
         this.targetDom = targetDom;
         this.opts = { ...defaults, ...inputOpts };
+        this.constant = {
+            modes: [
+                {
+                    className: 'days',
+                    navFnc: 'month',
+                    navStep: 1
+                },
+                {
+                    className: 'months',
+                    navFnc: 'year',
+                    navStep: 1
+                },
+                {
+                    className: 'years',
+                    navFnc: 'year',
+                    navStep: 10
+                }
+            ]
+        }
         this.init();
 
         function getDefaults(){
@@ -70,9 +89,9 @@ class DatePicker {
         settingMomentData( picker );
         settingTemplate(picker);
         settingDisabledDates( picker );
-        settingView( picker );
-        picker.opts.minDate = changeMoment( picker.opts.minDate );
-        picker.opts.maxDate = changeMoment( picker.opts.maxDate );
+        settingViewMode( picker );
+        picker.opts.minDate = changeMoment( picker, picker.opts.minDate );
+        picker.opts.maxDate = changeMoment( picker, picker.opts.maxDate );
         drawDayOfTheWeek( picker );
         drawMonths( picker );
         drawHours( picker );
@@ -81,11 +100,327 @@ class DatePicker {
         updateDate( picker );
         
         function updateDate ( picker, newDate ){
-            let initDate = picker.opts.defalutDate;
+            let initDate = picker.date;
             if( newDate ){
                 initDate = newDate;
             }
-            initDate = changeMoment( picker, newDate);
+            initDate = changeMoment( picker, initDate);
+            picker.date = initDate;
+            picker.viewDate = moment(initDate).startOf('month'); // 선택 했을 때를 위한 요일.
+
+            removeClass( picker.widget.querySelectorAll('.datepicker-days .disabled'), 'disabled' );
+            removeClass( picker.widget.querySelectorAll('.datepicker-months .disabled'), 'disabled' );
+            removeClass( picker.widget.querySelectorAll('.datepicker-years .disabled'), 'disabled' );
+
+            drawDate( picker );
+            drawTime( picker );
+
+            showMode(picker);
+            attachEvents( picker );
+        }
+
+        function attachEvents ( picker ){
+            const allTargete =  picker.widget.querySelectorAll('.datepicker *').forEach((target)=>{
+                target.addEventListener('click' , clickEvent.bind(picker) );
+            });
+        }
+
+        function clickEvent( event ){
+            event.stopPropagation();
+            event.preventDefault();
+            const target = event.target.closest('span, td, th');
+
+            if( target && !target.classList.contains('disabled') ){
+                switch (target.nodeName.toLowerCase()) {
+                    case 'th':
+                        switch (target.className) {
+                            case 'picker-switch':
+                                showMode(picker, 1);
+                                break;
+                            case 'prev':
+                            case 'next':
+                                let step = picker.constant.modes[picker.viewMode].navStep;
+                                if (target.className === 'prev') {
+                                    step = step * -1;
+                                }
+                                picker.viewDate.add(step, picker.constant.modes[picker.viewMode].navFnc);
+                                drawDate(picker);
+                                break;
+                        }
+                        break;
+                    case 'span':
+                        if ( target.classList.contains('month') ) {
+                            //월 
+                            const month = [].indexOf.call(target.parentElement.querySelectorAll('span'), target);
+                            picker.viewDate.month(month);
+                        } else {
+                            // 년 클릭시 
+                            const year = parseInt(target.textContent, 10) || 0;
+                            picker.viewDate.year(year);
+                        }
+                        if (picker.viewMode === picker.minViewMode) {
+                            picker.date = moment({
+                                y: picker.viewDate.year(),
+                                M: picker.viewDate.month(),
+                                d: picker.viewDate.date(),
+                                h: picker.date.hours(),
+                                m: picker.date.minutes(),
+                                s: picker.date.seconds()
+                            });
+                            //set();
+                            //notifyChange(oldDate, e.type);
+                        }
+                        showMode(picker,-1);
+                        drawDate(picker);
+                        break;
+                }
+            }
+            
+        }
+        
+        function showMode( picker, input ){
+            if (input) {
+                picker.viewMode = Math.max(picker.minViewMode, Math.min(2, picker.viewMode + input));
+            }
+            const target  = picker.widget.querySelectorAll('.datepicker > div');
+            const showTarget  = picker.widget.querySelector(`.datepicker-${picker.constant.modes[picker.viewMode].className}`);
+
+            for( const item of target ){
+                const classList = item.classList;
+
+                if( !classList.contains('hide') ){
+                    classList.add('hide');
+                }
+            }
+            showTarget.classList.remove('hide');
+        }
+
+        function drawTime( picker ){
+            if( !picker.date ){
+                return;
+            }
+            const targetTime  = picker.widget.querySelectorAll('.timepicker span[data-time-component]');
+            const targetPeriod = picker.widget.querySelector('.timepicker [data-action=togglePeriod]');
+            const period = picker.date.format('A');
+            let hour = picker.date.hour();
+
+            if( !picker.use24hours ){
+                if( hour === 0 ){
+                    hour = 12;
+                } else if( hour !== 12 ){
+                    hour %= 12;
+                }
+
+                targetPeriod.textContent = period;
+            }
+            for( const item of targetTime ){
+                let textInner = '';
+                if( item.dataset['timeComponent'] === 'hours'){
+                    textInner = padLeft(hour);
+                } else if ( item.dataset['timeComponent'] === 'minutes' ){
+                    textInner = padLeft(picker.viewDate.minutes());
+                } else if ( item.dataset['timeComponent'] === 'seconds' ){
+                    textInner = padLeft(picker.viewDate.second());
+                }
+
+                item.textContent = textInner;
+            }
+        }
+
+        function drawDate( picker ){
+            drawDateInMode( picker );
+            drawMonthsInMode(picker);
+            drawYearsInMode(picker);
+        }
+
+        function drawYearsInMode(picker){
+            const currentYear = picker.date.year();
+            const startYear = picker.opts.minDate.year();
+            const endYear = picker.opts.maxDate.year();
+            const targetYearTh = picker.widget.querySelectorAll('.datepicker-years th');
+            const yearText = picker.widget.querySelector('.datepicker-years table td');
+            yearText.innerHTML='';
+            let year = parseInt(picker.viewDate.year()/10)*10;
+
+            targetYearTh[1].textContent = `${year} - ${year+9}`;
+
+            if (startYear > year) {
+                addClass( targetYearTh[0], 'disabled' ); // 화살표 회색부분 diabled
+            }
+            if (endYear < year + 9) {
+                addClass( targetYearTh[2], 'disabled' ); // 화살표 회색부분 diabled
+            }
+
+            year--;
+
+            for ( let i = -1; i < 11; i++ ) {
+                const tempSpan = document.createElement('span');
+                const className = ['year'];
+                if( i == -1 || i === 10 ){
+                    className.push('old');
+                }
+
+                if( year === currentYear ){
+                    className.push('active');
+                }
+
+                if ( (year < startYear || year > endYear )) {
+                    className.push('disabled');
+                }
+
+                tempSpan.setAttribute('class',`${className.join(' ')}`);
+                tempSpan.textContent = year;
+                year++;
+                yearText.appendChild(tempSpan);
+            }
+        }
+
+        function drawMonthsInMode(picker){
+            const year = picker.viewDate.year();
+            const month = picker.viewDate.month();
+            const startYear = picker.opts.minDate.year();
+            const startMonth = picker.opts.minDate.month();
+            const endYear = picker.opts.maxDate.year();
+            const endMonth = picker.opts.maxDate.month();
+            const months = moment.months();
+            const targetMonthTh = picker.widget.querySelectorAll('.datepicker-months th');
+            const monthText = picker.widget.querySelectorAll('.datepicker-months span');
+
+
+            targetMonthTh[1].textContent = `${year}`;
+            removeClass( monthText, 'active' );
+
+            if (year - 1 < startYear) {
+                addClass( targetMonthTh[0], 'disabled' ); // 화살표 회색부분 diabled
+            }
+            if (year + 1 > endYear) {
+                addClass( targetMonthTh[2], 'disabled' ); // 화살표 회색부분 diabled
+            }
+
+            for (let i = 0; i < 12; i++) {
+                if ( month === i ) {
+                    addClass( monthText[i], 'active' );
+                }
+                if ((year === startYear && startMonth > i) || (year < startYear)) {
+                    addClass( monthText[i], 'disabled' );
+                } else if ((year === endYear && endMonth < i) || (year > endYear)) {
+                    addClass( monthText[i], 'disabled' );
+                }
+            }
+        }
+
+       
+
+        function drawDateInMode( picker ){
+            if( picker.opts.showDateOption ){
+                const year = picker.viewDate.year();
+                const month = picker.viewDate.month();
+                const startYear = picker.opts.minDate.year();
+                const startMonth = picker.opts.minDate.month();
+                const endYear = picker.opts.maxDate.year();
+                const endMonth = picker.opts.maxDate.month();
+                const months = moment.months();
+                const targetDaysTh = picker.widget.querySelectorAll('.datepicker-days th');
+                targetDaysTh[1].textContent = `${year} ${months[month]}`;
+
+                const prevMonth = changeMoment( picker, picker.viewDate).subtract(1,'months');
+                prevMonth.date(prevMonth.daysInMonth()).startOf('week'); // 그 달의 마지막 주의 첫째 요일로 세팅
+
+                if ((year === startYear && month <= startMonth) || year < startYear) {
+                    // 날에 나오는 왼쪽 화살표가 회식이 되어야 하는 로직
+                    // 현재 달이 제한 달보다 작거나 같을 경우 단
+                    // 년이 넘어가는 경우도 있어서 현재 년이 제한 년도보다 작을 경우
+                    addClass( targetDaysTh[0], 'disabled' ); // 화살표 회색부분 diabled
+                }
+                if ((year === endYear && month >= endMonth) || year > endYear) {
+                    addClass( targetDaysTh[2], 'disabled' ); // 화살표 회색부분 diabled
+                }
+
+
+                const nextMonth = changeMoment( picker, prevMonth).add(42, 'd'); // 달력상 42일 추가한 요일로 nextMonth 세팅.
+                const tempDayDom = document.createElement('div');
+                let tempTr;
+                while (prevMonth.isBefore(nextMonth)) {
+                    // prevMonth를 증가시키면서 날짜 채워가는 로직 
+                    if (prevMonth.weekday() === moment().startOf('week').weekday()) {
+                        tempTr = document.createElement('tr');
+                    }
+                    const className = ['day'];
+
+                    if (prevMonth.year() < year || (prevMonth.year() === year && prevMonth.month() < month)) {
+                        // old 조건. 전년의 요일( 월은 전년이 더 커버림), 같은년 일 때 전달의 요일일 시 
+                        className.push('old');
+                    } else if (prevMonth.year() > year || (prevMonth.year() === year && prevMonth.month() > month)) {
+                        // new 조건. 내년의 요일. 같은년 일 때  다음달의 요일일 시 
+                        className.push('new');
+                    }
+                    if (prevMonth.isSame(moment({y: picker.date.year(), M: picker.date.month(), d: picker.date.date()}))) {
+                        // 선택한 날일 시 
+                        className.push('active');
+                    }
+                    if ( isInDisableDates(picker, prevMonth) ) {
+                        // disabled 조건
+                        className.push('disabled');
+                    }
+                    if (picker.opts.useToday === true) {
+                        if (prevMonth.isSame(moment(), 'day')) {
+                            className.push('today');
+                        }
+                    }
+                    const tempTd = document.createElement('td');
+                    tempTd.setAttribute('class',`${className.join(' ')}`);
+                    tempTd.textContent = prevMonth.date();
+                    tempTr.appendChild( tempTd );
+
+                    prevMonth.add(1, 'd');
+
+                    if (prevMonth.weekday() === moment().endOf('week').weekday()) {
+                        tempDayDom.appendChild(tempTr);
+                    }
+                }
+
+                const targetDayTextDom = picker.widget.querySelector('.datepicker-days tbody');
+                targetDayTextDom.textContent = '';
+                atoBMoveChilden( targetDayTextDom, tempDayDom );
+            }
+        }
+
+        function isInDisableDates( picker, inputDate ){
+            const minDate = changeMoment( picker, picker.opts.minDate ).startOf('day'); // 그날의 시작 시로 변경.
+            const maxDate = changeMoment( picker, picker.opts.maxDate).endOf('day'); // 그날의 마지막 시간으로 변경
+
+            if (inputDate.isAfter(maxDate) || inputDate.isBefore(minDate)) {
+                return true;
+            }
+
+            return  picker.opts.disabledDates && picker.opts.disabledDates[ changeMoment(picker, inputDate) ] === true;
+
+        }
+
+        function addClass( node, className ){
+            if( node && node.length != 0 ){
+                if( node.length > 1 ){
+                    for ( const childNode of node ){
+                        childNode.classList.add(className);
+                    }
+                } else {
+                    node.classList.add(className);
+                }
+                
+            }
+        }
+
+        function removeClass( node, className ){
+            if( node && node.length != 0 ){
+                if( node.length > 1 ){
+                    for ( const childNode of node ){
+                        childNode.classList.remove(className);
+                    }
+                } else {
+                    node.classList.remove(className);
+                }
+                
+            }
         }
 
         function drawSeconds( picker ){
@@ -243,7 +578,7 @@ class DatePicker {
             }
         }
 
-        function settingView( picker ){
+        function settingViewMode( picker ){
             picker.minViewMode = picker.opts.minViewMode || 0;
             if (typeof picker.minViewMode === 'string') {
                 switch (picker.minViewMode) {
@@ -332,12 +667,10 @@ class DatePicker {
                     <a href="#" class="btn" data-action="incrementSeconds">
                         <span class="${picker.opts.icons.up}"></span>
                     </a>
-                </td>' : ''
-            ` : '';
+                </td>` : '';
 
             const use24hoursTemplate = !picker.use24hours ? `
-                <td class="separator"></td>
-            ` : '';
+                <td class="separator"></td>` : '';
 
             const minuteTemplate =  picker.opts.showMinutes? `
                 <span data-action="showMinutes" data-time-component="minutes" class="timepicker-minute"></span>
@@ -347,15 +680,13 @@ class DatePicker {
                 <td class="separator">:</td>
                 <td>
                     <span data-action="showSeconds"  data-time-component="seconds" class="timepicker-second"></span>
-                </td>
-            ` :''
+                </td>` :''
 
             const use24hoursTemplate2 = !picker.use24hours ? `
                ${use24hoursTemplate} 
                 <td>
                     <button type="button" class="btn btn-primary" data-action="togglePeriod"></button>
-                </td>
-            ` : '';
+                </td>` : '';
 
             const secondsTemplate2 = picker.opts.showSeconds ? `
                 <td class="separator"></td>
@@ -364,14 +695,12 @@ class DatePicker {
                         <span class="${picker.opts.icons.down}"></span>
                     </a>
                 </td>
-                ${use24hoursTemplate}
-            ` :'';
+                ${use24hoursTemplate}` :'';
 
             const secondsTemplate3 = picker.opts.showSeconds ? `
                 <div class="timepicker-seconds" data-action="selectSecond">
                     <table class="table-condensed"></table>
-                </div>
-            ` :'';
+                </div>` :'';
 
             const timeTemplate = `
                 <div class="timepicker-picker">
@@ -458,26 +787,28 @@ class DatePicker {
                 `
             } else {
                 templateText = `
-                    <div class="dropdown-menu datetimepicker-widget hidden ${picker.use24hours ? 'usetwentyfour' : ''}">
+                    <div class="dropdown-menu datetimepicker-widget ${picker.use24hours ? 'usetwentyfour' : ''}">
                         <ul>
                             <li class="collapse in" >
-                                <div class="datepicker-days">
-                                    <table class="table-condensed">
-                                        ${headTemplate}
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                                <div class="datepicker-months">
-                                    <table class="table-condensed"> 
-                                        ${headTemplate} 
-                                        ${contentTemplate}
-                                    </table>
-                                </div>
-                                <div class="datepicker-years">
-                                    <table class="table-condensed"> 
-                                        ${headTemplate} 
-                                        ${contentTemplate}
-                                    </table>
+                                <div class="datepicker">
+                                    <div class="datepicker-days">
+                                        <table class="table-condensed">
+                                            ${headTemplate}
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="datepicker-months">
+                                        <table class="table-condensed"> 
+                                            ${headTemplate} 
+                                            ${contentTemplate}
+                                        </table>
+                                    </div>
+                                    <div class="datepicker-years">
+                                        <table class="table-condensed"> 
+                                            ${headTemplate} 
+                                            ${contentTemplate}
+                                        </table>
+                                    </div>
                                 </div>
                             </li>
                             <li class="picker-switch accordion-toggle">
@@ -499,8 +830,8 @@ class DatePicker {
 
         function settingMomentData( picker ){
             moment.locale(picker.opts.language);
-            
-            picker.date = moment();
+            picker.opts.defaultDate = changeMoment ( picker, picker.opts.defaultDate ); // 초기화 버튼을 위한 값.
+            picker.date = changeMoment ( picker, picker.opts.defaultDate ); // 현재 선택된 날짜.
             picker.format = picker.opts.format;
             
             const localeData = moment().localeData();
@@ -522,9 +853,7 @@ class DatePicker {
                     }
                 }
             }
-
             picker.use24hours = picker.format.toLowerCase().indexOf('a') < 0 && picker.format.indexOf('h') < 0;
-
         }
     }
 }
