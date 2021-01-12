@@ -55,7 +55,8 @@ async function _compileJs( folder , productionConfig = 'dev'){
 
             if( productionConfig !== 'dev' ){
                 // 옵션 관련 https://github.com/mishoo/UglifyJS#minify-options
-                const jsConcatText = uglifyJS.minify(jsConcatText , {
+                console.log(jsConcatText);
+                jsConcatText = uglifyJS.minify(jsConcatText , {
                     compress : {
                         drop_console : true
                     },
