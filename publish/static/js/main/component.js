@@ -68,7 +68,6 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             showSeconds : true,
             useToday : true,
             useTodayButton : true,
-            defaultDate : '2021-01-12',
             language : 'ko',
             direction : 'auto',
             minViewMode : '',
@@ -77,20 +76,21 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             minDate : '1988.01.11',
             maxDate : '2021.04.11',
             format : '',
-            stepInterval : 5,
-            icons : {
-                time: 'glyphicon glyphicon-time',
-                date: 'glyphicon glyphicon-calendar',
-                up: 'glyphicon glyphicon-chevron-up',
-                down: 'glyphicon glyphicon-chevron-down',
-                previous: 'glyphicon glyphicon-chevron-left',
-                next: 'glyphicon glyphicon-chevron-right',
-                today: 'glyphicon glyphicon-screenshot',
-                clear: 'glyphicon glyphicon-trash',
-                close: 'glyphicon glyphicon-remove'
-            }
+            stepInterval : 5
          });
         console.log(datePicker);
+         
+        $("#datetimepicker-notime2").datetimepicker({
+            format:'YYYY-MM-DD',
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+            })
+         
+
     }
    
 })();   
