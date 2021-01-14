@@ -23,7 +23,7 @@ class DatePicker {
         const defaults = this.#getDefaults();
 
         this.targetDom = targetDom;
-        this.calanderIcon = targetDom.querySelector('#title-calendar-icon');
+        this.calanderIcon = targetDom.querySelector('#title-calendar-icon i');
         this.opts = { ...defaults, ...inputOpts };
         this.constant = {
             modes: [
@@ -54,12 +54,21 @@ class DatePicker {
         } else {
             picker.widget.classList.add('hidden');
         }
+        picker.widget.style.display = 'block';
+        picker.widget.style.padding = '5px';
         picker.place();
         picker.#attachDatePickerGlobalEvents( picker );
 
     }
 
-    updateDate ( picker, newDate ){
+    hide(){
+        const picker = this;
+        picker.widget.classList.add('hidden');
+        picker.viewMode = picker.startViewMode;
+        picker.#showMode(picker);
+    }
+
+    updateDate ( picker, newDate, closePick ){
         let initDate = picker.date;
         if( newDate ){
             initDate = newDate;
@@ -70,22 +79,22 @@ class DatePicker {
 
         picker.#drawDate( picker );
         picker.#drawTime( picker );
-        picker.#setIntputData( picker );
+        picker.#setIntputData( picker , closePick );
     }
 
     place() {
         const picker = this;
         const position = 'absolute';
         const offset = {
-            top : picker.targetDom.getBoundingClientRect().top,
-            left : picker.targetDom.getBoundingClientRect().left
+            top : picker.calanderIcon.getBoundingClientRect().top,
+            left : picker.calanderIcon.getBoundingClientRect().left
         }
         
 
         const windHeight = window.innerHeight;
         const windWidth = window.innerWidth;
-        const targetOutterHeight = picker.#getHeight(picker.targetDom,'outer');
-        const targetOutterWidth = picker.#getWidth(picker.targetDom,'outer');
+        const targetOutterHeight = picker.#getHeight(picker.calanderIcon,'outer');
+        const targetOutterWidth = picker.#getWidth(picker.calanderIcon,'outer');
 
         let placePosition;
 
@@ -103,7 +112,7 @@ class DatePicker {
         const widgetHeight = picker.#getHeight(picker.widget,'height');
         const widgetOuterWidth = picker.#getWidth(picker.widget,'width');
 
-        offset.top = offset.top + targetOutterWidth;
+        offset.top = offset.top + targetOutterHeight;
 
         if ( picker.opts.direction === 'up') {
             placePosition = 'top';
@@ -128,7 +137,7 @@ class DatePicker {
         }
 
         if (windWidth< offset.left + widgetOuterWidth ) {
-            offset.right =   (windWidth - offset.left - targetOutterWidth) + 'px';
+            offset.right =   ( windWidth - offset.left - targetOutterWidth ) + 'px';
             offset.left = 'auto';
             picker.widget.classList.add('pull-right');
         } else {
@@ -136,11 +145,12 @@ class DatePicker {
             offset.right = 'auto';
             picker.widget.classList.remove('pull-right');
         }
+        
+        picker.widget.style.position = position;
+
         if (placePosition === 'top') {
-            picker.widget.style.position = position;
             picker.widget.style.inset = `auto ${offset.right} ${offset.bottom} ${offset.left}`;
         } else {
-            picker.widget.style.position = position;
             picker.widget.style.inset = `${offset.top} ${offset.right} auto ${offset.left}`;
         }
     }
@@ -170,6 +180,7 @@ class DatePicker {
     }
 
     #getDefaults(){
+        moment.locale('ko');
         return {
             showTimeOption : true,
             showDateOption : true,
@@ -183,8 +194,8 @@ class DatePicker {
             minViewMode : '',
             viewMode : '',
             disabledDates : [],
-            minDate : '',
-            maxDate : '',
+            minDate : moment().add(-100,'year').startOf('year'),
+            maxDate : moment().add(100,'year').endOf('year'),
             format : '',
             stepInterval : 5,
             width : null,
@@ -377,9 +388,8 @@ class DatePicker {
 
     #attachDatePickerGlobalEvents( picker ) {
         window.addEventListener('resize', picker.place.bind(picker));
+        document.addEventListener('mousedown',picker.hide.bind(picker))
     }
-    
-    
 
     #getWidth(element, type) {
         if (type === 'inner')  // .innerWidth()
@@ -457,7 +467,7 @@ class DatePicker {
             </tbody>
         `;
 
-        const todayButton = picker.opts.useTodayButton ? `<a class="btn ${picker.opts.icons.today}" style="width:100%"></a>` : '';
+        const todayButton = picker.opts.useTodayButton ? `<a class="${picker.opts.icons.today}"></a>` : '';
 
         const timeTemplate = picker.#getTimeTemplate( picker );
         let templateText = '';
@@ -494,13 +504,13 @@ class DatePicker {
                                     </table>
                                 </div>
                             </div>
-                        </li>
-                        <li id="today-button">
+                            <div id="today-button" class="picker-switch">
                             ${todayButton}
+                            </div>
                         </li>
                         ${ picker.opts.showTimeOption ? `
                             <li class="picker-switch accordion-toggle">
-                                <a class="btn ${picker.opts.icons.time}" style="width:100%"></a>
+                                <a class="btn ${picker.opts.icons.time}"></a>
                             </li>
                             <li class="collapse">
                                 <div class="timepicker">
@@ -621,13 +631,14 @@ class DatePicker {
         picker.widget.querySelectorAll('[data-action]').forEach((target)=>{
             target.addEventListener('click' , picker.#doActionEvent.bind(picker) );
         });
-
-        picker.widget.querySelector('#today-button').addEventListener('click' , function (event){
-            const picker = this;
-            const defaultDate = picker.opts.defaultDate;
-            picker.updateDate ( picker, defaultDate );
-            
-        }.bind(picker));
+        if( picker.opts.showDateOption ){
+            picker.widget.querySelector('#today-button').addEventListener('click' , function (event){
+                const picker = this;
+                const defaultDate = picker.opts.defaultDate;
+                picker.updateDate ( picker, defaultDate, false );
+                
+            }.bind(picker));
+        }
 
         picker.widget.addEventListener('mousedown', picker.#stopEvent);
 
@@ -652,6 +663,7 @@ class DatePicker {
         if ( expanded ) {
             expanded.classList.remove('in');
             closed.classList.add('in');
+
             const icon = currentTarget.querySelector('a');
             let iconClass = '';
             if( icon ){
@@ -796,12 +808,12 @@ class DatePicker {
         
     }
 
-    #setIntputData( picker ){
+    #setIntputData( picker, closePick ){
         const formatDate = moment(picker.date).format(picker.format);
         const input = picker.targetDom.querySelector('input');
         input.value = formatDate;
 
-        if( !picker.opts.showTimeOption ){
+        if( !picker.opts.showTimeOption && !( closePick!==undefined && !closePick ) ){
             // 시간 클릭 할 필요 없을 시 클릭 시 picker 닫기 위해 
             picker.widget.classList.add('hidden');
 
@@ -809,24 +821,29 @@ class DatePicker {
 
     }
     
-    #showMode( picker, input ){
+    #showMode( picker, input=0 ){
         if (input) {
             picker.viewMode = Math.max(picker.minViewMode, Math.min(2, picker.viewMode + input));
         }
-        const target  = picker.widget.querySelectorAll('.datepicker > div');
-        const showTarget  = picker.widget.querySelector(`.datepicker-${picker.constant.modes[picker.viewMode].className}`);
+        if( picker.opts.showDateOption ){
+            const target  = picker.widget.querySelectorAll(`.datepicker > div`);
+            const showTarget  = picker.widget.querySelector(`.datepicker-${picker.constant.modes[picker.viewMode].className}`);
 
-        for( const item of target ){
-            const classList = item.classList;
+            for( const item of target ){
+                const classList = item.classList;
 
-            if( !classList.contains('hidden') ){
-                classList.add('hidden');
-                showTarget.style = '';
-                
+                if( !classList.contains('hidden') ){
+                    classList.add('hidden');
+                    showTarget.style = '';
+                    
+                }
             }
+            showTarget.classList.remove('hidden');
+            showTarget.style.display = 'block';
+        } else if( picker.opts.showTimeOption ) {
+            picker.widget.querySelector(`.timepicker-picker`).classList.remove('hidden');
         }
-        showTarget.classList.remove('hidden');
-        showTarget.style.display = "block";
+        
     }
 
     #drawTime( picker ){
@@ -877,9 +894,12 @@ class DatePicker {
         const endYear = picker.opts.maxDate.year();
         const targetYearTh = picker.widget.querySelectorAll('.datepicker-years th');
         const yearText = picker.widget.querySelector('.datepicker-years table td');
+
+        if( targetYearTh.length ===0 ) return;
+
         yearText.innerHTML='';
         let year = parseInt(picker.viewDate.year()/10)*10;
-
+        
         targetYearTh[1].textContent = `${year} - ${year+9}`;
 
         if (startYear > year) {
@@ -924,6 +944,7 @@ class DatePicker {
         const targetMonthTh = picker.widget.querySelectorAll('.datepicker-months th');
         const monthText = picker.widget.querySelectorAll('.datepicker-months span');
 
+        if( targetMonthTh.length === 0 ) return;
 
         targetMonthTh[1].textContent = `${year}`;
         picker.#removeClass( monthText, 'active' );

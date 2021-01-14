@@ -62,34 +62,20 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     function settingDatePicker(){
         const target = document.getElementById("datetimepicker-notime");
         const datePicker = DatePicker.datetimepicker( target  ,{ 
-            showTimeOption : true,
+            showTimeOption : false,
             showDateOption : true,
             showMinutes : true,
-            showSeconds : true,
+            showSeconds : false,
             useToday : true,
             useTodayButton : true,
             language : 'ko',
             direction : 'auto',
             minViewMode : '',
             viewMode : '',
-            disabledDates : [ '2021.01.13', '2021.03,04' ],
-            minDate : '1988.01.11',
-            maxDate : '2021.04.11',
             format : '',
             stepInterval : 5
          });
         console.log(datePicker);
-         
-        $("#datetimepicker-notime2").datetimepicker({
-            format:'YYYY-MM-DD',
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-arrow-up",
-                    down: "fa fa-arrow-down"
-                }
-            })
-         
 
     }
    
