@@ -7,10 +7,10 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     const monthTitle = document.getElementsByClassName('month-title')[0];
     const datePickerTitle = settingDatePickerTitle();
 
-    settingEvent( datePickerTitle );
+    settingEvent();
 
    
-    function settingEvent( datePickerTitle ){
+    function settingEvent(){
         calendarIcon.addEventListener('click' , (e)=>{
             const classList = calendarIconPop.classList;
             if( classList.contains('hidden') ){
@@ -22,12 +22,11 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         })
 
         calendarIconPop.addEventListener('click' , ionPopupClick);
-        monthTitle.addEventListener('click' , openDatePicker.bind(null, datePickerTitle));
-        calendarIconPop.addEventListener('mouseout' ,addHiddenClass);
-        calendarIconPop.addEventListener('mouseover' , removeHiddenClass);
+        monthTitle.addEventListener('click' , openDatePicker);
+        document.addEventListener('mousedown',addHiddenClass);
     }
 
-    function openDatePicker(datePickerTitle){
+    function openDatePicker(){
         datePickerTitle.show();
     }
 
