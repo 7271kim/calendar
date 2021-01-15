@@ -154,7 +154,7 @@ class DatePicker {
             picker.widget.style.inset = `${offset.top} ${offset.right} auto ${offset.left}`;
         }
     }
-	
+    
 	#init(){
 
         const picker = this;
