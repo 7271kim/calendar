@@ -209,7 +209,8 @@ class DatePicker {
                 next: 'fa fa-caret-right',
                 today: 'fa fa-certificate',
                 close: 'fa fa-close'
-            }
+            },
+            callBackFun : null
         }
     }
 
@@ -812,8 +813,9 @@ class DatePicker {
         const formatDate = moment(picker.date).format(picker.format);
         const input = picker.targetDom.querySelector('input');
         input.value = formatDate;
-        input.click();
-        
+        if( picker.opts.callBackFun ){
+            picker.opts.callBackFun();
+        }
         if( !picker.opts.showTimeOption && !( closePick!==undefined && !closePick ) ){
             // 시간 클릭 할 필요 없을 시 클릭 시 picker 닫기 위해 
             picker.widget.classList.add('hidden');

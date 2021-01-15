@@ -209,7 +209,8 @@ class DatePicker {
                 next: 'fa fa-caret-right',
                 today: 'fa fa-certificate',
                 close: 'fa fa-close'
-            }
+            },
+            callBackFun : null
         }
     }
 
@@ -812,7 +813,9 @@ class DatePicker {
         const formatDate = moment(picker.date).format(picker.format);
         const input = picker.targetDom.querySelector('input');
         input.value = formatDate;
-
+        if( picker.opts.callBackFun ){
+            picker.opts.callBackFun();
+        }
         if( !picker.opts.showTimeOption && !( closePick!==undefined && !closePick ) ){
             // 시간 클릭 할 필요 없을 시 클릭 시 picker 닫기 위해 
             picker.widget.classList.add('hidden');
@@ -1512,7 +1515,7 @@ class JTemplate {
         'COMPONENT_ATTRIBUTE' : 'data-jly-attribute',
         'COMPONENT_TEXT' : 'data-jly-text',
         'COMPONENT_LIST' : 'data-jly-list',
-        'COMPONENT_REAPEAT' : 'data-jly-reapeat',
+        'COMPONENT_REPEAT' : 'data-jly-repeat',
         'COMPONENT_VAR' : 'data-jly-var',
         'COMPONENT_INJECTION' : 'data-jly-injection',
         'component' : {}
@@ -1651,7 +1654,7 @@ function changeCurrentNodeToTemplateData ( currentNode, drawObj, variable, class
             [sharedObj.COMPONENT_ATTRIBUTE] : -1,
             [sharedObj.COMPONENT_TEXT] : -1,
             [sharedObj.COMPONENT_LIST] : -1,
-            [sharedObj.COMPONENT_REAPEAT] : -1,
+            [sharedObj.COMPONENT_REPEAT] : -1,
             [sharedObj.COMPONENT_INJECTION] : -1
         }
         
@@ -1664,7 +1667,7 @@ function changeCurrentNodeToTemplateData ( currentNode, drawObj, variable, class
             settingVar( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_VAR], currentAttrNames );
             settingAttr( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_ATTRIBUTE], currentAttrNames );
             settingList( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_LIST], currentAttrNames, classObj );
-            settingReapeat( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_REAPEAT], currentAttrNames, classObj);
+            settingRepeat( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_REPEAT], currentAttrNames, classObj);
             settingText( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_TEXT], currentAttrNames );
             settingInjection( currentNode, drawObj, variable, compNameIndex[sharedObj.COMPONENT_INJECTION], currentAttrNames, classObj );
         }
@@ -1737,7 +1740,7 @@ function settingText( currentNode, drawObj, variable, index, currentAttrNames ){
     }
 }
 
-function settingReapeat( currentNode, drawObj, variable, index, currentAttrNames, classObj ){
+function settingRepeat( currentNode, drawObj, variable, index, currentAttrNames, classObj ){
     if( index !== -1 ){
         const attrDotName = currentAttrNames[index];
         const dotSplitName = dotSplit( attrDotName );
@@ -1814,8 +1817,19 @@ function settingList( currentNode, drawObj, variable, index, currentAttrNames, c
 
 function settingRest( checkingAttr, currentNode,variable ){
     for( const attr of checkingAttr ){
-        const chanedValue = getPatternData( currentNode.getAttribute(attr), variable );
-        currentNode.setAttribute( attr, chanedValue );
+        let changeData = currentNode.getAttribute(attr);
+       
+        if( changeData ){
+            changeData = changeData.replace(/({{([^{{}}]*)}})/g, function( matchString, group1, group2 , offset , fullText){
+                if( matchString ){
+                    return getPatternData( matchString, variable );
+                } else {
+                    return innerText;
+                }
+            })
+        }
+        
+        currentNode.setAttribute( attr, changeData );
         }
 }
 
@@ -1838,8 +1852,8 @@ function checkingCurrentAttr ( checkingAttr, compNameIndex, currentAttrNames, cu
             compNameIndex[sharedObj.COMPONENT_TEXT]= parseInt(index);
         } else if( attrName.indexOf(sharedObj.COMPONENT_LIST) > -1 ){
             compNameIndex[sharedObj.COMPONENT_LIST] = parseInt(index);
-        } else if( attrName.indexOf(sharedObj.COMPONENT_REAPEAT) > -1 ){
-            compNameIndex[sharedObj.COMPONENT_REAPEAT] = parseInt(index);
+        } else if( attrName.indexOf(sharedObj.COMPONENT_REPEAT) > -1 ){
+            compNameIndex[sharedObj.COMPONENT_REPEAT] = parseInt(index);
         } else if( attrName.indexOf(sharedObj.COMPONENT_INJECTION) > -1 ){
             compNameIndex[sharedObj.COMPONENT_INJECTION] = parseInt(index);
         } else if( attrValue.indexOf('}}') > -1 ){

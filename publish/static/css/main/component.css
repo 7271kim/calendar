@@ -107,6 +107,36 @@
   height: 25%;
   overflow: hidden;
 }
+.main-section .day .one-week .old.day-warpper,
+.main-section .day .one-week .new.day-warpper {
+  color: #777777;
+}
+.main-section .day .one-week .old.day-warpper .day-dec .important,
+.main-section .day .one-week .new.day-warpper .day-dec .important {
+  background-color: transparent;
+  color: #777777;
+}
+.main-section .day .one-week .old.day-warpper .day-dec .post,
+.main-section .day .one-week .new.day-warpper .day-dec .post {
+  background-color: transparent;
+  color: #777777;
+}
+.main-section .day .one-week .old.day-warpper .day-dec .important,
+.main-section .day .one-week .new.day-warpper .day-dec .important {
+  color: #777777;
+  background-color: transparent;
+}
+.main-section .day .one-week .old.day-warpper .day-dec .schedule,
+.main-section .day .one-week .new.day-warpper .day-dec .schedule {
+  color: #777777;
+}
+.main-section .day .one-week .today.day-warpper .day-title .title-text {
+  background: pink;
+  border-radius: 50px;
+  padding: 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
 .main-section .day .one-week .day-warpper {
   flex: 1;
   max-width: 14.29%;
@@ -121,6 +151,9 @@
 }
 .main-section .day .one-week .day-warpper .day-title span img {
   width: 10px;
+}
+.main-section .day .one-week .day-warpper .day-title .title-text {
+  margin: 0;
 }
 .main-section .day .one-week .day-warpper .day-dec p {
   white-space: nowrap;

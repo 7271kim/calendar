@@ -122,7 +122,40 @@
             flex: 1;
             height: 25%;
             overflow: hidden;
+            
+            .old.day-warpper, .new.day-warpper{
+                color: #777777;
+                .day-dec {
+                    .important{
+                        background-color:transparent;
+                        color: #777777;
+                    }
+                    .post{
+                        background-color:transparent;
+                        color: #777777;
+                       
+                    }
+                    .important {
+                        color: #777777;
+                        background-color:transparent;
+                    }
 
+                    .schedule{
+                        color: #777777;
+                    }
+                }
+            }
+            .today.day-warpper{
+                .day-title{
+                    .title-text{
+                        background: pink;
+                        border-radius: 50px;
+                        padding: 5px;
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                }
+            }
             .day-warpper {
                 flex: 1;
                 max-width: 14.29%;
@@ -137,6 +170,9 @@
 
                             width: 10px;
                         }
+                    }
+                    .title-text{
+                        margin: 0;
                     }
                 }
                 .day-dec {

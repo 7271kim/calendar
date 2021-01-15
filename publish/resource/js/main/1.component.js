@@ -5,11 +5,13 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
-    const sectionTarget = document.getElementsByClassName('main-section');
+    const sectionTarget = document.getElementsByClassName('main-section')[0];
     const opts = {
         showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
-        format : 'YYYY MM월'
+        format : 'YYYY MM월',
+        minViewMode : 'months',
+        viewMode : 'months'
         
     }
 
@@ -51,11 +53,12 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     
     init();
 
-    function init( date ){
-        getDateData( date );
+    function init(){
+        getDateData();
         drawTotal();
         settingEvent();
     }
+
     function settingWeek(){
         const drawObj = sharedObj.drawObj.month;
         const weekdaysMin = moment.weekdaysMin();
@@ -76,8 +79,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             }
         }
     }
-
-    function drawTotal(){
+    function settingMonth(){
         const startDate = sharedObj.startDate;
         const endDate = sharedObj.endDate;
         const drawObj = sharedObj.drawObj.month;
@@ -85,81 +87,86 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         const month = sharedObj.pickDate.month();
         const date = sharedObj.pickDate.date();
         const today= moment();
+        const endWeekday = moment().endOf('week').weekday();
+        let oneWeekData =[];
 
+        drawObj.daysData=[];
+        drawObj.mainTitle = sharedObj.pickDate.format(opts.format);
+
+        while( startDate.isBefore(endDate) ){
+            const className = [];
+            if (startDate.year() < year || (startDate.year() === year && startDate.month() < month)) {
+                className.push('old');
+            } 
+            
+            if (startDate.year() > year || (startDate.year() === year && startDate.month() > month)) {
+                className.push('new');
+            }
+            
+            if (startDate.isSame(moment({y: year, M: month, d: date}))) {
+                className.push('active');
+            }
+
+            if (startDate.isSame(moment({y: today.year(), M: today.month(), d: today.date()}))) {
+                className.push('today');
+            }
+
+            const oneday = {
+                'wrapperClass' : `${className.join(' ')}`,
+                'count' : `${startDate.date()}`,
+                'scheduleList' : [
+                    {
+                        'class' : 'important',
+                        'title' : '집밥'
+                    },
+                    {
+                        'class' : 'post',
+                        'title' : 'post'
+                    },
+                    {
+                        'class' : 'schedule',
+                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
+                    },
+                    {
+                        'class' : 'schedule',
+                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
+                    },
+                    {
+                        'class' : 'schedule',
+                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
+                    },
+                    {
+                        'class' : 'schedule',
+                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
+                    },
+                    {
+                        'class' : 'schedule',
+                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
+                    }
+                    
+                ]
+            }
+            oneWeekData.push(oneday);
+            if( startDate.weekday() === endWeekday){
+                drawObj.daysData.push(oneWeekData)
+                oneWeekData = [];
+            }
+
+            startDate.add(1,'day');
+        }
+    }
+
+    function drawTotal(){
         if( opts.showMode === 'day' ){
             settingWeek();
         } else if( opts.showMode === 'week' ){
             settingWeek();
         } else if( opts.showMode === 'month' ){
-            const endWeekday = moment().endOf('week').weekday();
-            let oneWeekData =[];
             settingWeek();
-            
-            drawObj.daysData=[];
-            drawObj.mainTitle = sharedObj.pickDate.format(opts.format);
-
-            while( startDate.isBefore(endDate) ){
-                const className = [];
-                if (startDate.year() < year || (startDate.year() === year && startDate.month() < month)) {
-                    className.push('old');
-                } 
-                
-                if (startDate.year() > year || (startDate.year() === year && startDate.month() > month)) {
-                    className.push('new');
-                }
-                
-                if (startDate.isSame(moment({y: year, M: month, d: date}))) {
-                    className.push('active');
-                }
-
-                if (startDate.isSame(moment({y: today.year(), M: today.month(), d: today.date()}))) {
-                    className.push('today');
-                }
-
-                const oneday = {
-                    'wrapperClass' : `${className.join(' ')}`,
-                    'count' : `${startDate.date()}`,
-                    'scheduleList' : [
-                        {
-                            'class' : 'important',
-                            'title' : '집밥'
-                        },
-                        {
-                            'class' : 'post',
-                            'title' : 'post'
-                        },
-                        {
-                            'class' : 'schedule',
-                            'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                        },
-                        {
-                            'class' : 'schedule',
-                            'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                        },
-                        {
-                            'class' : 'schedule',
-                            'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                        },
-                        {
-                            'class' : 'schedule',
-                            'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                        },
-                        {
-                            'class' : 'schedule',
-                            'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                        }
-                        
-                    ]
-                }
-                oneWeekData.push(oneday);
-                if( startDate.weekday() === endWeekday){
-                    drawObj.daysData.push(oneWeekData)
-                    oneWeekData = [];
-                }
-
-                startDate.add(1,'day');
-            }
-            templateData.injectModel( sectionTarget, 'month' , sharedObj.drawObj.month);
+            settingMonth();
+            templateData.injectModel( sectionTarget.querySelectorAll('.title-wrapper'), 'monthTitle' , sharedObj.drawObj.month);
+            templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
+            templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
         } else if( opts.showMode === 'year' ){
 
         }
@@ -227,12 +234,19 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         calendarIconPop.addEventListener('click' , ionPopupClick);
         monthTitle.addEventListener('click' , openDatePicker);
         document.addEventListener('mousedown',addHiddenClass);
-        dayData.addEventListener('click' , initAll);
     }
 
-    function initAll( event ){
-        const newDate = getMoment(event.target.value);
-        init(newDate);
+    function updateMonthDate(){
+        
+        const newDate = getMoment(dayData.value);
+        if( !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
+            monthTitle.textContent = newDate.format(opts.format);
+            getDateData(newDate);
+            settingMonth();
+            templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
+        }
+        
+        
     }
     function openDatePicker(){
         datePickerTitle.show();
@@ -269,7 +283,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     function settingDatePickerTitle(){
         const target = document.getElementById("datetimepicker-notime");
         const datePickerTitle = DatePicker.datetimepicker( target  ,{ 
-            showTimeOption : true,
+            showTimeOption : false,
             showDateOption : true,
             showMinutes : true,
             showSeconds : false,
@@ -277,11 +291,11 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             useTodayButton : true,
             language : 'ko',
             direction : 'auto',
-            minViewMode : '',
-            viewMode : '',
-            format : '',
+            minViewMode : opts.minViewMode,
+            viewMode : opts.viewMode,
             stepInterval : 5,
-            defaultDate : sharedObj.pickDate
+            defaultDate : sharedObj.pickDate,
+            callBackFun : updateMonthDate
          });
 
          return datePickerTitle;
