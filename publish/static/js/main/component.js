@@ -12,7 +12,6 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
         pickerViewMode : 'months'
-        
     }
 
     const sharedObj = {
@@ -237,6 +236,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     function updateShowMode( showMode ){
         opts.showMode = showMode;
         if( showMode ==='month' ){
+            opts.giveCallback = updateMonthDate;
             updateMonthDate( true );
         } else {
             templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , {
