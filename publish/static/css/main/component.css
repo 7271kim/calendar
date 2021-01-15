@@ -148,6 +148,7 @@
 }
 .main-section .day .one-week .day-warpper .day-title span {
   margin-left: auto;
+  height: 20px;
 }
 .main-section .day .one-week .day-warpper .day-title span img {
   width: 10px;

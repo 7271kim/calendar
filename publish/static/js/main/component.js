@@ -1,7 +1,7 @@
 import { JTemplate, DatePicker } from "/js/common/component.js";
 
 (()=>{
-    let calendarIcon, calendarIconPop, monthTitleIcon, monthTitle, datePickerTitle, dayData;
+    let calendarIcon, calendarIconPop, monthTitleIcon, monthTitle, datePickerTitle, dayData
 
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
@@ -10,8 +10,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
-        minViewMode : 'months',
-        viewMode : 'months'
+        pickerMinViewMode : 'months',
+        pickerViewMode : 'months'
         
     }
 
@@ -46,8 +46,6 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                     ]
                 ]
             }
-            
-
         }
     }
     
@@ -233,27 +231,67 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
         calendarIconPop.addEventListener('click' , ionPopupClick);
         monthTitle.addEventListener('click' , openDatePicker);
-        document.addEventListener('mousedown',addHiddenClass);
+        document.addEventListener('mousedown',addHiddenClass, true);
     }
 
-    function updateMonthDate(){
+    function updateShowMode( showMode ){
+        opts.showMode = showMode;
+        if( showMode ==='month' ){
+            updateMonthDate( true );
+        } else {
+            templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , {
+                'mainTitle' : 'test',
+                'weekList' : [],
+                'daysData' : [
+                    [
+                        {   
+                            'wrapperClass' : '',
+                            'count' : '',
+                            'scheduleList' : [
+                                {
+                                    'class' : 'important',
+                                    'title' : '집밥'
+                                },
+                                {
+                                    'class' : 'post',
+                                    'title' : 'post'
+                                },
+                                {
+                                    'class' : 'schedule',
+                                    'title' : 'schedule'
+                                }
+                            ]
+                        }
+                    ]
+                ]
+            });
+        }
+        
+    }
+
+    function updateMonthDate( isForceUpdate ){
         
         const newDate = getMoment(dayData.value);
-        if( !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
+        
+        // 강제로 업데이트 하거나, pick한 날짜가 오늘일 아닐때만 업데이트
+        if( isForceUpdate || !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
             monthTitle.textContent = newDate.format(opts.format);
             getDateData(newDate);
             settingMonth();
             templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
         }
-        
-        
     }
+
     function openDatePicker(){
         datePickerTitle.show();
     }
 
-    function addHiddenClass(e){
-        const classList = calendarIconPop.classList.add('hidden');
+    function addHiddenClass(event){
+        var target = event.target;
+        if( target.parentElement !== event.currentTarget.querySelector("#icon-popup-target") ) {
+            const classList = calendarIconPop.classList.add('hidden');
+        }
+        
     }
 
     function removeHiddenClass(e){
@@ -262,23 +300,24 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     
     function ionPopupClick(e){
         const classList = calendarIconPop.classList;
-            if( classList.contains('hidden') ){
-                classList.remove('hidden');
-            } else {
-                classList.add('hidden');
-            }
+        if( classList.contains('hidden') ){
+            classList.remove('hidden');
+        } else {
+            classList.add('hidden');
+        }
 
-            const innderDiv =  [...calendarIconPop.getElementsByTagName('div')];
-            for( const div of innderDiv ){
-                const classList = div.classList;
-                if( classList.contains('current') ){
-                    classList.remove('current');
-                    break;
-                }
+        const innderDiv =  [...calendarIconPop.getElementsByTagName('div')];
+        for( const div of innderDiv ){
+            const classList = div.classList;
+            if( classList.contains('current') ){
+                classList.remove('current');
+                break;
             }
+        }
 
-            e.target.classList.add('current');
-    }
+        e.target.classList.add('current');
+        updateShowMode(e.target.dataset['showMode']);
+}
 
     function settingDatePickerTitle(){
         const target = document.getElementById("datetimepicker-notime");
@@ -291,8 +330,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             useTodayButton : true,
             language : 'ko',
             direction : 'auto',
-            minViewMode : opts.minViewMode,
-            viewMode : opts.viewMode,
+            minViewMode : opts.pickerMinViewMode,
+            viewMode : opts.pickerViewMode,
             stepInterval : 5,
             defaultDate : sharedObj.pickDate,
             callBackFun : updateMonthDate
