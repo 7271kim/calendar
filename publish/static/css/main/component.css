@@ -213,22 +213,20 @@
   height: 40px;
   line-height: 40px;
   border-radius: 10px;
-  cursor: pointer;
   padding: 0 10px 0 10px;
 }
 .month-dim-layer .schedule-container .important {
   background: rgba(217, 98, 129);
+  cursor: pointer;
 }
 .month-dim-layer .schedule-container .post {
   background-color: #039be5;
 }
 .month-dim-layer .schedule-container .normal {
   background-color: #eaeaea;
+  cursor: pointer;
 }
 .month-dim-layer .schedule-container .text {
-  border-bottom: 4px solid black;
-  border-radius: 0;
-  margin-bottom: 10px;
   display: flex;
   align-items: center;
 }

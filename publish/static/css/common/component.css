@@ -615,6 +615,7 @@ body {
   width: 30px;
   height: 30px;
   position: relative;
+  cursor: pointer;
 }
 .close:after {
   content: '';
@@ -633,23 +634,24 @@ body {
   left: 13px;
 }
 .close-vertical {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   position: relative;
+  cursor: pointer;
 }
 .close-vertical:after {
   content: '';
-  height: 30px;
+  height: 20px;
   border-left: 4px solid black;
   position: absolute;
   transform: rotate(90deg);
-  left: 14px;
+  left: 8px;
 }
 .close-vertical:before {
   content: '';
-  height: 30px;
+  height: 20px;
   border-left: 4px solid black;
   position: absolute;
   transform: rotate(0deg);
-  left: 13px;
+  left: 8px;
 }
