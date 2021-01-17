@@ -68,7 +68,8 @@ class DatePicker {
         picker.#showMode(picker);
     }
 
-    updateDate ( picker, newDate, closePick ){
+    updateDate ( newDate, closePick ){
+        const picker = this;
         let initDate = picker.date;
         if( newDate ){
             initDate = newDate;
@@ -174,7 +175,7 @@ class DatePicker {
         picker.#drawHours( picker );
         picker.#drawMinutes( picker );
         picker.#drawSeconds( picker );
-        picker.updateDate( picker );
+        picker.updateDate();
         picker.#showMode(picker);
         picker.#attachEvents( picker );
     }
@@ -636,7 +637,7 @@ class DatePicker {
             picker.widget.querySelector('#today-button').addEventListener('click' , function (event){
                 const picker = this;
                 const defaultDate = picker.opts.defaultDate;
-                picker.updateDate ( picker, defaultDate, false );
+                picker.updateDate ( defaultDate, false );
                 
             }.bind(picker));
         }
@@ -810,7 +811,7 @@ class DatePicker {
     }
 
     #setIntputData( picker, closePick ){
-        const formatDate = moment(picker.date).format(picker.format);
+        const formatDate = moment(picker.date).format("YYYY-MM-DD hh:mm:ss");
         const input = picker.targetDom.querySelector('input');
         input.value = formatDate;
         if( picker.opts.callBackFun ){

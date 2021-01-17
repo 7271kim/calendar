@@ -3,206 +3,281 @@
 .main-section{
     height: 100%;
     min-height: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    background-color:  rgba(197, 224, 220, 0.2);
-    
-    .row{
-        display: flex;
-        margin: 0px 15px 0px 15px;
-    }
 
-    .title-wrapper{
-        margin: 15px;
-
-        div{
-            flex: none;
-        }
-        .month{
-            display: flex;
-            flex: none;
-            
-            .month-arrow-left{
-                cursor: pointer;
-                display: flex;
-            }
-
-            .month-title{
-                cursor: pointer;
-                margin: 0 10px 0 10px;
-                line-height: @title-wrapper-height;
-            }
-
-            .container-date-picker{
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                .calendar-togle {
-                    cursor: pointer;
-                    margin-right: 10px;
-                }
-                
-            }
-
-            .month-arrow-right{
-                cursor: pointer;
-                display: flex;
-            }
-        }
-
-        .calendar-icon{
-            margin-left: auto;
-            cursor: pointer;
-            position: relative;
-            .triangle{
-                border-style:solid; 
-                border-width:15px;
-                border-color:transparent transparent #B4C0D9 transparent;
-                position: absolute;
-                top: -30px;
-                right: 15px;
-            }
-
-            .group-popup {
-                position: absolute;
-                width: 200px;
-                left: -158px;
-                top: 40px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                background-color: rgba(180, 192, 217, 1.0);
-                border-radius: 10px;
-
-                div{
-                    height: 50px;
-                    line-height: 50px;
-                    font-family: 'NanumGothic';
-                    font-size: 14px;
-                    width: 100%;
-                    text-align: center;
-                }
-                .current{
-                    font-family: 'NanumGothic bold';
-                    font-size: 16px;
-                }
-            }
-        }
-
-        .cross {
-            margin: 0px 10px 0px 25px;
-            cursor: pointer;
-        }
-
-    }
-    .week {
-        display: flex;
-        background-color: rgba(236, 229, 206, 0.5);
-
-        .day-of-week {
-            flex: 1;
-            text-align: center;
-            line-height: 30px;
-        }
-    }
-    .day{
+    .view-month{
+        height: 100%;
+        min-height: 100%;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
-        flex: 1;
-        margin-bottom: 15px;
-        font-size: 15px;
+        background-color:  rgba(197, 224, 220, 0.2);
 
-        .one-week{
+        .row{
             display: flex;
-            flex: 1;
-            height: 25%;
-            overflow: hidden;
-            
-            .old.day-warpper, .new.day-warpper{
-                color: #777777;
-                .day-dec {
-                    .important{
-                        background-color:transparent;
-                        color: #777777;
-                    }
-                    .post{
-                        background-color:transparent;
-                        color: #777777;
-                       
-                    }
-                    .important {
-                        color: #777777;
-                        background-color:transparent;
-                    }
-
-                    .schedule{
-                        color: #777777;
-                    }
-                }
+            margin: 0px 15px 0px 15px;
+        }
+    
+        .title-wrapper{
+            margin: 15px;
+    
+            div{
+                flex: none;
             }
-            .today.day-warpper{
-                .day-title{
-                    .title-text{
-                        background: pink;
-                        border-radius: 50px;
-                        padding: 5px;
-                        font-size: 20px;
-                        font-weight: bold;
-                    }
-                }
-            }
-            .day-warpper {
-                flex: 1;
-                max-width: 14.29%;
-                padding: 7px;
-                .day-title{
-                    display: flex;
+            .month{
+                display: flex;
+                flex: none;
+                
+                .month-arrow{
                     cursor: pointer;
+                    display: flex;
+                }
+    
+                .month-title{
+                    cursor: pointer;
+                    margin: 0 10px 0 10px;
+                    line-height: @title-wrapper-height;
+                }
+    
+                .container-date-picker{
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+    
+                    .calendar-togle {
+                        cursor: pointer;
+                        margin-right: 10px;
+                    }
                     
-                    span{
-                        margin-left: auto;
-                        height: 20px;
-                        img{
-                            width: 10px;
+                }
+            }
+    
+            .calendar-icon{
+                margin-left: auto;
+                cursor: pointer;
+                position: relative;
+                .triangle{
+                    border-style:solid; 
+                    border-width:15px;
+                    border-color:transparent transparent #B4C0D9 transparent;
+                    position: absolute;
+                    top: -30px;
+                    right: 15px;
+                }
+    
+                .group-popup {
+                    position: absolute;
+                    width: 200px;
+                    left: -158px;
+                    top: 40px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: rgba(180, 192, 217, 1.0);
+                    border-radius: 10px;
+    
+                    div{
+                        height: 50px;
+                        line-height: 50px;
+                        font-family: 'NanumGothic';
+                        font-size: 14px;
+                        width: 100%;
+                        text-align: center;
+                    }
+                    .current{
+                        font-family: 'NanumGothic bold';
+                        font-size: 16px;
+                    }
+                }
+            }
+    
+            .cross {
+                margin: 0px 10px 0px 25px;
+                cursor: pointer;
+            }
+    
+        }
+        .week {
+            display: flex;
+            background-color: rgba(236, 229, 206, 0.5);
+    
+            .day-of-week {
+                flex: 1;
+                text-align: center;
+                line-height: 30px;
+            }
+        }
+        .day{
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex: 1;
+            margin-bottom: 15px;
+            font-size: 15px;
+    
+            .one-week{
+                display: flex;
+                flex: 1;
+                height: 25%;
+                overflow: hidden;
+                
+                .old.day-warpper, .new.day-warpper{
+                    color: #777777;
+                    .day-dec {
+                        .important{
+                            background-color:gainsboro;
+                            color: #777777;
+                        }
+                        .post{
+                            background-color:gainsboro;
+                            color: #777777;
+                           
+                        }
+                        .schedule{
+                            color: #777777;
                         }
                     }
-                    .title-text{
-                        margin: 0;
+                }
+                .today.day-warpper{
+                    .day-title{
+                        .title-text{
+                            background: pink;
+                            border-radius: 50px;
+                            padding: 5px;
+                            font-size: 20px;
+                            font-weight: bold;
+                        }
                     }
                 }
-                .day-dec {
-                    p {
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        margin: 1px 0px 1px 0px;
-                        padding: 3px 8px;
-                        border: 1px solid transparent;
-                        padding-right: 8px;
-                        border-radius: 4px;
+                .day-warpper {
+                    flex: 1;
+                    max-width: 14.29%;
+                    padding: 7px;
+                    cursor: pointer;
+                    .day-title{
+                        display: flex;
                         cursor: pointer;
+                        
+                        span{
+                            margin-left: auto;
+                            height: 20px;
+                            img{
+                                width: 10px;
+                            }
+                        }
+                        .title-text{
+                            margin: 0;
+                        }
                     }
-                    .post{
-                        background-color: #039be5;
-                        color: white;
-                       
-                    }
-                    .important {
-                        color:  white;
-                        background: rgba(217,98,129);
-                    }
-
-                    .schedule{
-                        color:  black;
+                    .day-dec {
+                        p {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            margin: 1px 0px 1px 0px;
+                            padding: 3px 8px;
+                            border: 1px solid transparent;
+                            padding-right: 8px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                        }
+                        .post{
+                            background-color: #039be5;
+                            color: white;
+                           
+                        }
+                        .important {
+                            color:  white;
+                            background: rgba(217,98,129);
+                        }
+    
+                        .schedule{
+                            color:  black;
+                        }
                     }
                 }
             }
         }
     }
-
 }
+
+.month-dim-layer {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+
+    .dim{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        opacity: .5;
+        filter: alpha(opacity=50);
+    }
+
+    .schedule-container {
+        width: 50%;
+        height: 70%;
+        background: white;
+        z-index: 1;
+        padding: 20px;
+        border-radius: 10px;
+        overflow: auto;
+
+        .schedule {
+            overflow: hidden;
+            text-overflow:ellipsis; 
+            white-space: nowrap;
+            margin: 5px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 0 10px 0 10px;
+        }
+
+        .important {
+            background: rgba(217,98,129);
+        }
+
+        .post {
+            background-color: #039be5;
+        }
+
+        .normal {
+            background-color: #eaeaea;
+        }
+
+        .text {
+            border-bottom: 4px solid black;
+            border-radius: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .today {
+            display: flex;
+            align-items: center;
+        }
+
+        .close-vertical {
+            margin-left: 10px;
+        }
+
+        .close {
+            margin-left: auto;
+        }
+
+    }
+  }

@@ -611,3 +611,45 @@ body {
   clip: rect(1px, 1px, 1px, 1px);
   clip-path: inset(50%);
 }
+.close {
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+.close:after {
+  content: '';
+  height: 30px;
+  border-left: 4px solid black;
+  position: absolute;
+  transform: rotate(45deg);
+  left: 13px;
+}
+.close:before {
+  content: '';
+  height: 30px;
+  border-left: 4px solid black;
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 13px;
+}
+.close-vertical {
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+.close-vertical:after {
+  content: '';
+  height: 30px;
+  border-left: 4px solid black;
+  position: absolute;
+  transform: rotate(90deg);
+  left: 14px;
+}
+.close-vertical:before {
+  content: '';
+  height: 30px;
+  border-left: 4px solid black;
+  position: absolute;
+  transform: rotate(0deg);
+  left: 13px;
+}

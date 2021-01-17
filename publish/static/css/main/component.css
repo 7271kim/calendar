@@ -1,54 +1,54 @@
 .main-section {
   height: 100%;
   min-height: 100%;
+}
+.main-section .view-month {
+  height: 100%;
+  min-height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   background-color: rgba(197, 224, 220, 0.2);
 }
-.main-section .row {
+.main-section .view-month .row {
   display: flex;
   margin: 0px 15px 0px 15px;
 }
-.main-section .title-wrapper {
+.main-section .view-month .title-wrapper {
   margin: 15px;
 }
-.main-section .title-wrapper div {
+.main-section .view-month .title-wrapper div {
   flex: none;
 }
-.main-section .title-wrapper .month {
+.main-section .view-month .title-wrapper .month {
   display: flex;
   flex: none;
 }
-.main-section .title-wrapper .month .month-arrow-left {
+.main-section .view-month .title-wrapper .month .month-arrow {
   cursor: pointer;
   display: flex;
 }
-.main-section .title-wrapper .month .month-title {
+.main-section .view-month .title-wrapper .month .month-title {
   cursor: pointer;
   margin: 0 10px 0 10px;
   line-height: 30px;
 }
-.main-section .title-wrapper .month .container-date-picker {
+.main-section .view-month .title-wrapper .month .container-date-picker {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.main-section .title-wrapper .month .container-date-picker .calendar-togle {
+.main-section .view-month .title-wrapper .month .container-date-picker .calendar-togle {
   cursor: pointer;
   margin-right: 10px;
 }
-.main-section .title-wrapper .month .month-arrow-right {
-  cursor: pointer;
-  display: flex;
-}
-.main-section .title-wrapper .calendar-icon {
+.main-section .view-month .title-wrapper .calendar-icon {
   margin-left: auto;
   cursor: pointer;
   position: relative;
 }
-.main-section .title-wrapper .calendar-icon .triangle {
+.main-section .view-month .title-wrapper .calendar-icon .triangle {
   border-style: solid;
   border-width: 15px;
   border-color: transparent transparent #B4C0D9 transparent;
@@ -56,7 +56,7 @@
   top: -30px;
   right: 15px;
 }
-.main-section .title-wrapper .calendar-icon .group-popup {
+.main-section .view-month .title-wrapper .calendar-icon .group-popup {
   position: absolute;
   width: 200px;
   left: -158px;
@@ -68,7 +68,7 @@
   background-color: #b4c0d9;
   border-radius: 10px;
 }
-.main-section .title-wrapper .calendar-icon .group-popup div {
+.main-section .view-month .title-wrapper .calendar-icon .group-popup div {
   height: 50px;
   line-height: 50px;
   font-family: 'NanumGothic';
@@ -76,24 +76,24 @@
   width: 100%;
   text-align: center;
 }
-.main-section .title-wrapper .calendar-icon .group-popup .current {
+.main-section .view-month .title-wrapper .calendar-icon .group-popup .current {
   font-family: 'NanumGothic bold';
   font-size: 16px;
 }
-.main-section .title-wrapper .cross {
+.main-section .view-month .title-wrapper .cross {
   margin: 0px 10px 0px 25px;
   cursor: pointer;
 }
-.main-section .week {
+.main-section .view-month .week {
   display: flex;
   background-color: rgba(236, 229, 206, 0.5);
 }
-.main-section .week .day-of-week {
+.main-section .view-month .week .day-of-week {
   flex: 1;
   text-align: center;
   line-height: 30px;
 }
-.main-section .day {
+.main-section .view-month .day {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -101,62 +101,58 @@
   margin-bottom: 15px;
   font-size: 15px;
 }
-.main-section .day .one-week {
+.main-section .view-month .day .one-week {
   display: flex;
   flex: 1;
   height: 25%;
   overflow: hidden;
 }
-.main-section .day .one-week .old.day-warpper,
-.main-section .day .one-week .new.day-warpper {
+.main-section .view-month .day .one-week .old.day-warpper,
+.main-section .view-month .day .one-week .new.day-warpper {
   color: #777777;
 }
-.main-section .day .one-week .old.day-warpper .day-dec .important,
-.main-section .day .one-week .new.day-warpper .day-dec .important {
-  background-color: transparent;
+.main-section .view-month .day .one-week .old.day-warpper .day-dec .important,
+.main-section .view-month .day .one-week .new.day-warpper .day-dec .important {
+  background-color: gainsboro;
   color: #777777;
 }
-.main-section .day .one-week .old.day-warpper .day-dec .post,
-.main-section .day .one-week .new.day-warpper .day-dec .post {
-  background-color: transparent;
+.main-section .view-month .day .one-week .old.day-warpper .day-dec .post,
+.main-section .view-month .day .one-week .new.day-warpper .day-dec .post {
+  background-color: gainsboro;
   color: #777777;
 }
-.main-section .day .one-week .old.day-warpper .day-dec .important,
-.main-section .day .one-week .new.day-warpper .day-dec .important {
-  color: #777777;
-  background-color: transparent;
-}
-.main-section .day .one-week .old.day-warpper .day-dec .schedule,
-.main-section .day .one-week .new.day-warpper .day-dec .schedule {
+.main-section .view-month .day .one-week .old.day-warpper .day-dec .schedule,
+.main-section .view-month .day .one-week .new.day-warpper .day-dec .schedule {
   color: #777777;
 }
-.main-section .day .one-week .today.day-warpper .day-title .title-text {
+.main-section .view-month .day .one-week .today.day-warpper .day-title .title-text {
   background: pink;
   border-radius: 50px;
   padding: 5px;
   font-size: 20px;
   font-weight: bold;
 }
-.main-section .day .one-week .day-warpper {
+.main-section .view-month .day .one-week .day-warpper {
   flex: 1;
   max-width: 14.29%;
   padding: 7px;
+  cursor: pointer;
 }
-.main-section .day .one-week .day-warpper .day-title {
+.main-section .view-month .day .one-week .day-warpper .day-title {
   display: flex;
   cursor: pointer;
 }
-.main-section .day .one-week .day-warpper .day-title span {
+.main-section .view-month .day .one-week .day-warpper .day-title span {
   margin-left: auto;
   height: 20px;
 }
-.main-section .day .one-week .day-warpper .day-title span img {
+.main-section .view-month .day .one-week .day-warpper .day-title span img {
   width: 10px;
 }
-.main-section .day .one-week .day-warpper .day-title .title-text {
+.main-section .view-month .day .one-week .day-warpper .day-title .title-text {
   margin: 0;
 }
-.main-section .day .one-week .day-warpper .day-dec p {
+.main-section .view-month .day .one-week .day-warpper .day-dec p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -167,14 +163,82 @@
   border-radius: 4px;
   cursor: pointer;
 }
-.main-section .day .one-week .day-warpper .day-dec .post {
+.main-section .view-month .day .one-week .day-warpper .day-dec .post {
   background-color: #039be5;
   color: white;
 }
-.main-section .day .one-week .day-warpper .day-dec .important {
+.main-section .view-month .day .one-week .day-warpper .day-dec .important {
   color: white;
   background: rgba(217, 98, 129);
 }
-.main-section .day .one-week .day-warpper .day-dec .schedule {
+.main-section .view-month .day .one-week .day-warpper .day-dec .schedule {
   color: black;
+}
+.month-dim-layer {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.month-dim-layer .dim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.month-dim-layer .schedule-container {
+  width: 50%;
+  height: 70%;
+  background: white;
+  z-index: 1;
+  padding: 20px;
+  border-radius: 10px;
+  overflow: auto;
+}
+.month-dim-layer .schedule-container .schedule {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 5px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 0 10px 0 10px;
+}
+.month-dim-layer .schedule-container .important {
+  background: rgba(217, 98, 129);
+}
+.month-dim-layer .schedule-container .post {
+  background-color: #039be5;
+}
+.month-dim-layer .schedule-container .normal {
+  background-color: #eaeaea;
+}
+.month-dim-layer .schedule-container .text {
+  border-bottom: 4px solid black;
+  border-radius: 0;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.month-dim-layer .schedule-container .today {
+  display: flex;
+  align-items: center;
+}
+.month-dim-layer .schedule-container .close-vertical {
+  margin-left: 10px;
+}
+.month-dim-layer .schedule-container .close {
+  margin-left: auto;
 }

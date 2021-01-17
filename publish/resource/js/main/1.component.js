@@ -1,7 +1,8 @@
 import { JTemplate, DatePicker } from "/js/common/component.js";
 
 (()=>{
-    let calendarIcon, calendarIconPop, monthTitleIcon, monthTitle, datePickerTitle, dayData
+    let calendarIcon, calendarIconPop, monthTitleIcon, monthTitle, 
+        datePickerTitle, dayData, preNextTitle, monthDimLayer 
 
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
@@ -18,6 +19,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         pickDate : moment(),
         startDate : '',
         endDate : '',
+        dbTotalData : {},
         drawObj :{
             'month' : {
                 'mainTitle' : 'test',
@@ -30,20 +32,32 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                             'scheduleList' : [
                                 {
                                     'class' : 'important',
-                                    'title' : '집밥'
+                                    'title' : '집밥',
+                                    'totalIndex' : '0'
                                 },
                                 {
                                     'class' : 'post',
-                                    'title' : 'post'
+                                    'title' : 'post',
+                                    'totalIndex' : '1'
                                 },
                                 {
                                     'class' : 'schedule',
-                                    'title' : 'schedule'
+                                    'title' : 'schedule',
+                                    'totalIndex' : '2'
                                 }
                             ]
                         }
                     ]
-                ]
+                ],
+                'clickItem' : {
+                    'today' : '',
+                    'clickList' : [
+                        {
+                            'className':'',
+                            'title' : ''
+                        }
+                    ]
+                }
             }
         }
     }
@@ -107,42 +121,31 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             if (startDate.isSame(moment({y: today.year(), M: today.month(), d: today.date()}))) {
                 className.push('today');
             }
-
+            const dbData = sharedObj.dbTotalData[startDate.format('YYYY-MM-DD')]
+            let dayList = [];
+            if ( dbData ){
+                for( const item of dbData ){
+                    let classCheck = '';
+                    if( item.important == 0 ){
+                        classCheck = 'schedule';
+                        
+                    } else if( item.important == 1 ){
+                        classCheck = 'important';
+                    }
+                    dayList.push( {
+                        'class' : classCheck,
+                        'title' : item.title
+                    })
+                }
+            }
+          
             const oneday = {
                 'wrapperClass' : `${className.join(' ')}`,
                 'count' : `${startDate.date()}`,
-                'scheduleList' : [
-                    {
-                        'class' : 'important',
-                        'title' : '집밥'
-                    },
-                    {
-                        'class' : 'post',
-                        'title' : 'post'
-                    },
-                    {
-                        'class' : 'schedule',
-                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                    },
-                    {
-                        'class' : 'schedule',
-                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                    },
-                    {
-                        'class' : 'schedule',
-                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                    },
-                    {
-                        'class' : 'schedule',
-                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                    },
-                    {
-                        'class' : 'schedule',
-                        'title' : 'scheduleeeeeeeeeeeeeeeeee'
-                    }
-                    
-                ]
+                'date' : startDate.format('YYYY-MM-DD'),
+                'scheduleList' :  dayList || []
             }
+
             oneWeekData.push(oneday);
             if( startDate.weekday() === endWeekday){
                 drawObj.daysData.push(oneWeekData)
@@ -161,9 +164,9 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         } else if( opts.showMode === 'month' ){
             settingWeek();
             settingMonth();
+            templateMonthUpdate();
             templateData.injectModel( sectionTarget.querySelectorAll('.title-wrapper'), 'monthTitle' , sharedObj.drawObj.month);
             templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
-            templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
         } else if( opts.showMode === 'year' ){
 
         }
@@ -173,12 +176,15 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         monthTitleIcon = document.getElementById('title-calendar-icon');
         monthTitle = document.getElementsByClassName('month-title')[0];
         dayData = document.getElementById('day-data');
+        preNextTitle = document.querySelectorAll('.month-arrow');
+        monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
 
         datePickerTitle = settingDatePickerTitle();
     }
     function getDateData( date ){
         let startDate,endDate;
         let selectedDate = opts.defaultDate;
+        sharedObj.dbTotalData={};
         
         if( date ){
             selectedDate = getMoment(date);
@@ -206,7 +212,121 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
         sharedObj.pickDate =selectedDate;
         sharedObj.startDate =startDate;
-        sharedObj.endDate =endDate;
+        sharedObj.endDate = endDate;
+        const dbTotalData = [
+            {
+                'title' : '집밥먹기',
+                'seq' : '1',
+                'content' : '집에서 밥먹기',
+                'important' : '1',
+                'startDate' : '2020-12-27',
+                'endDate' :  '2020-12-27',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : '집밥먹기',
+                'seq' : '1',
+                'content' : '집에서 밥먹기',
+                'important' :  '1',
+                'startDate' : '2021-01-17',
+                'endDate' :  '2021-01-20',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : '공부하기',
+                'seq' : '2',
+                'content' : '집에서 밥먹기sssss',
+                'important' :  '1',
+                'startDate' : '2021-01-17',
+                'endDate' :  '2021-01-20',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : 'ssssssss',
+                'seq' : '3',
+                'content' : 'sssssssssssss ssssssss sssssssssssssssssssss',
+                'important' :  '0',
+                'startDate' : '2021-01-17',
+                'endDate' :  '2021-01-20',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : 'ssssssss',
+                'seq' : '1',
+                'content' : 'ssssssss',
+                'important' :  '1',
+                'startDate' : '2021-01-11',
+                'endDate' :  '2021-01-13',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : '공부하기',
+                'seq' : '2',
+                'content' : '집에서 밥먹기sssss',
+                'important' :  '1',
+                'startDate' : '2021-01-19',
+                'endDate' :  '2021-01-20',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : 'ssssssss',
+                'seq' : '3',
+                'content' : 'sssssssssssss ssssssss sssssssssssssssssssss',
+                'important' : '0',
+                'startDate' : '2021-01-27',
+                'endDate' :  '2021-01-27',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : 'ssssssss',
+                'seq' : '1',
+                'content' : 'ssssssss',
+                'important' : '1',
+                'startDate' : '2021-01-28',
+                'endDate' :  '2021-01-28',
+                'latitude' : '',
+                'longitude'  :''
+            }
+        ]
+
+        for( const item of dbTotalData ) {
+            const startDate =  getMoment(item.startDate);
+            const endDate = getMoment(item.endDate).add(1,'day');
+            if( startDate.isValid() && endDate.isValid() ){
+
+                while( startDate.isBefore(endDate) ){
+                    const date = startDate.format('YYYY-MM-DD');
+                    if( !sharedObj.dbTotalData[date] ){
+                        sharedObj.dbTotalData[date] = [item];
+                    } else {
+                        sharedObj.dbTotalData[date].push(item);
+                    }
+                     
+                     startDate.add(1,'day');
+                }
+            }
+        }
+
+        for( const day in sharedObj.dbTotalData ){
+            let dayList = sharedObj.dbTotalData[day]
+            const important = [];
+            const normal = [];
+            for( const item of dayList ){
+                if( item.important ==='1' ) {
+                    important.push(item);
+                } else {
+                    normal.push(item);
+                }
+            }   
+            sharedObj.dbTotalData[day] = [...important, ...normal];
+        }
     }
 
     function getMoment( date ){
@@ -231,6 +351,26 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         calendarIconPop.addEventListener('click' , ionPopupClick);
         monthTitle.addEventListener('click' , openDatePicker);
         document.addEventListener('mousedown',addHiddenClass, true);
+
+        for( const item of preNextTitle ){
+            item.addEventListener('click', updatePreNext );
+        }
+        
+    }
+
+
+    function updatePreNext( event ){
+        const target = event.currentTarget;
+        const today =  getMoment(dayData.value);
+        
+        if(target.classList.contains('prev') ){
+            today.startOf('month').subtract(1,'day')
+        } else if ( target.classList.contains('next') ){
+            today.endOf('month').add(1,'day')
+        }
+        dayData.value = today.format('YYYY-MM-DD')
+        updateMonthDate( true );
+        datePickerTitle.updateDate(today);
     }
 
     function updateShowMode( showMode ){
@@ -268,6 +408,41 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         }
         
     }
+    function templateMonthUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
+        const eventTargets = document.querySelectorAll('.day-warpper');
+        if( eventTargets ){
+            for( const item of eventTargets ){
+                item.addEventListener('click', clickMonthDay);
+            }
+        }
+    }
+
+    function clickMonthDay( event ){
+        const target = event.currentTarget;
+        const date = target.dataset.index;
+        const daydata = sharedObj.dbTotalData[date];
+        const clickItem = sharedObj.drawObj.month.clickItem;
+        const clickList = clickItem.clickList = [];
+        
+
+        if( daydata ){
+            daydata.map( item =>{
+                const className = item.important ==='1' ? 'important': 'normal'
+                clickList.push({
+                    'className' : className,
+                    'title' : item.title
+                })
+            })
+        }
+        
+        clickItem.today = date;
+        templateData.injectModel( document.querySelectorAll('.schedule-container'), 'monthPopup' , sharedObj.drawObj.month);
+        monthDimLayer.classList.remove('hidden');
+        document.querySelector('.schedule-container .close').addEventListener('click' , (e)=>{
+            monthDimLayer.classList.add('hidden');
+        })
+    }
 
     function updateMonthDate( isForceUpdate ){
         
@@ -278,7 +453,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             monthTitle.textContent = newDate.format(opts.format);
             getDateData(newDate);
             settingMonth();
-            templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
+            templateMonthUpdate()
         }
     }
 

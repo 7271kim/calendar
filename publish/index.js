@@ -6,6 +6,7 @@ const path = require('path');
 const watcher = require('./less-js-watcher');
 const livereload = require('livereload');
 const livereloadMiddleware = require('connect-livereload');
+const exec = require('child_process').exec;
 
 const liveServer = livereload.createServer({
     exts:['html','css','js','less'],
@@ -43,5 +44,16 @@ app.use(( req, res, next )=>{
 })
 
 app.listen( app.get('port'), ()=>{
+    
+    exec( 'start chrome http://localhost:8001"', function (error, stdout, stderr) {
+        if (error !== null) {
+            console.log(error);
+        }
+
+        if (stdout) {
+            console.error(stdout);
+        }
+    });
+
     console.log(app.get('port'),'번 포트에서 대기 중');
 } )
