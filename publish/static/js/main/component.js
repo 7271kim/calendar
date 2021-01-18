@@ -192,7 +192,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         calendarIconPop = document.getElementById('icon-popup-target');
         monthTitleIcon = document.getElementById('title-calendar-icon');
         monthTitle = document.getElementsByClassName('month-title')[0];
-        dayData = document.getElementById('day-data');
+        dayData = document.getElementsByClassName('day-data')[0];
         preNextTitle = document.querySelectorAll('.month-arrow');
         resetToday = document.querySelector('#reset-today');
 
