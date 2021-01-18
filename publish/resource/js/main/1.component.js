@@ -22,7 +22,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         dbTotalData : {},
         drawObj :{
             'month' : {
-                'mainTitle' : 'test',
+                'mainTitle' : '',
                 'weekList' : [],
                 'daysData' : [
                     [
@@ -89,6 +89,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 }
             }
         }
+
+        templateWeekUpdate();
     }
     function settingMonth(){
         const startDate = sharedObj.startDate;
@@ -158,7 +160,9 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function templateMonthTitleUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.title-wrapper'), 'monthTitle' , sharedObj.drawObj.month);
-
+        titleUpdate();
+    }
+    function titleUpdate(){
         calendarIcon = document.getElementById('icon-popup');
         calendarIconPop = document.getElementById('icon-popup-target');
         monthTitleIcon = document.getElementById('title-calendar-icon');
@@ -194,17 +198,17 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         monthTitle.addEventListener('click' , openDatePicker );
         
          for( const item of preNextTitle ){
-            item.addEventListener('click', updatePreNext );
+            item.addEventListener('click', updatePreNextMonth );
         }
 
         datePickerTitle = settingDatePickerTitle( );
     }
     
-    function templateMontWeekUpdate(){
+    function templateWeekUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
     }
 
-    function drawTotal( isReDraw ){
+    function drawTotal(){
         if( opts.showMode === 'day' ){
             settingWeek();
         } else if( opts.showMode === 'week' ){
@@ -212,15 +216,15 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         } else if( opts.showMode === 'month' ){
             settingWeek();
             settingMonth();
+            templateMonthUpdate();
             templateMonthTitleUpdate();
-            templateMontWeekUpdate();
-
         } else if( opts.showMode === 'year' ){
             
         }
 
-        templateMonthTitleUpdate( isReDraw );
+        
         monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
+        themeChange();
         
     }
     function getDateData( date ){
@@ -383,11 +387,10 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         document.addEventListener('mousedown',addHiddenClass, true);
     }
 
-
-    function updatePreNext( event ){
+    function updatePreNextMonth( event ){
         const target = event.currentTarget;
         const today =  getMoment(dayData.value);
-        
+
         if(target.classList.contains('prev') ){
             today.startOf('month').subtract(1,'day')
         } else if ( target.classList.contains('next') ){
@@ -461,8 +464,10 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     }
 
     function addHiddenClass(event){
-        var target = event.target;
-        if( target.parentElement !== event.currentTarget.querySelector("#icon-popup-target") ) {
+        const target = event.target;
+        const currentTarget = event.currentTarget.querySelector("#icon-popup-target");
+
+        if( currentTarget && target.parentElement !==currentTarget ) {
             const classList = calendarIconPop.classList.add('hidden');
         }
         
@@ -491,7 +496,20 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
         e.target.classList.add('current');
         updateShowMode(e.target.dataset['showMode']);
-}
+    }
+
+    function themeChange(){
+        const viewTheme = document.querySelectorAll('.main-section .view-theme');
+        const tartget = document.querySelector(`.main-section .view-${opts.showMode}`);
+        for( const item of viewTheme ){
+            item.classList.add('hidden')
+        }
+
+        if( tartget ){
+            tartget.classList.remove('hidden');
+        }
+        
+    }
 
     function settingDatePickerTitle(){
         const target = document.getElementById("datetimepicker-notime");
