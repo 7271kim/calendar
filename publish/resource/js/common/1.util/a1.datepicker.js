@@ -1,19 +1,21 @@
 class DatePicker {
     static idx = 0;
-    static weakMapPickers = new WeakMap();
+    static mapPickers = {};
 
     static datetimepicker( targetDom, inputOpts ){
         if ( typeof moment === 'undefined' || !moment ) {
             throw new Error('moment.js 가 필요합니다.');
         }
         if( targetDom ){
-            if(!DatePicker.weakMapPickers.get(targetDom)){
-                const newDatePicker = new DatePicker( targetDom, inputOpts );
-                DatePicker.weakMapPickers.set( targetDom, newDatePicker )
-                return newDatePicker;
-            } else {
-                return DatePicker.weakMapPickers.get(targetDom);
-            }
+            const id = targetDom.getAttribute("id");
+            const newDatePicker = new DatePicker( targetDom, inputOpts );
+
+            if(DatePicker.mapPickers[id]){
+                DatePicker.mapPickers[id].widget.remove()
+            } 
+
+            DatePicker.mapPickers[id] = newDatePicker;
+            return newDatePicker;
         } else {
             throw new Error('target이 잘못되었습니다.');
         }

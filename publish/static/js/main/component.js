@@ -8,7 +8,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
     const opts = {
-        showMode : 'year', // day - 일 , week- 주 , month- 월, year- 년
+        showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
@@ -227,7 +227,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             item.addEventListener('click', updatePreNextMonth );
         }
 
-        datePickerTitle = settingDatePickerTitle( );
+        datePickerTitle = settingDatePickerTitle();
 
         resetToday.addEventListener('click', clickReset);
 
