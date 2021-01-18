@@ -636,8 +636,7 @@ class DatePicker {
         if( picker.opts.showDateOption ){
             picker.widget.querySelector('#today-button').addEventListener('click' , function (event){
                 const picker = this;
-                const defaultDate = picker.opts.defaultDate;
-                picker.updateDate ( defaultDate, false );
+                picker.updateDate ( moment(), false );
                 
             }.bind(picker));
         }

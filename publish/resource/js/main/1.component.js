@@ -8,7 +8,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
     const opts = {
-        showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
+        showMode : 'year', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
@@ -156,20 +156,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         }
     }
 
-    function drawTotal(){
-        if( opts.showMode === 'day' ){
-            settingWeek();
-        } else if( opts.showMode === 'week' ){
-            settingWeek();
-        } else if( opts.showMode === 'month' ){
-            settingWeek();
-            settingMonth();
-            templateMonthUpdate();
-            templateData.injectModel( sectionTarget.querySelectorAll('.title-wrapper'), 'monthTitle' , sharedObj.drawObj.month);
-            templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
-        } else if( opts.showMode === 'year' ){
-
-        }
+    function templateMonthTitleUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.title-wrapper'), 'monthTitle' , sharedObj.drawObj.month);
 
         calendarIcon = document.getElementById('icon-popup');
         calendarIconPop = document.getElementById('icon-popup-target');
@@ -177,9 +165,63 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         monthTitle = document.getElementsByClassName('month-title')[0];
         dayData = document.getElementById('day-data');
         preNextTitle = document.querySelectorAll('.month-arrow');
-        monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
 
-        datePickerTitle = settingDatePickerTitle();
+        if( opts.showMode === 'month' ){
+            document.querySelector('.title-wrapper div[data-show-mode=month]').classList.add('current');
+        } else if( opts.showMode === 'year' ){
+            document.querySelector('.title-wrapper div[data-show-mode=year]').classList.add('current');
+        } else if( opts.showMode === 'week' ){
+            document.querySelector('.title-wrapper div[data-show-mode=week]').classList.add('current');
+        } else {
+            document.querySelector('.title-wrapper div[data-show-mode=day]').classList.add('current');
+        }
+
+        settingTitleEvent();
+    }
+
+    function settingTitleEvent(){
+        calendarIcon.addEventListener('click' , (e)=>{
+            const classList = calendarIconPop.classList;
+            if( classList.contains('hidden') ){
+                classList.remove('hidden');
+            } else {
+                classList.add('hidden');
+            }
+            calendarIconPop.focus();
+        })
+        
+        calendarIconPop.addEventListener('click' , clickChangeShowMode );
+        monthTitle.addEventListener('click' , openDatePicker );
+        
+         for( const item of preNextTitle ){
+            item.addEventListener('click', updatePreNext );
+        }
+
+        datePickerTitle = settingDatePickerTitle( );
+    }
+    
+    function templateMontWeekUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
+    }
+
+    function drawTotal( isReDraw ){
+        if( opts.showMode === 'day' ){
+            settingWeek();
+        } else if( opts.showMode === 'week' ){
+            settingWeek();
+        } else if( opts.showMode === 'month' ){
+            settingWeek();
+            settingMonth();
+            templateMonthTitleUpdate();
+            templateMontWeekUpdate();
+
+        } else if( opts.showMode === 'year' ){
+            
+        }
+
+        templateMonthTitleUpdate( isReDraw );
+        monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
+        
     }
     function getDateData( date ){
         let startDate,endDate;
@@ -338,24 +380,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     }
    
     function settingEvent(){
-        calendarIcon.addEventListener('click' , (e)=>{
-            const classList = calendarIconPop.classList;
-            if( classList.contains('hidden') ){
-                classList.remove('hidden');
-            } else {
-                classList.add('hidden');
-            }
-            calendarIconPop.focus();
-        })
-
-        calendarIconPop.addEventListener('click' , ionPopupClick);
-        monthTitle.addEventListener('click' , openDatePicker);
         document.addEventListener('mousedown',addHiddenClass, true);
-
-        for( const item of preNextTitle ){
-            item.addEventListener('click', updatePreNext );
-        }
-        
     }
 
 
@@ -375,38 +400,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function updateShowMode( showMode ){
         opts.showMode = showMode;
-        if( showMode ==='month' ){
-            opts.giveCallback = updateMonthDate;
-            updateMonthDate( true );
-        } else {
-            templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , {
-                'mainTitle' : 'test',
-                'weekList' : [],
-                'daysData' : [
-                    [
-                        {   
-                            'wrapperClass' : '',
-                            'count' : '',
-                            'scheduleList' : [
-                                {
-                                    'class' : 'important',
-                                    'title' : '집밥'
-                                },
-                                {
-                                    'class' : 'post',
-                                    'title' : 'post'
-                                },
-                                {
-                                    'class' : 'schedule',
-                                    'title' : 'schedule'
-                                }
-                            ]
-                        }
-                    ]
-                ]
-            });
-        }
-        
+        drawTotal();
     }
     function templateMonthUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
@@ -437,6 +431,11 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         }
         
         clickItem.today = date;
+        templateMonthPopup();
+        
+    }
+
+    function templateMonthPopup(){
         templateData.injectModel( document.querySelectorAll('.schedule-container'), 'monthPopup' , sharedObj.drawObj.month);
         monthDimLayer.classList.remove('hidden');
         document.querySelector('.schedule-container .close').addEventListener('click' , (e)=>{
@@ -473,7 +472,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         const classList = calendarIconPop.classList.remove('hidden');
     }
     
-    function ionPopupClick(e){
+    function clickChangeShowMode(e){
         const classList = calendarIconPop.classList;
         if( classList.contains('hidden') ){
             classList.remove('hidden');
@@ -508,7 +507,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             minViewMode : opts.pickerMinViewMode,
             viewMode : opts.pickerViewMode,
             stepInterval : 5,
-            defaultDate : sharedObj.pickDate,
+            defaultDate : opts.defaultDate,
             callBackFun : updateMonthDate
          });
 
