@@ -28,6 +28,16 @@
   cursor: pointer;
   display: flex;
 }
+.main-section .view-theme .title-wrapper .month .today {
+  cursor: pointer;
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+}
+.main-section .view-theme .title-wrapper .month .today img {
+  width: 20px;
+  height: 20px;
+}
 .main-section .view-theme .title-wrapper .month .month-title {
   cursor: pointer;
   margin: 0 10px 0 10px;
@@ -168,8 +178,8 @@
   color: white;
 }
 .main-section .view-theme .day .one-week .day-warpper .day-dec .important {
-  color: white;
-  background: rgba(217, 98, 129);
+  color: #ff8787;
+  background: #C5E0DC;
 }
 .main-section .view-theme .day .one-week .day-warpper .day-dec .schedule {
   color: black;
@@ -202,6 +212,9 @@
 }
 .main-section .view-theme.view-year .year .one-row .title {
   flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
 }
 .main-section .view-theme.view-year .year .one-row .one-week {
   flex: 1;
@@ -212,6 +225,7 @@
 }
 .main-section .view-theme.view-year .year .one-row .one-week span {
   flex: 1;
+  font-size: 10px;
 }
 .main-section .view-theme.view-year .year .one-row .one-week .old,
 .main-section .view-theme.view-year .year .one-row .one-week .new {
@@ -220,10 +234,7 @@
 }
 .main-section .view-theme.view-year .year .one-row .one-week .check {
   position: relative;
-  background: pink;
-  border-radius: 50%;
-  padding: 5px;
-  font-size: 20px;
+  background: #C5E0DC;
   font-weight: bold;
 }
 .main-section .view-theme.view-year .year .one-row .one-week .check.old {
@@ -273,7 +284,8 @@
   padding: 0 10px 0 10px;
 }
 .month-dim-layer .schedule-container .important {
-  background: rgba(217, 98, 129);
+  color: black;
+  background: #C5E0DC;
   cursor: pointer;
 }
 .month-dim-layer .schedule-container .post {

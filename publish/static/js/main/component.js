@@ -2,7 +2,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
 (()=>{
     let calendarIcon, calendarIconPop, monthTitleIcon, monthTitle, 
-        datePickerTitle, dayData, preNextTitle, monthDimLayer 
+        datePickerTitle, dayData, preNextTitle, monthDimLayer,resetToday
 
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
@@ -12,7 +12,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
-        pickerViewMode : 'months'
+        pickerViewMode : 'months',
+        callBackFun : updateMonthDate
     }
 
     const sharedObj = {
@@ -58,6 +59,25 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                         }
                     ]
                 }
+            },
+            'year' : {
+                'mainTitle' : '',
+                'totalList' : [
+                    [
+                        {
+                            'monthDate' : '',
+                            'monthFormat' : '',
+                            'dayList' : [
+                                [
+                                    {
+                                        'class' : '',
+                                        'date' : ''
+                                    }
+                                ]
+                            ]
+                        }
+                    ]
+                ]
             }
         }
     }
@@ -156,6 +176,11 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
             startDate.add(1,'day');
         }
+
+        opts.pickerViewMode = 'months';
+        opts.pickerMinViewMode = 'months';
+        
+        opts.callBackFun = updateMonthDate;
     }
 
     function templateMonthTitleUpdate(){
@@ -169,6 +194,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         monthTitle = document.getElementsByClassName('month-title')[0];
         dayData = document.getElementById('day-data');
         preNextTitle = document.querySelectorAll('.month-arrow');
+        resetToday = document.querySelector('#reset-today');
 
         if( opts.showMode === 'month' ){
             document.querySelector('.title-wrapper div[data-show-mode=month]').classList.add('current');
@@ -202,13 +228,141 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         }
 
         datePickerTitle = settingDatePickerTitle( );
+
+        resetToday.addEventListener('click', clickReset);
+
     }
     
+    function clickReset(e){
+        opts.defaultDate = moment();
+        drawTotal();
+    }
+
     function templateWeekUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
     }
 
+    function settingYears(){
+        let startDate = sharedObj.startDate;
+        const drawObj = sharedObj.drawObj.year;
+        const endWeekday = moment().endOf('week').weekday();
+        const today= moment();
+
+        let count = 0;
+
+
+        drawObj.totalList=[];
+        drawObj.mainTitle = sharedObj.pickDate.format('YYYY');
+        
+        let tempMonth =  startDate.year();
+
+        for( let column = 1; column <= 3; column++ ){
+            let fourMonthList = [];
+
+            for( let row = 1; row <=4; row++ ){
+                const prevMonth = getMoment(startDate).subtract(1,'months');
+                prevMonth.date(prevMonth.daysInMonth()).startOf('week');
+                
+                const tempStartDate = prevMonth;
+                const tempEndDate = getMoment(prevMonth).add(41, 'days').endOf('day');	
+                const year = startDate.year();
+                const month = startDate.month();
+
+                startDate = getMoment(tempStartDate);
+
+                let oneWeekData =[];
+                let dayList = [];
+
+                while( tempStartDate.isBefore(tempEndDate) ){
+                    const className = [];
+                    if (tempStartDate.year() < year || (tempStartDate.year() === year && tempStartDate.month() < month)) {
+                        className.push('old');
+                    } 
+                    
+                    if (tempStartDate.year() > year || (tempStartDate.year() === year && tempStartDate.month() > month)) {
+                        className.push('new');
+                    }
+                    
+                    if (tempStartDate.isSame(moment({y: today.year(), M: today.month(), d: today.date()}))) {
+                        className.push('today');
+                    }
+                    const dbData = sharedObj.dbTotalData[tempStartDate.format('YYYY-MM-DD')]
+                    if ( dbData ){
+                        className.push('check');
+                    }
+                
+                    const oneday = {
+                        'class' : `${className.join(' ')}`,
+                        'date' : tempStartDate.date(),
+                    }
+
+                    oneWeekData.push(oneday);
+                    if( tempStartDate.weekday() === endWeekday){
+                        dayList.push(oneWeekData)
+                        oneWeekData = [];
+                    }
+                    tempStartDate.add(1,'day');
+                    startDate.add(1,'day');
+                }
+
+                const beforeMonth = getMoment(startDate).subtract(1,'month');
+
+                fourMonthList.push({
+                    monthDate : beforeMonth.format('YYYY-MM-01'),
+                    monthFormat : beforeMonth.format('YYYY년 MM월'),
+                    dayList : dayList
+                })
+            }
+            drawObj.totalList.push( fourMonthList );
+        }
+
+        opts.pickerMinViewMode = 'years';
+        opts.pickerViewMode = 'years';
+        opts.callBackFun = updateYearDate;
+    }
+
+    function templateYearUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.year-wrapper'), 'yearData' , sharedObj.drawObj.year);
+        const calendarMonth = document.querySelectorAll('.calendar-month');
+
+        if( calendarMonth.length > 0 ){
+            for( const item of calendarMonth ){
+                item.addEventListener('click', clickYear );
+            }
+        }
+        
+    }
+
+    function clickYear ( event ) {
+        const currentTarget = event.currentTarget;
+        const date = currentTarget.dataset['index'];
+        opts.defaultDate = getMoment(date);
+        opts.pickerViewMode = 'months';
+        opts.pickerMinViewMode = 'months';
+        updateShowMode('month');
+    }
+
+    function templateTitleUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-year .title-wrapper'), 'yearTitle' , sharedObj.drawObj.year);
+        titleUpdate();
+    }
+    function resetDom(){
+        document.querySelector('.view-month .title-wrapper').textContent = '';
+        document.querySelector('.view-month .week-wrapper').textContent = '';
+        document.querySelector('.view-month .day-wrapper').textContent = '';
+        document.querySelector('.view-year .title-wrapper').textContent = '';
+        document.querySelector('.view-year .year-wrapper').textContent = '';
+        document.querySelector('.view-week .title-wrapper').textContent = '';
+        document.querySelector('.view-week .week-wrapper').textContent = '';
+        document.querySelector('.view-week .day-wrapper').textContent = '';
+        document.querySelector('.view-day .title-wrapper').textContent = '';
+        document.querySelector('.view-day .week-wrapper').textContent = '';
+        document.querySelector('.view-day .day-wrapper').textContent = '';
+    }
+
     function drawTotal(){
+        resetDom()
+        themeChange();
         if( opts.showMode === 'day' ){
             settingWeek();
         } else if( opts.showMode === 'week' ){
@@ -219,13 +373,10 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             templateMonthUpdate();
             templateMonthTitleUpdate();
         } else if( opts.showMode === 'year' ){
-            
+            settingYears();
+            templateYearUpdate();
+            templateTitleUpdate();
         }
-
-        
-        monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
-        themeChange();
-        
     }
     function getDateData( date ){
         let startDate,endDate;
@@ -387,22 +538,64 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         document.addEventListener('mousedown',addHiddenClass, true);
     }
 
+    function updateYearDate( isForceUpdate ){
+        const newDate = getMoment(dayData.value);
+        
+        // 강제로 업데이트 하거나, pick한 날짜가 오늘일 아닐때만 업데이트
+        if( isForceUpdate || !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
+            monthTitle.textContent = newDate.format("YYYY");
+            opts.defaultDate = newDate;
+            getDateData(newDate);
+            settingYears();
+            templateYearUpdate()
+        }
+    }
+
     function updatePreNextMonth( event ){
         const target = event.currentTarget;
         const today =  getMoment(dayData.value);
 
         if(target.classList.contains('prev') ){
-            today.startOf('month').subtract(1,'day')
+            if( opts.showMode ==='month' ){
+                today.startOf('month').subtract(1,'day')
+            } else if( opts.showMode ==='year'){
+                today.startOf('year').subtract(1,'day')
+            } else if ( opts.showMode === 'week' ){
+
+            } else if( opts.showMode === 'day'){
+
+            }
         } else if ( target.classList.contains('next') ){
-            today.endOf('month').add(1,'day')
+            if( opts.showMode ==='month' ){
+                today.endOf('month').add(1,'day')
+            } else if( opts.showMode ==='year'){
+                today.endOf('year').add(1,'day')
+            } else if ( opts.showMode === 'week' ){
+
+            } else if( opts.showMode === 'day'){
+
+            }
         }
-        dayData.value = today.format('YYYY-MM-DD')
-        updateMonthDate( true );
+
+        dayData.value = today.format('YYYY-MM-DD');
         datePickerTitle.updateDate(today);
+
+        if( opts.showMode ==='month' ){
+            updateMonthDate( true );
+        } else if( opts.showMode ==='year'){
+            updateYearDate( true );
+        } else if ( opts.showMode === 'week' ){
+
+        } else if( opts.showMode === 'day'){
+
+        }
+        
     }
 
     function updateShowMode( showMode ){
         opts.showMode = showMode;
+
+        getDateData( getMoment(sharedObj.pickDate) );
         drawTotal();
     }
     function templateMonthUpdate(){
@@ -440,6 +633,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function templateMonthPopup(){
         templateData.injectModel( document.querySelectorAll('.schedule-container'), 'monthPopup' , sharedObj.drawObj.month);
+        monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
         monthDimLayer.classList.remove('hidden');
         document.querySelector('.schedule-container .close').addEventListener('click' , (e)=>{
             monthDimLayer.classList.add('hidden');
@@ -453,6 +647,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         // 강제로 업데이트 하거나, pick한 날짜가 오늘일 아닐때만 업데이트
         if( isForceUpdate || !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
             monthTitle.textContent = newDate.format(opts.format);
+            opts.defaultDate = newDate;
             getDateData(newDate);
             settingMonth();
             templateMonthUpdate()
@@ -526,7 +721,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             viewMode : opts.pickerViewMode,
             stepInterval : 5,
             defaultDate : opts.defaultDate,
-            callBackFun : updateMonthDate
+            callBackFun : opts.callBackFun
          });
 
          return datePickerTitle;

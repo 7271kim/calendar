@@ -6,7 +6,7 @@ class DatePicker {
         if ( typeof moment === 'undefined' || !moment ) {
             throw new Error('moment.js 가 필요합니다.');
         }
-        if( targetDom && !DatePicker.weakMapPickers.get(targetDom) ){
+        if( targetDom ){
             if(!DatePicker.weakMapPickers.get(targetDom)){
                 const newDatePicker = new DatePicker( targetDom, inputOpts );
                 DatePicker.weakMapPickers.set( targetDom, newDatePicker )
@@ -192,7 +192,7 @@ class DatePicker {
             defaultDate : moment(),
             language : 'ko',
             direction : 'auto',
-            minViewMode : '',
+            minViewMode : '', // months, years
             viewMode : '',
             disabledDates : [],
             minDate : moment().add(-100,'year').startOf('year'),
@@ -636,8 +636,7 @@ class DatePicker {
         if( picker.opts.showDateOption ){
             picker.widget.querySelector('#today-button').addEventListener('click' , function (event){
                 const picker = this;
-                const defaultDate = picker.opts.defaultDate;
-                picker.updateDate ( defaultDate, false );
+                picker.updateDate ( moment(), false );
                 
             }.bind(picker));
         }
