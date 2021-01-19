@@ -242,6 +242,24 @@
   opacity: 0.4;
   color: #777777;
 }
+.main-section .view-theme.view-week {
+  min-width: 910px;
+}
+.main-section .view-theme.view-week .day-wrapper {
+  overflow: auto;
+}
+.main-section .view-theme.view-week .day-wrapper thead {
+  line-height: 50px;
+}
+.main-section .view-theme.view-week .day-wrapper tbody tr {
+  height: 40px;
+  border-bottom: 1px dashed;
+  border-top: 1px dashed;
+}
+.main-section .view-theme.view-week .day-wrapper tbody tr td {
+  vertical-align: middle;
+  position: relative;
+}
 .month-dim-layer {
   display: flex;
   justify-items: center;

@@ -8,7 +8,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
     const opts = {
-        showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
+        showMode : 'week', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
@@ -352,12 +352,6 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         document.querySelector('.view-month .day-wrapper').textContent = '';
         document.querySelector('.view-year .title-wrapper').textContent = '';
         document.querySelector('.view-year .year-wrapper').textContent = '';
-        document.querySelector('.view-week .title-wrapper').textContent = '';
-        document.querySelector('.view-week .week-wrapper').textContent = '';
-        document.querySelector('.view-week .day-wrapper').textContent = '';
-        document.querySelector('.view-day .title-wrapper').textContent = '';
-        document.querySelector('.view-day .week-wrapper').textContent = '';
-        document.querySelector('.view-day .day-wrapper').textContent = '';
     }
 
     function drawTotal(){
@@ -366,7 +360,9 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         if( opts.showMode === 'day' ){
             settingWeek();
         } else if( opts.showMode === 'week' ){
-            settingWeek();
+            templateWeekTitleUpdate();
+            settingWeekData();
+            templateWeekUpdate();
         } else if( opts.showMode === 'month' ){
             settingWeek();
             settingMonth();
@@ -378,6 +374,88 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             templateTitleUpdate();
         }
     }
+
+    function templateWeekUpdate(){
+        const startDate = getMoment(sharedObj.startDate);
+        const endDate = getMoment(sharedObj.endDate);
+        const endWeekday = moment().endOf('week').weekday();
+        const weekTarget = document.querySelectorAll('.view-week .day-wrapper thead th');
+        const localWeekdate = moment().localeData()._weekdaysMin;
+        for( let index=1; index < 8; index++ ){
+            const day = localWeekdate[startDate.day()];
+            const title = `${startDate.format('YYYY-MM-DD')} (${day})`;
+            weekTarget[index].textContent = title;
+            startDate.add(1,'day')
+        }
+
+        //opts.callBackFun = updateMonthDate;
+    }
+
+    function settingWeekData(){
+        const startDate = getMoment(sharedObj.startDate);
+        const endDate = getMoment(sharedObj.endDate);
+        const targetTdAll = document.querySelectorAll('.view-week .day-wrapper tbody td');
+        const mapObj = new Map();
+
+        for( let index=1; index < 8; index++ ){
+            const dbData = sharedObj.dbTotalData[startDate.format('YYYY-MM-DD')];
+            if( dbData ){
+                for( let itemIndex = dbData.length-1; itemIndex >= 0; itemIndex-- ){
+                    const item = dbData[itemIndex];
+                    const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh');
+                    const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh');
+                    const tempDay = getMoment(startDate);
+                    for( let hour = 0; hour < 25; hour++ ){
+                        const isBetween = tempDay.isSame(itemStartDate) || tempDay.isAfter(itemStartDate) && tempDay.isBefore(itemEndDate);
+                        if( isBetween ){
+                            const tartgetTd = targetTdAll[hour*8 + index];
+                            if( mapObj.get(tartgetTd) ){
+                                const before = mapObj.get(tartgetTd).push(item);
+                            } else{
+                                const before = mapObj.set(tartgetTd,[item]);
+                            }
+                        }
+                        tempDay.add(1,'hours');
+                    }
+                }
+            }
+            
+            startDate.add(1,'day')
+        }
+
+        for( const [targetTd, value] of mapObj ){
+            const lengthItem = value.length;
+            const parentEl = targetTd.parentElement;
+            const wrapWidh = (parentEl.clientWidth)/8;
+            const wrapHeight = targetTd.parentElement.clientHeight;
+            let leftIndex = 0;
+            for( const item of value  ){
+                const tempDiv = document.createElement('div');
+                tempDiv.textContent = item.title;
+                tempDiv.style.width = `${wrapWidh/lengthItem}px`
+                tempDiv.style.float = 'left';
+                tempDiv.style.overflow = 'hidden';
+                tempDiv.style['text-overflow'] = 'ellipsis';
+                tempDiv.style['white-space'] = 'nowrap';
+                tempDiv.style['line-height'] = `${wrapHeight}px`;
+                tempDiv.style['cursor'] = `pointer`;
+                tempDiv.style['background'] = `${item.bgColor}`;
+                tempDiv.style['text-align'] = `center`;
+                tempDiv.style['position'] = `absolute`;
+                tempDiv.style['top'] = `0`;
+                tempDiv.style['left'] = `${leftIndex}px`;
+                targetTd.appendChild(tempDiv);
+                leftIndex += wrapWidh/lengthItem;
+            }
+        }
+    }
+
+    function templateWeekTitleUpdate(){
+        const startDate = sharedObj.startDate;
+        const titleTarget = document.querySelector('.view-week .title-wrapper .month-title');
+        titleTarget.textContent = startDate.format("YYYY-MM-DD");
+    }
+
     function getDateData( date ){
         let startDate,endDate;
         let selectedDate = opts.defaultDate;
@@ -422,32 +500,52 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 'longitude'  :''
             },
             {
-                'title' : '집밥먹기',
-                'seq' : '1',
-                'content' : '집에서 밥먹기',
-                'important' :  '1',
-                'startDate' : '2021-01-17',
-                'endDate' :  '2021-01-20',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '공부하기',
+                'title' : '공부하ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ기',
                 'seq' : '2',
                 'content' : '집에서 밥먹기sssss',
                 'important' :  '1',
-                'startDate' : '2021-01-17',
-                'endDate' :  '2021-01-20',
+                'startDate' : '2021-01-17 13:00',
+                'endDate' :  '2021-01-18 15:00',
                 'latitude' : '',
                 'longitude'  :''
             },
             {
-                'title' : 'ssssssss',
-                'seq' : '3',
-                'content' : 'sssssssssssss ssssssss sssssssssssssssssssss',
-                'important' :  '0',
-                'startDate' : '2021-01-17',
-                'endDate' :  '2021-01-20',
+                'title' : '공부하ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ기',
+                'seq' : '2',
+                'content' : '집에서 밥먹기sssss',
+                'important' :  '1',
+                'startDate' : '2021-01-17 13:00',
+                'endDate' :  '2021-01-17 15:00',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : '공부하ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ기',
+                'seq' : '2',
+                'content' : '집에서 밥먹기sssss',
+                'important' :  '1',
+                'startDate' : '2021-01-17 13:00',
+                'endDate' :  '2021-01-17 15:00',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : '아하아하',
+                'seq' : '2',
+                'content' : '집에서 밥먹기sssss',
+                'important' :  '1',
+                'startDate' : '2021-01-17 13:00',
+                'endDate' :  '2021-01-17 17:00',
+                'latitude' : '',
+                'longitude'  :''
+            },
+            {
+                'title' : 'ㅋㅋㅋ',
+                'seq' : '2',
+                'content' : '집에서 밥먹기sssss',
+                'important' :  '1',
+                'startDate' : '2021-01-17 13:00',
+                'endDate' :  '2021-01-17 15:00',
                 'latitude' : '',
                 'longitude'  :''
             },
@@ -467,7 +565,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 'content' : '집에서 밥먹기sssss',
                 'important' :  '1',
                 'startDate' : '2021-01-19',
-                'endDate' :  '2021-01-20',
+                'endDate' :  '2021-01-19',
                 'latitude' : '',
                 'longitude'  :''
             },
@@ -476,8 +574,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 'seq' : '3',
                 'content' : 'sssssssssssss ssssssss sssssssssssssssssssss',
                 'important' : '0',
-                'startDate' : '2021-01-27',
-                'endDate' :  '2021-01-27',
+                'startDate' : '2021-01-27 13:00:00',
+                'endDate' :  '2021-01-27 15:00:00',
                 'latitude' : '',
                 'longitude'  :''
             },
@@ -492,10 +590,18 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 'longitude'  :''
             }
         ]
+        
+        const colorSet = ['#F3FBFF','#DFF3FF','#C9EBFF','#FAFBE9','#AAA9A2'];
+        let colorIndex = 0;
 
         for( const item of dbTotalData ) {
             const startDate =  getMoment(item.startDate);
             const endDate = getMoment(item.endDate).add(1,'day');
+            if( colorIndex == colorSet.length ){
+                colorIndex = 0;
+            }
+            item.bgColor = colorSet[colorIndex++];
+
             if( startDate.isValid() && endDate.isValid() ){
 
                 while( startDate.isBefore(endDate) ){
@@ -694,8 +800,12 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     }
 
     function themeChange(){
+        let classT = opts.showMode;
+        if( opts.showMode === 'day' ){
+            classT = 'week'
+        }
         const viewTheme = document.querySelectorAll('.main-section .view-theme');
-        const tartget = document.querySelector(`.main-section .view-${opts.showMode}`);
+        const tartget = document.querySelector(`.main-section .view-${classT}`);
         for( const item of viewTheme ){
             item.classList.add('hidden')
         }
