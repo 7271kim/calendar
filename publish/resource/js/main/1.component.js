@@ -1,14 +1,14 @@
 import { JTemplate, DatePicker } from "/js/common/component.js";
 
 (()=>{
-    let calendarIcon, calendarIconPop, monthTitleIcon, monthTitle, 
+    let calendarIcon, calendarIconPop, monthWarapper , monthTitleIcon, monthTitle, 
         datePickerTitle, dayData, preNextTitle, monthDimLayer,resetToday
 
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
     const opts = {
-        showMode : 'week', // day - 일 , week- 주 , month- 월, year- 년
+        showMode : 'day', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
@@ -110,7 +110,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             }
         }
 
-        templateWeekUpdate();
+        templateWeekGlobalUpdate();
     }
     function settingMonth(){
         const startDate = sharedObj.startDate;
@@ -209,17 +209,18 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         settingTitleEvent();
     }
 
+    function toggleHide(){
+        const classList = calendarIconPop.classList;
+        if( classList.contains('hidden') ){
+            classList.remove('hidden');
+        } else {
+            classList.add('hidden');
+        }
+        calendarIconPop.focus();
+    }
+
     function settingTitleEvent(){
-        calendarIcon.addEventListener('click' , (e)=>{
-            const classList = calendarIconPop.classList;
-            if( classList.contains('hidden') ){
-                classList.remove('hidden');
-            } else {
-                classList.add('hidden');
-            }
-            calendarIconPop.focus();
-        })
-        
+        calendarIcon.addEventListener('click' , toggleHide );
         calendarIconPop.addEventListener('click' , clickChangeShowMode );
         monthTitle.addEventListener('click' , openDatePicker );
         
@@ -238,7 +239,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         drawTotal();
     }
 
-    function templateWeekUpdate(){
+    function templateWeekGlobalUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.week-wrapper'), 'monthWeek' , sharedObj.drawObj.month);
     }
 
@@ -352,13 +353,18 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         document.querySelector('.view-month .day-wrapper').textContent = '';
         document.querySelector('.view-year .title-wrapper').textContent = '';
         document.querySelector('.view-year .year-wrapper').textContent = '';
+        document.querySelector('.view-week .title-wrapper').textContent = '';
+        document.querySelector('.view-week .day-wrapper').textContent = '';
+        document.querySelector('.view-day .title-wrapper').textContent = '';
+        document.querySelector('.view-day .day-wrapper').textContent = '';
     }
 
     function drawTotal(){
         resetDom()
         themeChange();
         if( opts.showMode === 'day' ){
-            settingWeek();
+            settingTodayData();
+            templateDayTitleUpdate()
         } else if( opts.showMode === 'week' ){
             settingWeekData();
             templateWeekUpdate();
@@ -373,6 +379,85 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             templateYearUpdate();
             templateTitleUpdate();
         }
+    }
+    function templateDayTitleUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-day .title-wrapper'), 'todayTitle' , {});
+        const startDate = sharedObj.startDate;
+        const titleTarget = document.querySelector('.view-day .title-wrapper .month-title');
+        titleTarget.textContent = startDate.format("YYYY-MM-DD");
+        titleUpdate();
+    }
+
+    function settingTodayData(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-day .day-wrapper'), 'todayData' , {});
+        const startDate = moment({y: sharedObj.startDate.year(), M: sharedObj.startDate.month(), d: sharedObj.startDate.date()});
+        const endDate = getMoment(sharedObj.endDate);
+        const targetTdAll = document.querySelectorAll('.view-day .day-wrapper tbody td');
+        const mapObj = new Map();
+
+        for( const item of targetTdAll ){
+            if( !item.classList.contains('time') ) {
+                item.textContent = '';
+            }
+        }
+
+        const dbData = sharedObj.dbTotalData[startDate.format('YYYY-MM-DD')];
+        if( dbData ){
+            for( let itemIndex = dbData.length-1; itemIndex >= 0; itemIndex-- ){
+                const item = dbData[itemIndex];
+                const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh');
+                const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh');
+                const tempDay = getMoment(startDate);
+                for( let hour = 0; hour < 25; hour++ ){
+                    const isBetween = tempDay.isSame(itemStartDate) || tempDay.isAfter(itemStartDate) && tempDay.isBefore(itemEndDate);
+                    if( isBetween ){
+                        const tartgetTd = targetTdAll[hour*2+1];
+                        if( mapObj.get(tartgetTd) ){
+                            const before = mapObj.get(tartgetTd).push(item);
+                        } else{
+                            const before = mapObj.set(tartgetTd,[item]);
+                        }
+                    }
+                    tempDay.add(1,'hours');
+                }
+            }
+        }
+
+        for( const [targetTd, value] of mapObj ){
+            const lengthItem = value.length;
+            const parentEl = targetTd.parentElement;
+            const wrapWidh = (parentEl.clientWidth-50);
+            const wrapHeight = targetTd.parentElement.clientHeight;
+            let leftIndex = 0;
+            for( const item of value  ){
+                const tempDiv = document.createElement('div');
+                tempDiv.textContent = item.title;
+                tempDiv.style.width = `${wrapWidh/lengthItem}px`
+                tempDiv.style.float = 'left';
+                tempDiv.style.overflow = 'hidden';
+                tempDiv.style['text-overflow'] = 'ellipsis';
+                tempDiv.style['white-space'] = 'nowrap';
+                tempDiv.style['line-height'] = `${wrapHeight}px`;
+                tempDiv.style['cursor'] = `pointer`;
+                tempDiv.style['background'] = `${item.bgColor}`;
+                tempDiv.style['text-align'] = `center`;
+                tempDiv.style['position'] = `absolute`;
+                tempDiv.style['top'] = `0`;
+                tempDiv.style['left'] = `${leftIndex}px`;
+                targetTd.appendChild(tempDiv);
+                leftIndex += wrapWidh/lengthItem;
+            }
+        }
+
+        opts.pickerMinViewMode = '';
+        opts.pickerViewMode = '';
+        opts.callBackFun = updateTodaydate;
+
+        const weekTarget = document.querySelectorAll('.view-day .day-wrapper thead th');
+        const localWeekdate = moment().localeData()._weekdaysMin;
+        const day = localWeekdate[startDate.day()];
+        const title = `${startDate.format('YYYY-MM-DD')} (${day})`;
+        weekTarget[1].textContent = title;
     }
 
     function templateWeekUpdate(){
@@ -390,8 +475,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     }
 
     function settingWeekData(){
-        const startDate = getMoment(sharedObj.startDate);
-        const endDate = getMoment(sharedObj.endDate);
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-week .day-wrapper'), 'weekDayData' , {});
+        const startDate = moment({y: sharedObj.startDate.year(), M: sharedObj.startDate.month(), d: sharedObj.startDate.date()});
         const targetTdAll = document.querySelectorAll('.view-week .day-wrapper tbody td');
         const mapObj = new Map();
 
@@ -430,7 +515,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         for( const [targetTd, value] of mapObj ){
             const lengthItem = value.length;
             const parentEl = targetTd.parentElement;
-            const wrapWidh = (parentEl.clientWidth)/8;
+            const wrapWidh = (parentEl.clientWidth-50)/7;
             const wrapHeight = targetTd.parentElement.clientHeight;
             let leftIndex = 0;
             for( const item of value  ){
@@ -460,9 +545,24 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function updateWeekStyle(){
         const targetTdAll = document.querySelectorAll('.view-week .day-wrapper tbody td');
+        const targetTdDayAll = document.querySelectorAll('.view-day .day-wrapper tbody td');
         
         for( const item of targetTdAll ){
-            const wrapWidh = (item.parentElement.clientWidth)/8;
+            const wrapWidh = (item.parentElement.clientWidth -50)/7;
+            const innderDiv = item.querySelectorAll('div');
+            if( innderDiv.length > 0 ){
+                let leftIndex = 0;
+                for( const div of innderDiv ){
+                    const widh = wrapWidh/innderDiv.length;
+                    div.style.width = `${widh}px`
+                    div.style['left'] = `${leftIndex}px`;
+                    leftIndex += widh;
+                }
+            }
+        }
+
+        for( const item of targetTdDayAll ){
+            const wrapWidh = (item.parentElement.clientWidth -50);
             const innderDiv = item.querySelectorAll('div');
             if( innderDiv.length > 0 ){
                 let leftIndex = 0;
@@ -477,6 +577,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     }
 
     function templateWeekTitleUpdate(){
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-week .title-wrapper'), 'weekTitleData' , {});
         const startDate = sharedObj.startDate;
         const titleTarget = document.querySelector('.view-week .title-wrapper .month-title');
         titleTarget.textContent = startDate.format("YYYY-MM-DD");
@@ -494,9 +595,12 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         
         switch (opts.showMode){
             case 'week' :
+                startDate = getMoment(selectedDate).startOf('week');
+                endDate = getMoment(selectedDate).endOf('week');
+                break;
             case 'day' : 
-                    startDate = getMoment(selectedDate).startOf('week');
-                    endDate = getMoment(selectedDate).endOf('week');
+                    startDate = getMoment(selectedDate);
+                    endDate = getMoment(selectedDate);
                 break;
             case 'month' :
                     const prevMonth = getMoment(selectedDate).subtract(1,'months');
@@ -697,7 +801,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             } else if ( opts.showMode === 'week' ){
                 today.startOf('week').subtract(1,'day')
             } else if( opts.showMode === 'day'){
-
+                today.subtract(1,'day')
             }
         } else if ( target.classList.contains('next') ){
             if( opts.showMode ==='month' ){
@@ -707,7 +811,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             } else if ( opts.showMode === 'week' ){
                 today.endOf('week').add(1,'day')
             } else if( opts.showMode === 'day'){
-
+                today.add(1,'day')
             }
         }
 
@@ -721,9 +825,20 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         } else if ( opts.showMode === 'week' ){
             updateWeekDate(true);
         } else if( opts.showMode === 'day'){
-
+            updateTodaydate(true);
         }
         
+    }
+
+    function updateTodaydate( isForceUpdate ){
+        const newDate = getMoment(dayData.value);
+        
+        if( isForceUpdate || !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
+            monthTitle.textContent = newDate.format("YYYY-MM-DD");
+            opts.defaultDate = newDate;
+            getDateData(newDate);
+            settingTodayData();
+        }
     }
 
     function updateWeekDate( isForceUpdate ){
@@ -842,9 +957,6 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function themeChange(){
         let classT = opts.showMode;
-        if( opts.showMode === 'day' ){
-            classT = 'week'
-        }
         const viewTheme = document.querySelectorAll('.main-section .view-theme');
         const tartget = document.querySelector(`.main-section .view-${classT}`);
         for( const item of viewTheme ){
