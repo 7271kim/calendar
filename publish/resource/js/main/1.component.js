@@ -360,9 +360,9 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         if( opts.showMode === 'day' ){
             settingWeek();
         } else if( opts.showMode === 'week' ){
-            templateWeekTitleUpdate();
             settingWeekData();
             templateWeekUpdate();
+            templateWeekTitleUpdate();
         } else if( opts.showMode === 'month' ){
             settingWeek();
             settingMonth();
@@ -387,8 +387,6 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             weekTarget[index].textContent = title;
             startDate.add(1,'day')
         }
-
-        //opts.callBackFun = updateMonthDate;
     }
 
     function settingWeekData(){
@@ -396,6 +394,12 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         const endDate = getMoment(sharedObj.endDate);
         const targetTdAll = document.querySelectorAll('.view-week .day-wrapper tbody td');
         const mapObj = new Map();
+
+        for( const item of targetTdAll ){
+            if( !item.classList.contains('time') ) {
+                item.textContent = '';
+            }
+        }
 
         for( let index=1; index < 8; index++ ){
             const dbData = sharedObj.dbTotalData[startDate.format('YYYY-MM-DD')];
@@ -448,12 +452,35 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 leftIndex += wrapWidh/lengthItem;
             }
         }
+
+        opts.pickerMinViewMode = '';
+        opts.pickerViewMode = '';
+        opts.callBackFun = updateWeekDate;
+    }
+
+    function updateWeekStyle(){
+        const targetTdAll = document.querySelectorAll('.view-week .day-wrapper tbody td');
+        
+        for( const item of targetTdAll ){
+            const wrapWidh = (item.parentElement.clientWidth)/8;
+            const innderDiv = item.querySelectorAll('div');
+            if( innderDiv.length > 0 ){
+                let leftIndex = 0;
+                for( const div of innderDiv ){
+                    const widh = wrapWidh/innderDiv.length;
+                    div.style.width = `${widh}px`
+                    div.style['left'] = `${leftIndex}px`;
+                    leftIndex += widh;
+                }
+            }
+        }
     }
 
     function templateWeekTitleUpdate(){
         const startDate = sharedObj.startDate;
         const titleTarget = document.querySelector('.view-week .title-wrapper .month-title');
         titleTarget.textContent = startDate.format("YYYY-MM-DD");
+        titleUpdate();
     }
 
     function getDateData( date ){
@@ -642,6 +669,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
    
     function settingEvent(){
         document.addEventListener('mousedown',addHiddenClass, true);
+        window.addEventListener('resize', updateWeekStyle);
     }
 
     function updateYearDate( isForceUpdate ){
@@ -667,7 +695,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             } else if( opts.showMode ==='year'){
                 today.startOf('year').subtract(1,'day')
             } else if ( opts.showMode === 'week' ){
-
+                today.startOf('week').subtract(1,'day')
             } else if( opts.showMode === 'day'){
 
             }
@@ -677,7 +705,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             } else if( opts.showMode ==='year'){
                 today.endOf('year').add(1,'day')
             } else if ( opts.showMode === 'week' ){
-
+                today.endOf('week').add(1,'day')
             } else if( opts.showMode === 'day'){
 
             }
@@ -691,11 +719,24 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         } else if( opts.showMode ==='year'){
             updateYearDate( true );
         } else if ( opts.showMode === 'week' ){
-
+            updateWeekDate(true);
         } else if( opts.showMode === 'day'){
 
         }
         
+    }
+
+    function updateWeekDate( isForceUpdate ){
+        const newDate = getMoment(dayData.value);
+        
+        // 강제로 업데이트 하거나, pick한 날짜가 오늘일 아닐때만 업데이트
+        if( isForceUpdate || !newDate.isSame(moment({y: sharedObj.pickDate.year(), M: sharedObj.pickDate.month(), d: sharedObj.pickDate.date()})) ){
+            monthTitle.textContent = newDate.format("YYYY-MM-DD");
+            opts.defaultDate = newDate;
+            getDateData(newDate);
+            settingWeekData();
+            templateWeekUpdate();
+        }
     }
 
     function updateShowMode( showMode ){
@@ -705,7 +746,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         drawTotal();
     }
     function templateMonthUpdate(){
-        templateData.injectModel( sectionTarget.querySelectorAll('.day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-month .day-wrapper'), 'monthDay' , sharedObj.drawObj.month);
         const eventTargets = document.querySelectorAll('.day-warpper');
         if( eventTargets ){
             for( const item of eventTargets ){
