@@ -243,8 +243,7 @@
   opacity: 0.4;
   color: #777777;
 }
-.main-section .view-theme.view-week,
-.main-section .view-theme.view-day {
+.main-section .view-theme.view-week {
   min-width: 910px;
 }
 .main-section .view-theme.view-week .day-wrapper,

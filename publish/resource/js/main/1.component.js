@@ -8,12 +8,14 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
     const opts = {
-        showMode : 'day', // day - 일 , week- 주 , month- 월, year- 년
+        showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
         format : 'YYYY MM월',
         pickerMinViewMode : 'months',
         pickerViewMode : 'months',
-        callBackFun : updateMonthDate
+        callBackFun : updateMonthDate,
+        showTimeOption : false,
+        showSeconds : true
     }
 
     const sharedObj = {
@@ -405,8 +407,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         if( dbData ){
             for( let itemIndex = dbData.length-1; itemIndex >= 0; itemIndex-- ){
                 const item = dbData[itemIndex];
-                const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh');
-                const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh');
+                const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh:mm').startOf("hours");
+                const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh:mm:ss');
                 const tempDay = getMoment(startDate);
                 for( let hour = 0; hour < 25; hour++ ){
                     const isBetween = tempDay.isSame(itemStartDate) || tempDay.isAfter(itemStartDate) && tempDay.isBefore(itemEndDate);
@@ -491,8 +493,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             if( dbData ){
                 for( let itemIndex = dbData.length-1; itemIndex >= 0; itemIndex-- ){
                     const item = dbData[itemIndex];
-                    const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh');
-                    const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh');
+                    const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh:mm').startOf("hours");
+                    const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh:mm:ss');
                     const tempDay = getMoment(startDate);
                     for( let hour = 0; hour < 25; hour++ ){
                         const isBetween = tempDay.isSame(itemStartDate) || tempDay.isAfter(itemStartDate) && tempDay.isBefore(itemEndDate);
@@ -624,99 +626,19 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 'title' : '집밥먹기',
                 'seq' : '1',
                 'content' : '집에서 밥먹기',
-                'important' : '1',
-                'startDate' : '2020-12-27',
-                'endDate' :  '2020-12-27',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '공부하ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ기',
-                'seq' : '2',
-                'content' : '집에서 밥먹기sssss',
-                'important' :  '1',
-                'startDate' : '2021-01-17 13:00',
-                'endDate' :  '2021-01-18 15:00',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '공부하ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ기',
-                'seq' : '2',
-                'content' : '집에서 밥먹기sssss',
-                'important' :  '1',
-                'startDate' : '2021-01-17 13:00',
-                'endDate' :  '2021-01-17 15:00',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '공부하ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ기',
-                'seq' : '2',
-                'content' : '집에서 밥먹기sssss',
-                'important' :  '1',
-                'startDate' : '2021-01-17 13:00',
-                'endDate' :  '2021-01-17 15:00',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '아하아하',
-                'seq' : '2',
-                'content' : '집에서 밥먹기sssss',
-                'important' :  '1',
-                'startDate' : '2021-01-17 13:00',
-                'endDate' :  '2021-01-17 17:00',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : 'ㅋㅋㅋ',
-                'seq' : '2',
-                'content' : '집에서 밥먹기sssss',
-                'important' :  '1',
-                'startDate' : '2021-01-17 13:00',
-                'endDate' :  '2021-01-17 15:00',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : 'ssssssss',
-                'seq' : '1',
-                'content' : 'ssssssss',
-                'important' :  '1',
-                'startDate' : '2021-01-11',
-                'endDate' :  '2021-01-13',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '공부하기',
-                'seq' : '2',
-                'content' : '집에서 밥먹기sssss',
-                'important' :  '1',
-                'startDate' : '2021-01-19',
-                'endDate' :  '2021-01-19',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : 'ssssssss',
-                'seq' : '3',
-                'content' : 'sssssssssssss ssssssss sssssssssssssssssssss',
                 'important' : '0',
-                'startDate' : '2021-01-27 13:00:00',
-                'endDate' :  '2021-01-27 15:00:00',
+                'startDate' : '2021-01-21 10:00:00',
+                'endDate' :  '2021-01-21 12:12:00',
                 'latitude' : '',
                 'longitude'  :''
             },
             {
-                'title' : 'ssssssss',
+                'title' : '밥먹으면서 노래듣기 13:00시에 끝',
                 'seq' : '1',
-                'content' : 'ssssssss',
+                'content' : '노래듣기',
                 'important' : '1',
-                'startDate' : '2021-01-28',
-                'endDate' :  '2021-01-28',
+                'startDate' : '2021-01-21 10:00:00',
+                'endDate' :  '2021-01-21 13:00:00',
                 'latitude' : '',
                 'longitude'  :''
             }
@@ -726,8 +648,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         let colorIndex = 0;
 
         for( const item of dbTotalData ) {
-            const startDate =  getMoment(item.startDate);
-            const endDate = getMoment(item.endDate).add(1,'day');
+            const startDate = moment(item['startDate'],'YYYY-MM-DD hh:mm:ss');
+            const endDate = moment(item['endDate'],'YYYY-MM-DD hh:mm:ss');
             if( colorIndex == colorSet.length ){
                 colorIndex = 0;
             }
@@ -972,10 +894,10 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     function settingDatePickerTitle(){
         const target = document.getElementById("datetimepicker-notime");
         const datePickerTitle = DatePicker.datetimepicker( target  ,{ 
-            showTimeOption : false,
+            showTimeOption : opts.showTimeOption,
             showDateOption : true,
             showMinutes : true,
-            showSeconds : false,
+            showSeconds : opts.showSeconds,
             useToday : true,
             useTodayButton : true,
             language : 'ko',
