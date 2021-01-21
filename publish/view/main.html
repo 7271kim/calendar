@@ -39,6 +39,10 @@
         <div class="dim"></div>
         <div class="schedule-container"></div>
     </div>
+    <div class="detail-dim-layer hidden" id="detail-layer" >
+        <div class="dim"></div>
+        <div class="detail-container"></div>
+    </div>
 
     <script src="/js/common/component.js" type="module"></script>
     <script src="/js/main/component.js" type="module"></script>
@@ -96,7 +100,7 @@
                 <span class="close left-margin"></span>
             </div>
             <jly data-jly-list.item="{{obj.clickItem.clickList}}">
-                <div class="schedule {{item.className}}">{{item.title}}</div>
+                <div class="schedule {{item.className}}" data-index="{{obj.clickItem.today}}" data-seq="{{item.seq}}">{{item.title}}</div>
             </jly>
         </div>
         <div class="row title-wrapper" data-jly-template="{{ yearTitle @ obj }}">
@@ -573,6 +577,42 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="detail-container" data-jly-template="{{ detailPop @ obj }}">
+            <div class="day">{{obj.today}}</div>
+            <span class="close left-margin"></span>
+            <div class="login-container">
+                <p><input type="text" placeholder="Title" readonly value="{{obj.title}}" /></p>
+                <p><textarea rows="10" placeholder="content" readonly >{{obj.content @ context="html"}}</textarea></p>
+                <p class="start">
+                    <img src="/img/calendar-icon.svg" alt="캘린더 아이콘">
+                    <span>시작일</span>
+                </p>
+                <p class="start-date">
+                    <input type="text" placeholder="Title" readonly value="{{obj.startDate}}" />
+                </p>
+                <p class="end">
+                    <img src="/img/calendar-icon.svg" alt="캘린더 아이콘">
+                    <span>종료일</span>
+                </p>
+                <p class="end-date">
+                    <input type="text" placeholder="Title" readonly value="{{obj.endDate}}">
+                </p>
+                <div class="import">
+                    <label class="out-label" for="squaredFour">중요 일정</label>
+                    <span class="squaredFour">
+                        <input type="checkbox" value="None" id="squaredFour" name="check" disabled checked/>
+                        <label for="squaredFour"></label>
+                    </span>
+                </div>
+                <p class="location">
+                    <img src="/img/map.svg" alt="캘린더 아이콘">
+                    <span>위치</span>
+                </p>
+                <p class="reset">
+                    <input type="button" value="수정"><input type="button" value="삭제">
+                </p>
+            </div>
         </div>
      </div>
      <!--googleon: all-->

@@ -269,7 +269,8 @@
 .main-section .view-theme.view-day .day-wrapper .time {
   width: 50px;
 }
-.month-dim-layer {
+.month-dim-layer,
+.detail-dim-layer {
   display: flex;
   justify-items: center;
   align-items: center;
@@ -281,17 +282,21 @@
   height: 100%;
   z-index: 100;
 }
-.month-dim-layer .dim {
+.month-dim-layer .dim,
+.detail-dim-layer .dim {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: #000;
-  opacity: 0.5;
+  opacity: 0.8;
   filter: alpha(opacity=50);
 }
-.month-dim-layer .schedule-container {
+.month-dim-layer .schedule-container,
+.detail-dim-layer .schedule-container,
+.month-dim-layer .detail-container,
+.detail-dim-layer .detail-container {
   width: 50%;
   height: 70%;
   background: white;
@@ -300,7 +305,10 @@
   border-radius: 10px;
   overflow: auto;
 }
-.month-dim-layer .schedule-container .schedule {
+.month-dim-layer .schedule-container .schedule,
+.detail-dim-layer .schedule-container .schedule,
+.month-dim-layer .detail-container .schedule,
+.detail-dim-layer .detail-container .schedule {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -310,29 +318,183 @@
   border-radius: 10px;
   padding: 0 10px 0 10px;
 }
-.month-dim-layer .schedule-container .important {
+.month-dim-layer .schedule-container .important,
+.detail-dim-layer .schedule-container .important,
+.month-dim-layer .detail-container .important,
+.detail-dim-layer .detail-container .important {
   color: black;
   background: #C5E0DC;
   cursor: pointer;
 }
-.month-dim-layer .schedule-container .post {
+.month-dim-layer .schedule-container .post,
+.detail-dim-layer .schedule-container .post,
+.month-dim-layer .detail-container .post,
+.detail-dim-layer .detail-container .post {
   background-color: #039be5;
 }
-.month-dim-layer .schedule-container .normal {
+.month-dim-layer .schedule-container .normal,
+.detail-dim-layer .schedule-container .normal,
+.month-dim-layer .detail-container .normal,
+.detail-dim-layer .detail-container .normal {
   background-color: #eaeaea;
   cursor: pointer;
 }
-.month-dim-layer .schedule-container .text {
+.month-dim-layer .schedule-container .text,
+.detail-dim-layer .schedule-container .text,
+.month-dim-layer .detail-container .text,
+.detail-dim-layer .detail-container .text {
   display: flex;
   align-items: center;
 }
-.month-dim-layer .schedule-container .today {
+.month-dim-layer .schedule-container .today,
+.detail-dim-layer .schedule-container .today,
+.month-dim-layer .detail-container .today,
+.detail-dim-layer .detail-container .today {
   display: flex;
   align-items: center;
 }
-.month-dim-layer .schedule-container .close-vertical {
+.month-dim-layer .schedule-container .close-vertical,
+.detail-dim-layer .schedule-container .close-vertical,
+.month-dim-layer .detail-container .close-vertical,
+.detail-dim-layer .detail-container .close-vertical {
   margin-left: 10px;
 }
-.month-dim-layer .schedule-container .close {
+.month-dim-layer .schedule-container .close,
+.detail-dim-layer .schedule-container .close,
+.month-dim-layer .detail-container .close,
+.detail-dim-layer .detail-container .close {
   margin-left: auto;
+}
+.detail-dim-layer .detail-container {
+  position: relative;
+  width: 500px;
+  background: #ebebeb;
+  padding: 12px;
+}
+.detail-dim-layer .detail-container .import,
+.detail-dim-layer .detail-container p {
+  padding: 12px;
+}
+.detail-dim-layer .detail-container .close {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: white;
+  width: 40px;
+  height: 40px;
+}
+.detail-dim-layer .detail-container .close::before {
+  height: 40px;
+  left: 20px;
+}
+.detail-dim-layer .detail-container .close::after {
+  height: 40px;
+  left: 20px;
+}
+.detail-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 16px;
+  outline: 0;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+.detail-dim-layer .detail-container .out-label {
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .squaredFour {
+  width: 20px;
+  position: relative;
+  margin: 20px auto;
+}
+.detail-dim-layer .detail-container .squaredFour label {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  background: #fcfff4;
+  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  border-radius: 4px;
+  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+.detail-dim-layer .detail-container .squaredFour label:after {
+  content: '';
+  width: 9px;
+  height: 5px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border: 3px solid #333;
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  transform: rotate(-45deg);
+}
+.detail-dim-layer .detail-container .squaredFour label:hover::after {
+  opacity: 0.5;
+}
+.detail-dim-layer .detail-container .squaredFour input[type=checkbox] {
+  visibility: hidden;
+}
+.detail-dim-layer .detail-container .squaredFour input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+.detail-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input[type="text"] {
+  background: #fff;
+  border-color: #bbb;
+  color: #555;
+}
+.detail-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input[type="text"]:focus {
+  border-color: #888;
+}
+.detail-dim-layer .detail-container textarea {
+  resize: none;
+}
+.detail-dim-layer .detail-container input[type="button"] {
+  background: #28d;
+  border-color: transparent;
+  color: #fff;
+  width: 40%;
+  float: left;
+  margin: 5%;
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container input[type="button"]:hover {
+  background: #17c;
+}
+.detail-dim-layer .detail-container img {
+  vertical-align: middle;
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .start span,
+.detail-dim-layer .detail-container .end span {
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .location span {
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .day {
+  background: #28d;
+  padding: 20px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+}
+.login input[type="submit"]:hover {
+  background: #17c;
+}
+/* Buttons' focus effect */
+.login input[type="submit"]:focus {
+  border-color: #05a;
 }

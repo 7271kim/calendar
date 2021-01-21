@@ -308,7 +308,7 @@
     }
 }
 
-.month-dim-layer {
+.month-dim-layer, .detail-dim-layer {
     display: flex;
     justify-items: center;
     align-items: center;
@@ -327,11 +327,11 @@
         width: 100%;
         height: 100%;
         background: #000;
-        opacity: .5;
+        opacity: .8;
         filter: alpha(opacity=50);
     }
 
-    .schedule-container {
+    .schedule-container,.detail-container {
         width: 50%;
         height: 70%;
         background: white;
@@ -385,4 +385,160 @@
         }
 
     }
-  }
+}
+
+.detail-dim-layer{
+    .detail-container {
+        position: relative;
+        width: 500px;
+        background: #ebebeb;
+        padding: 12px;
+        .import,p{
+            padding: 12px;
+        }
+
+        .close{
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: white;
+            width: 40px;
+            height: 40px;
+        }
+        .close::before{
+            height: 40px;
+            left: 20px;
+        }
+        .close::after{
+            height: 40px;
+            left: 20px;
+        }
+
+        textarea,input {
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+            border-width: 1px;
+            border-style: solid;
+            padding: 16px;
+            outline: 0;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+
+        .out-label{
+            cursor: pointer;
+        }
+
+        .squaredFour {
+            #squaredFour {
+            }
+
+            width: 20px;
+            position: relative;
+            margin: 20px auto;
+            label {
+              width: 20px;
+              height: 20px;
+              cursor: pointer;
+              position: absolute;
+              top: 0;
+              left: 10px;
+              background: #fcfff4;
+              background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+              border-radius: 4px;
+              box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+              &:after {
+                content: '';
+                width: 9px;
+                height: 5px;
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                border: 3px solid #333;
+                border-top: none;
+                border-right: none;
+                background: transparent;
+                opacity: 0;
+                transform: rotate(-45deg);
+              }
+              &:hover::after {
+                opacity: 0.5;
+              }
+            }
+            input[type=checkbox] {
+              visibility: hidden;
+              &:checked + label:after {
+                opacity: 1;
+              }
+            }
+          }
+
+        textarea,input[type="text"]{
+            background: #fff;
+            border-color: #bbb;
+            color: #555;
+        }
+
+        textarea,input[type="text"]:focus{
+            border-color: #888;
+        }
+
+        textarea {
+            resize:none;
+        }
+
+        input[type="button"]{
+            background: #28d;
+            border-color: transparent;
+            color: #fff;
+            width: 40%;
+            float: left;
+            margin: 5%;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover{
+            background: #17c;
+        }
+
+        img {
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .start, .end {
+            span{
+                cursor: pointer;
+            }
+        }
+
+        .location {
+            span {
+                cursor: pointer;
+            }
+        }
+
+       
+
+        .day {
+            background: #28d;
+            padding: 20px;
+            font-size: 1.4em;
+            font-weight: normal;
+            text-align: center;
+            text-transform: uppercase;
+            color: #fff;
+        }
+    }
+}
+
+
+
+.login input[type="submit"]:hover {
+  background: #17c;
+}
+
+/* Buttons' focus effect */
+.login input[type="submit"]:focus {
+  border-color: #05a;
+}

@@ -23,6 +23,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         startDate : '',
         endDate : '',
         dbTotalData : {},
+        dbTotalDataSeq : {},
         drawObj :{
             'month' : {
                 'mainTitle' : '',
@@ -36,17 +37,17 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                                 {
                                     'class' : 'important',
                                     'title' : '집밥',
-                                    'totalIndex' : '0'
+                                    'seq' : '0'
                                 },
                                 {
                                     'class' : 'post',
                                     'title' : 'post',
-                                    'totalIndex' : '1'
+                                    'seq' : '1'
                                 },
                                 {
                                     'class' : 'schedule',
                                     'title' : 'schedule',
-                                    'totalIndex' : '2'
+                                    'seq' : '2'
                                 }
                             ]
                         }
@@ -80,6 +81,17 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                         }
                     ]
                 ]
+            },
+            'detailPop' : {
+                'today' : '',
+                'title' : '',
+                'seq' : '',
+                'content' : '',
+                'important' : '',
+                'startDate' : '',
+                'endDate' :  '',
+                'latitude' : '',
+                'longitude'  :''
             }
         }
     }
@@ -434,6 +446,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             for( const item of value  ){
                 const tempDiv = document.createElement('div');
                 tempDiv.textContent = item.title;
+                tempDiv.setAttribute('data-index',getMoment(item.startDate).format('YYYY-MM-DD'));
+                tempDiv.setAttribute('data-seq',item.seq);
                 tempDiv.style.width = `${wrapWidh/lengthItem}px`
                 tempDiv.style.float = 'left';
                 tempDiv.style.overflow = 'hidden';
@@ -448,6 +462,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 tempDiv.style['left'] = `${leftIndex}px`;
                 targetTd.appendChild(tempDiv);
                 leftIndex += wrapWidh/lengthItem;
+
+                tempDiv.addEventListener('click',openDetail);
             }
         }
 
@@ -523,7 +539,9 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             for( const item of value  ){
                 const tempDiv = document.createElement('div');
                 tempDiv.textContent = item.title;
-                tempDiv.style.width = `${wrapWidh/lengthItem}px`
+                tempDiv.setAttribute('data-index',getMoment(item.startDate).format('YYYY-MM-DD'));
+                tempDiv.setAttribute('data-seq',item.seq);
+                tempDiv.style.width = `${wrapWidh/lengthItem}px`;
                 tempDiv.style.float = 'left';
                 tempDiv.style.overflow = 'hidden';
                 tempDiv.style['text-overflow'] = 'ellipsis';
@@ -537,6 +555,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 tempDiv.style['left'] = `${leftIndex}px`;
                 targetTd.appendChild(tempDiv);
                 leftIndex += wrapWidh/lengthItem;
+
+                tempDiv.addEventListener('click',openDetail);
             }
         }
 
@@ -634,7 +654,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             },
             {
                 'title' : '밥먹으면서 노래듣기 13:00시에 끝',
-                'seq' : '1',
+                'seq' : '2',
                 'content' : '노래듣기',
                 'important' : '1',
                 'startDate' : '2021-01-21 10:00:00',
@@ -650,6 +670,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         for( const item of dbTotalData ) {
             const startDate = moment(item['startDate'],'YYYY-MM-DD hh:mm:ss');
             const endDate = moment(item['endDate'],'YYYY-MM-DD hh:mm:ss');
+            const seq = item.seq;
+            
             if( colorIndex == colorSet.length ){
                 colorIndex = 0;
             }
@@ -664,8 +686,13 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                     } else {
                         sharedObj.dbTotalData[date].push(item);
                     }
+
+                    if( !sharedObj.dbTotalDataSeq[date] ){
+                        sharedObj.dbTotalDataSeq[date] ={};
+                    }
+                    sharedObj.dbTotalDataSeq[date][seq] = item;
                      
-                     startDate.add(1,'day');
+                    startDate.add(1,'day');
                 }
             }
         }
@@ -805,7 +832,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
                 const className = item.important ==='1' ? 'important': 'normal'
                 clickList.push({
                     'className' : className,
-                    'title' : item.title
+                    'title' : item.title,
+                    'seq' : item.seq
                 })
             })
         }
@@ -821,6 +849,43 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         monthDimLayer.classList.remove('hidden');
         document.querySelector('.schedule-container .close').addEventListener('click' , (e)=>{
             monthDimLayer.classList.add('hidden');
+        })
+
+        document.querySelectorAll('.schedule-container .schedule:not(.today)').forEach( target =>{
+            target.addEventListener('click',openDetail);
+        })
+    }
+
+    function openDetail( event ){
+        const currentTarget = event.currentTarget;
+        const date = currentTarget.dataset.index;
+        const seq = currentTarget.dataset.seq;
+        const target = sharedObj.dbTotalDataSeq[date][seq];
+        const weekdaysMin = moment.weekdaysMin();
+        const startDate = moment(target.startDate,'YYYY-MM-DD HH:mm:ss');
+        const endDate = moment(target.endDate,'YYYY-MM-DD HH:mm:ss');
+
+        sharedObj.drawObj.detailPop = {
+            'today' : date,
+            'title' : target.title,
+            'seq' : target.seq,
+            'content' : target.content,
+            'important' : target.important,
+            'startDate' :  startDate.format(`YYYY년 MM월 DD일(${weekdaysMin[startDate.days()]}) HH:mm:ss `),
+            'endDate' :  endDate.format(`YYYY년 MM월 DD일(${weekdaysMin[startDate.days()]}) HH:mm:ss `),
+            'latitude' : '',
+            'longitude'  :''
+        }
+
+        templateData.injectModel( document.querySelectorAll('.detail-container'), 'detailPop' , sharedObj.drawObj.detailPop);
+
+        if( target.important !== '1' ){
+            document.querySelector('.detail-container #squaredFour').removeAttribute('checked');
+        }
+
+        document.querySelector('#detail-layer').classList.remove('hidden');
+        document.querySelector('#detail-layer .close').addEventListener('click', ()=>{
+            document.querySelector('#detail-layer').classList.add('hidden');
         })
     }
 
