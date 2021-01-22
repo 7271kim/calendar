@@ -308,7 +308,7 @@
     }
 }
 
-.month-dim-layer, .detail-dim-layer {
+.month-dim-layer, .detail-dim-layer, .write-dim-layer {
     display: flex;
     justify-items: center;
     align-items: center;
@@ -387,7 +387,7 @@
     }
 }
 
-.detail-dim-layer{
+.detail-dim-layer, .write-dim-layer{
     .detail-container {
         position: relative;
         width: 500px;
@@ -488,7 +488,7 @@
             resize:none;
         }
 
-        input[type="button"]{
+        input[type="button"], input[type="submit"]{
             background: #28d;
             border-color: transparent;
             color: #fff;
@@ -498,7 +498,7 @@
             cursor: pointer;
         }
 
-        input[type="button"]:hover{
+        input[type="button"]:hover, input[type="submit"]:hover{
             background: #17c;
         }
 
@@ -532,13 +532,12 @@
     }
 }
 
-
-
-.login input[type="submit"]:hover {
-  background: #17c;
-}
-
-/* Buttons' focus effect */
-.login input[type="submit"]:focus {
-  border-color: #05a;
+.write-dim-layer{
+    .detail-container{
+        input[type="submit"]{
+            width: 100%;
+            margin: 0;
+        }
+    }
+    
 }

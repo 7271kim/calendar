@@ -270,7 +270,8 @@
   width: 50px;
 }
 .month-dim-layer,
-.detail-dim-layer {
+.detail-dim-layer,
+.write-dim-layer {
   display: flex;
   justify-items: center;
   align-items: center;
@@ -283,7 +284,8 @@
   z-index: 100;
 }
 .month-dim-layer .dim,
-.detail-dim-layer .dim {
+.detail-dim-layer .dim,
+.write-dim-layer .dim {
   position: absolute;
   top: 0;
   left: 0;
@@ -295,8 +297,10 @@
 }
 .month-dim-layer .schedule-container,
 .detail-dim-layer .schedule-container,
+.write-dim-layer .schedule-container,
 .month-dim-layer .detail-container,
-.detail-dim-layer .detail-container {
+.detail-dim-layer .detail-container,
+.write-dim-layer .detail-container {
   width: 50%;
   height: 70%;
   background: white;
@@ -307,8 +311,10 @@
 }
 .month-dim-layer .schedule-container .schedule,
 .detail-dim-layer .schedule-container .schedule,
+.write-dim-layer .schedule-container .schedule,
 .month-dim-layer .detail-container .schedule,
-.detail-dim-layer .detail-container .schedule {
+.detail-dim-layer .detail-container .schedule,
+.write-dim-layer .detail-container .schedule {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -320,62 +326,80 @@
 }
 .month-dim-layer .schedule-container .important,
 .detail-dim-layer .schedule-container .important,
+.write-dim-layer .schedule-container .important,
 .month-dim-layer .detail-container .important,
-.detail-dim-layer .detail-container .important {
+.detail-dim-layer .detail-container .important,
+.write-dim-layer .detail-container .important {
   color: black;
   background: #C5E0DC;
   cursor: pointer;
 }
 .month-dim-layer .schedule-container .post,
 .detail-dim-layer .schedule-container .post,
+.write-dim-layer .schedule-container .post,
 .month-dim-layer .detail-container .post,
-.detail-dim-layer .detail-container .post {
+.detail-dim-layer .detail-container .post,
+.write-dim-layer .detail-container .post {
   background-color: #039be5;
 }
 .month-dim-layer .schedule-container .normal,
 .detail-dim-layer .schedule-container .normal,
+.write-dim-layer .schedule-container .normal,
 .month-dim-layer .detail-container .normal,
-.detail-dim-layer .detail-container .normal {
+.detail-dim-layer .detail-container .normal,
+.write-dim-layer .detail-container .normal {
   background-color: #eaeaea;
   cursor: pointer;
 }
 .month-dim-layer .schedule-container .text,
 .detail-dim-layer .schedule-container .text,
+.write-dim-layer .schedule-container .text,
 .month-dim-layer .detail-container .text,
-.detail-dim-layer .detail-container .text {
+.detail-dim-layer .detail-container .text,
+.write-dim-layer .detail-container .text {
   display: flex;
   align-items: center;
 }
 .month-dim-layer .schedule-container .today,
 .detail-dim-layer .schedule-container .today,
+.write-dim-layer .schedule-container .today,
 .month-dim-layer .detail-container .today,
-.detail-dim-layer .detail-container .today {
+.detail-dim-layer .detail-container .today,
+.write-dim-layer .detail-container .today {
   display: flex;
   align-items: center;
 }
 .month-dim-layer .schedule-container .close-vertical,
 .detail-dim-layer .schedule-container .close-vertical,
+.write-dim-layer .schedule-container .close-vertical,
 .month-dim-layer .detail-container .close-vertical,
-.detail-dim-layer .detail-container .close-vertical {
+.detail-dim-layer .detail-container .close-vertical,
+.write-dim-layer .detail-container .close-vertical {
   margin-left: 10px;
 }
 .month-dim-layer .schedule-container .close,
 .detail-dim-layer .schedule-container .close,
+.write-dim-layer .schedule-container .close,
 .month-dim-layer .detail-container .close,
-.detail-dim-layer .detail-container .close {
+.detail-dim-layer .detail-container .close,
+.write-dim-layer .detail-container .close {
   margin-left: auto;
 }
-.detail-dim-layer .detail-container {
+.detail-dim-layer .detail-container,
+.write-dim-layer .detail-container {
   position: relative;
   width: 500px;
   background: #ebebeb;
   padding: 12px;
 }
 .detail-dim-layer .detail-container .import,
-.detail-dim-layer .detail-container p {
+.write-dim-layer .detail-container .import,
+.detail-dim-layer .detail-container p,
+.write-dim-layer .detail-container p {
   padding: 12px;
 }
-.detail-dim-layer .detail-container .close {
+.detail-dim-layer .detail-container .close,
+.write-dim-layer .detail-container .close {
   position: fixed;
   top: 0;
   right: 0;
@@ -383,16 +407,20 @@
   width: 40px;
   height: 40px;
 }
-.detail-dim-layer .detail-container .close::before {
+.detail-dim-layer .detail-container .close::before,
+.write-dim-layer .detail-container .close::before {
   height: 40px;
   left: 20px;
 }
-.detail-dim-layer .detail-container .close::after {
+.detail-dim-layer .detail-container .close::after,
+.write-dim-layer .detail-container .close::after {
   height: 40px;
   left: 20px;
 }
 .detail-dim-layer .detail-container textarea,
-.detail-dim-layer .detail-container input {
+.write-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input,
+.write-dim-layer .detail-container input {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -403,15 +431,18 @@
   font-family: inherit;
   font-size: 0.95em;
 }
-.detail-dim-layer .detail-container .out-label {
+.detail-dim-layer .detail-container .out-label,
+.write-dim-layer .detail-container .out-label {
   cursor: pointer;
 }
-.detail-dim-layer .detail-container .squaredFour {
+.detail-dim-layer .detail-container .squaredFour,
+.write-dim-layer .detail-container .squaredFour {
   width: 20px;
   position: relative;
   margin: 20px auto;
 }
-.detail-dim-layer .detail-container .squaredFour label {
+.detail-dim-layer .detail-container .squaredFour label,
+.write-dim-layer .detail-container .squaredFour label {
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -423,7 +454,8 @@
   border-radius: 4px;
   box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
 }
-.detail-dim-layer .detail-container .squaredFour label:after {
+.detail-dim-layer .detail-container .squaredFour label:after,
+.write-dim-layer .detail-container .squaredFour label:after {
   content: '';
   width: 9px;
   height: 5px;
@@ -437,29 +469,40 @@
   opacity: 0;
   transform: rotate(-45deg);
 }
-.detail-dim-layer .detail-container .squaredFour label:hover::after {
+.detail-dim-layer .detail-container .squaredFour label:hover::after,
+.write-dim-layer .detail-container .squaredFour label:hover::after {
   opacity: 0.5;
 }
-.detail-dim-layer .detail-container .squaredFour input[type=checkbox] {
+.detail-dim-layer .detail-container .squaredFour input[type=checkbox],
+.write-dim-layer .detail-container .squaredFour input[type=checkbox] {
   visibility: hidden;
 }
-.detail-dim-layer .detail-container .squaredFour input[type=checkbox]:checked + label:after {
+.detail-dim-layer .detail-container .squaredFour input[type=checkbox]:checked + label:after,
+.write-dim-layer .detail-container .squaredFour input[type=checkbox]:checked + label:after {
   opacity: 1;
 }
 .detail-dim-layer .detail-container textarea,
-.detail-dim-layer .detail-container input[type="text"] {
+.write-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input[type="text"],
+.write-dim-layer .detail-container input[type="text"] {
   background: #fff;
   border-color: #bbb;
   color: #555;
 }
 .detail-dim-layer .detail-container textarea,
-.detail-dim-layer .detail-container input[type="text"]:focus {
+.write-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input[type="text"]:focus,
+.write-dim-layer .detail-container input[type="text"]:focus {
   border-color: #888;
 }
-.detail-dim-layer .detail-container textarea {
+.detail-dim-layer .detail-container textarea,
+.write-dim-layer .detail-container textarea {
   resize: none;
 }
-.detail-dim-layer .detail-container input[type="button"] {
+.detail-dim-layer .detail-container input[type="button"],
+.write-dim-layer .detail-container input[type="button"],
+.detail-dim-layer .detail-container input[type="submit"],
+.write-dim-layer .detail-container input[type="submit"] {
   background: #28d;
   border-color: transparent;
   color: #fff;
@@ -468,21 +511,29 @@
   margin: 5%;
   cursor: pointer;
 }
-.detail-dim-layer .detail-container input[type="button"]:hover {
+.detail-dim-layer .detail-container input[type="button"]:hover,
+.write-dim-layer .detail-container input[type="button"]:hover,
+.detail-dim-layer .detail-container input[type="submit"]:hover,
+.write-dim-layer .detail-container input[type="submit"]:hover {
   background: #17c;
 }
-.detail-dim-layer .detail-container img {
+.detail-dim-layer .detail-container img,
+.write-dim-layer .detail-container img {
   vertical-align: middle;
   cursor: pointer;
 }
 .detail-dim-layer .detail-container .start span,
-.detail-dim-layer .detail-container .end span {
+.write-dim-layer .detail-container .start span,
+.detail-dim-layer .detail-container .end span,
+.write-dim-layer .detail-container .end span {
   cursor: pointer;
 }
-.detail-dim-layer .detail-container .location span {
+.detail-dim-layer .detail-container .location span,
+.write-dim-layer .detail-container .location span {
   cursor: pointer;
 }
-.detail-dim-layer .detail-container .day {
+.detail-dim-layer .detail-container .day,
+.write-dim-layer .detail-container .day {
   background: #28d;
   padding: 20px;
   font-size: 1.4em;
@@ -491,10 +542,7 @@
   text-transform: uppercase;
   color: #fff;
 }
-.login input[type="submit"]:hover {
-  background: #17c;
-}
-/* Buttons' focus effect */
-.login input[type="submit"]:focus {
-  border-color: #05a;
+.write-dim-layer .detail-container input[type="submit"] {
+  width: 100%;
+  margin: 0;
 }

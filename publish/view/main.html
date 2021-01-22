@@ -44,6 +44,63 @@
         <div class="detail-container"></div>
     </div>
 
+    <div class="write-dim-layer hidden" id="detail-layer" >
+        <div class="dim"></div>
+        <div class="detail-container">
+            <span class="close left-margin"></span>
+            <div class="login-container">
+                <form action="">
+                    <p><input type="text" placeholder="Title" name="detailTitle" id="detailTitle" required /></p>
+                    <p><textarea rows="10" placeholder="content" name="detailContent" id="detailContent" required></textarea></p>
+                    <p class="start">
+                        <span class="container-date-picker">
+                            <span id="datetimepicker-start" data-target-input="nearest">
+                                <input type='text' class="datetimepicker-input hidden day-data" />
+                                <span id="title-calendar-icon" class="calendar-togle" data-target="#datetimepicker-notime">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </span>
+                        </span>
+                        <span>시작일</span>
+                    </p>
+                    <p class="start-date">
+                        <input type="hidden" name="startDate" id="startDate"/>
+                        <input type="text" placeholder="달력을 클릭하세요" readonly />
+                    </p>
+                    <p class="end">
+                        <span class="container-date-picker">
+                            <span id="datetimepicker-end" data-target-input="nearest">
+                                <input type='text' class="datetimepicker-input hidden day-data" />
+                                <span id="title-calendar-icon" class="calendar-togle" data-target="#datetimepicker-notime">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </span>
+                        </span>
+                        <span>종료일</span>
+                    </p>
+                    <p class="end-date">
+                        <input type="hidden" name="endDate" id="endDate"/>
+                        <input type="text" placeholder="달력을 클릭하세요" readonly required/>
+                    </p>
+                    <div class="import">
+                        <label class="out-label" for="squaredFour">중요 일정</label>
+                        <span class="squaredFour">
+                            <input type="checkbox" value="None" id="squaredFour" name="checkImpotant" checked/>
+                            <label for="squaredFour"></label>
+                        </span>
+                    </div>
+                    <!-- <p class="location">
+                        <img src="/img/map.svg" alt="캘린더 아이콘">
+                        <span>위치</span>
+                    </p> -->
+                    <p class="reset">
+                        <input type="submit" value="글쓰기">
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="/js/common/component.js" type="module"></script>
     <script src="/js/main/component.js" type="module"></script>
     
@@ -96,7 +153,7 @@
         <div class="schedule-container" data-jly-template="{{ monthPopup @ obj }}">
             <div class="schedule today">
                 <span class="text">{{obj.clickItem.today}}</span>
-                <span class="close-vertical"></span>
+                <span class="close-vertical" data-index="{{obj.clickItem.today}}" ></span>
                 <span class="close left-margin"></span>
             </div>
             <jly data-jly-list.item="{{obj.clickItem.clickList}}">
@@ -442,7 +499,7 @@
         <div class="row title-wrapper" data-jly-template="{{ todayTitle @ obj }}">
             <div class="month">
                 <span class="month-arrow prev"><img src="/img/arrow-left.svg" alt="왼쪽 화살표"></span>
-                <span class="month-title" ></span>
+                <span class="month-title" >{{ obj.today }}</span>
                 <div class="container-date-picker">
                     <div id="datetimepicker-notime" data-target-input="nearest">
                         <input type='text' class="datetimepicker-input hidden day-data" />
@@ -465,7 +522,7 @@
                 </div>
             </div>
             <div class="cross">
-                <img src="/img/cross.svg" alt="십자가 아이콘">
+                <img src="/img/cross.svg" alt="십자가 아이콘" data-index="{{ obj.today }}" >
             </div>
         </div>
         <div class="row day day-wrapper" data-jly-template="{{ todayData @ obj }}">
@@ -601,14 +658,14 @@
                 <div class="import">
                     <label class="out-label" for="squaredFour">중요 일정</label>
                     <span class="squaredFour">
-                        <input type="checkbox" value="None" id="squaredFour" name="check" disabled checked/>
+                        <input type="checkbox" value="None" id="squaredFour" name="checkImpotant" disabled checked/>
                         <label for="squaredFour"></label>
                     </span>
                 </div>
-                <p class="location">
+                <!-- <p class="location">
                     <img src="/img/map.svg" alt="캘린더 아이콘">
                     <span>위치</span>
-                </p>
+                </p> -->
                 <p class="reset">
                     <input type="button" value="수정"><input type="button" value="삭제">
                 </p>

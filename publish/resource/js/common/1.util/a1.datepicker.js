@@ -812,7 +812,7 @@ class DatePicker {
     }
 
     #setIntputData( picker, closePick ){
-        const formatDate = moment(picker.date).format("YYYY-MM-DD hh:mm:ss");
+        const formatDate = moment(picker.date).format("YYYY-MM-DD HH:mm:ss");
         const input = picker.targetDom.querySelector('input');
         input.value = formatDate;
         if( picker.opts.callBackFun ){

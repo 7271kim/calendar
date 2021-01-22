@@ -1,5 +1,7 @@
 import { JTemplate, DatePicker } from "/js/common/component.js";
 
+let count = 0;
+
 (()=>{
     let calendarIcon, calendarIconPop, monthWarapper , monthTitleIcon, monthTitle, 
         datePickerTitle, dayData, preNextTitle, monthDimLayer,resetToday
@@ -7,6 +9,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
+    const dbTotalData = []
+
     const opts = {
         showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
         defaultDate : moment(), // 오늘이 날짜.
@@ -199,6 +203,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function templateMonthTitleUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.title-wrapper'), 'monthTitle' , sharedObj.drawObj.month);
+        document.querySelector('.view-month .cross img').addEventListener('click',writeDetail);
+        
         titleUpdate();
     }
     function titleUpdate(){
@@ -359,6 +365,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
     function templateTitleUpdate(){
         templateData.injectModel( sectionTarget.querySelectorAll('.view-year .title-wrapper'), 'yearTitle' , sharedObj.drawObj.year);
+        document.querySelector('.view-year .cross img').addEventListener('click',writeDetail);
+
         titleUpdate();
     }
     function resetDom(){
@@ -395,10 +403,12 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         }
     }
     function templateDayTitleUpdate(){
-        templateData.injectModel( sectionTarget.querySelectorAll('.view-day .title-wrapper'), 'todayTitle' , {});
         const startDate = sharedObj.startDate;
-        const titleTarget = document.querySelector('.view-day .title-wrapper .month-title');
-        titleTarget.textContent = startDate.format("YYYY-MM-DD");
+        const text = startDate.format("YYYY-MM-DD");
+
+        templateData.injectModel( sectionTarget.querySelectorAll('.view-day .title-wrapper'), 'todayTitle' , { 'today' : text});
+        document.querySelector('.view-day .cross img').addEventListener('click',writeDetail);
+
         titleUpdate();
     }
 
@@ -419,8 +429,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         if( dbData ){
             for( let itemIndex = dbData.length-1; itemIndex >= 0; itemIndex-- ){
                 const item = dbData[itemIndex];
-                const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh:mm').startOf("hours");
-                const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh:mm:ss');
+                const itemStartDate = moment(item.startDate,'YYYY-MM-DD HH:mm').startOf("hours");
+                const itemEndDate = moment(item.endDate,'YYYY-MM-DD HH:mm:ss');
                 const tempDay = getMoment(startDate);
                 for( let hour = 0; hour < 25; hour++ ){
                     const isBetween = tempDay.isSame(itemStartDate) || tempDay.isAfter(itemStartDate) && tempDay.isBefore(itemEndDate);
@@ -509,8 +519,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             if( dbData ){
                 for( let itemIndex = dbData.length-1; itemIndex >= 0; itemIndex-- ){
                     const item = dbData[itemIndex];
-                    const itemStartDate = moment(item.startDate,'YYYY-MM-DD hh:mm').startOf("hours");
-                    const itemEndDate = moment(item.endDate,'YYYY-MM-DD hh:mm:ss');
+                    const itemStartDate = moment(item.startDate,'YYYY-MM-DD HH:mm').startOf("hours");
+                    const itemEndDate = moment(item.endDate,'YYYY-MM-DD HH:mm:ss');
                     const tempDay = getMoment(startDate);
                     for( let hour = 0; hour < 25; hour++ ){
                         const isBetween = tempDay.isSame(itemStartDate) || tempDay.isAfter(itemStartDate) && tempDay.isBefore(itemEndDate);
@@ -603,6 +613,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         const startDate = sharedObj.startDate;
         const titleTarget = document.querySelector('.view-week .title-wrapper .month-title');
         titleTarget.textContent = startDate.format("YYYY-MM-DD");
+
+        document.querySelector('.view-week .cross img').addEventListener('click',writeDetail);
         titleUpdate();
     }
 
@@ -641,35 +653,13 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         sharedObj.pickDate =selectedDate;
         sharedObj.startDate =startDate;
         sharedObj.endDate = endDate;
-        const dbTotalData = [
-            {
-                'title' : '집밥먹기',
-                'seq' : '1',
-                'content' : '집에서 밥먹기',
-                'important' : '0',
-                'startDate' : '2021-01-21 10:00:00',
-                'endDate' :  '2021-01-21 12:12:00',
-                'latitude' : '',
-                'longitude'  :''
-            },
-            {
-                'title' : '밥먹으면서 노래듣기 13:00시에 끝',
-                'seq' : '2',
-                'content' : '노래듣기',
-                'important' : '1',
-                'startDate' : '2021-01-21 10:00:00',
-                'endDate' :  '2021-01-21 13:00:00',
-                'latitude' : '',
-                'longitude'  :''
-            }
-        ]
         
         const colorSet = ['#F3FBFF','#DFF3FF','#C9EBFF','#FAFBE9','#AAA9A2'];
         let colorIndex = 0;
 
         for( const item of dbTotalData ) {
-            const startDate = moment(item['startDate'],'YYYY-MM-DD hh:mm:ss');
-            const endDate = moment(item['endDate'],'YYYY-MM-DD hh:mm:ss');
+            const startDate = moment(item['startDate'],'YYYY-MM-DD HH:mm:ss');
+            const endDate = moment(item['endDate'],'YYYY-MM-DD HH:mm:ss');
             const seq = item.seq;
             
             if( colorIndex == colorSet.length ){
@@ -678,7 +668,7 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
             item.bgColor = colorSet[colorIndex++];
 
             if( startDate.isValid() && endDate.isValid() ){
-
+                startDate.startOf('day');
                 while( startDate.isBefore(endDate) ){
                     const date = startDate.format('YYYY-MM-DD');
                     if( !sharedObj.dbTotalData[date] ){
@@ -721,8 +711,17 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
     }
    
     function settingEvent(){
+        const write = document.querySelector('.write-dim-layer');
+        const closeDom = write.querySelector('.close');
+
         document.addEventListener('mousedown',addHiddenClass, true);
         window.addEventListener('resize', updateWeekStyle);
+        closeDom.removeEventListener('click',htmlRemoveHiden);
+        closeDom.addEventListener('click',htmlRemoveHiden);
+    }
+
+    function htmlRemoveHiden(){
+        document.querySelector('.write-dim-layer').classList.add('hidden');
     }
 
     function updateYearDate( isForceUpdate ){
@@ -847,6 +846,8 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
         templateData.injectModel( document.querySelectorAll('.schedule-container'), 'monthPopup' , sharedObj.drawObj.month);
         monthDimLayer = document.getElementsByClassName('month-dim-layer')[0];
         monthDimLayer.classList.remove('hidden');
+
+        document.querySelector('.schedule-container .close-vertical').addEventListener('click' , writeDetail);
         document.querySelector('.schedule-container .close').addEventListener('click' , (e)=>{
             monthDimLayer.classList.add('hidden');
         })
@@ -976,5 +977,122 @@ import { JTemplate, DatePicker } from "/js/common/component.js";
 
          return datePickerTitle;
     }
+
+    function writeDetail( event ){
+        const currentTarget = event.currentTarget;
+        const date = currentTarget.dataset.index ? currentTarget.dataset.index : moment().format('YYYY-MM-DD HH:mm:ss');
+        const wrateDom = document.querySelector('.write-dim-layer'); 
+        const startCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-start');
+        const endCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-end');
+
+        wrateDom.classList.remove('hidden');
+        wrateDom.querySelector('#detailTitle').value = '';
+        wrateDom.querySelector('#detailContent').value = '';
+        wrateDom.querySelector('#squaredFour').removeAttribute('checked');
+        wrateDom.querySelector('#startDate').value = '';
+        wrateDom.querySelector('#endDate').value = '';
+        wrateDom.querySelector('#detailTitle').focus();
+
+        const startPicker = DatePicker.datetimepicker( startCal,{ 
+            showTimeOption : true,
+            showDateOption : true,
+            showMinutes : true,
+            showSeconds : true,
+            useToday : true,
+            useTodayButton : true,
+            language : 'ko',
+            direction : 'auto',
+            minViewMode : "",
+            viewMode : "",
+            stepInterval : 5,
+            defaultDate : date,
+            callBackFun : changeStart
+         });
+
+         const endPicker = DatePicker.datetimepicker( endCal ,{ 
+            showTimeOption : true,
+            showDateOption : true,
+            showMinutes : true,
+            showSeconds : true,
+            useToday : true,
+            useTodayButton : true,
+            language : 'ko',
+            direction : 'auto',
+            minViewMode : "",
+            viewMode : "",
+            stepInterval : 5,
+            defaultDate : date,
+            callBackFun : changeEnd
+         });
+
+         const sClickPicker = ( startPicker )=>{
+            startPicker.show();
+         }
+
+         const eClickPicker = ( endPicker )=>{
+            endPicker.show();
+         }
+
+         wrateDom.querySelector('.start > span:nth-child(2)').removeEventListener('click' ,sClickPicker.bind(null,startPicker));
+         wrateDom.querySelector('.start > span:nth-child(2)').addEventListener('click' ,sClickPicker.bind(null,startPicker));
+         wrateDom.querySelector('.start-date input[type="text"]').removeEventListener('click' ,sClickPicker.bind(null,startPicker));
+         wrateDom.querySelector('.start-date input[type="text"]').addEventListener('click' ,sClickPicker.bind(null,startPicker));
+        
+         wrateDom.querySelector('.end > span:nth-child(2)').removeEventListener('click' ,eClickPicker.bind(null,endPicker));
+         wrateDom.querySelector('.end > span:nth-child(2)').addEventListener('click' ,eClickPicker.bind(null,endPicker));
+         wrateDom.querySelector('.end-date input[type="text"]').removeEventListener('click' ,eClickPicker.bind(null,endPicker));
+         wrateDom.querySelector('.end-date input[type="text"]').addEventListener('click' ,eClickPicker.bind(null,endPicker));
+
+         wrateDom.querySelector('.reset input').removeEventListener('click', formSubmit);
+         wrateDom.querySelector('.reset input').addEventListener('click', formSubmit);
+
+
+    }
+
+    function formSubmit(event){
+        event.preventDefault()
+
+        const wrateDom = document.querySelector('.write-dim-layer');
+
+        dbTotalData.push({
+            'title' : wrateDom.querySelector('#detailTitle').value,
+            'seq' : count++,
+            'content' : wrateDom.querySelector('#detailContent').value,
+            'important' : wrateDom.querySelector('#squaredFour').checked == true ? 1 : 0,
+            'startDate' : wrateDom.querySelector('#startDate').value,
+            'endDate' :  wrateDom.querySelector('#endDate').value,
+            'latitude' : '',
+            'longitude'  :''
+        })
+
+        wrateDom.classList.add('hidden');
+
+        init();
+    }
+    
+
+    function changeStart(){
+        const wrateDom = document.querySelector('.write-dim-layer'); 
+        const startCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-start input');
+        const hTarget = wrateDom.querySelector('.write-dim-layer .start-date input[type="hidden"]');
+        const cTarget = wrateDom.querySelector('.write-dim-layer .start-date input[type="text"]');
+        const weekdaysMin = moment.weekdaysMin();
+        const momoentC = moment(startCal.value,'YYYY-MM-DD HH:mm:ss');
+
+        hTarget.value = momoentC.format('YYYY-MM-DD HH:mm:ss');
+        cTarget.value = momoentC.format(`YYYY년 MM월 DD일 (${weekdaysMin[momoentC.days()]}) HH:mm:ss`);
+    }
+
+    function changeEnd(){
+        const wrateDom = document.querySelector('.write-dim-layer'); 
+        const endCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-end input');
+        const hTarget = wrateDom.querySelector('.write-dim-layer .end-date input[type="hidden"]');
+        const cTarget = wrateDom.querySelector('.write-dim-layer .end-date input[type="text"]');
+        const weekdaysMin = moment.weekdaysMin();
+        const momoentC = moment(endCal.value,'YYYY-MM-DD HH:mm:ss');
+
+        hTarget.value = momoentC.format('YYYY-MM-DD HH:mm:ss');
+        cTarget.value = momoentC.format(`YYYY년 MM월 DD일 (${weekdaysMin[momoentC.days()]}) HH:mm:ss`);
+    }
    
-})();   
+})();
