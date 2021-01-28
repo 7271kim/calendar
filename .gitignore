@@ -20,3 +20,4 @@ ui.apps/src/main/content/jcr_root/libs
 /bin/
 .history/
 **/.env
+**/prod.json
