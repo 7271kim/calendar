@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const devConfig = require('../devConfig');
 const { Member, CalList } = require('../models');
-const { verifyToken, deprecated } = require('./middlewares');
+const { verifyToken, deprecated, apiLimiter } = require('./middlewares');
 const router = express.Router();
 
 // jwt 토근 발급
@@ -38,7 +38,7 @@ router.post('/token', async (req, res) => {
   }
 });
 
-router.post('/member', verifyToken, async (req, res ) => {
+router.post('/member', verifyToken, apiLimiter, async (req, res ) => {
   try {
     Member.create({
       mail: req.body.mail,
@@ -55,7 +55,7 @@ router.post('/member', verifyToken, async (req, res ) => {
   }
 });
 
-router.post('/calendar', verifyToken, async (req, res ) => {
+router.post('/calendar', verifyToken, apiLimiter, async (req, res ) => {
   try {
     CalList.create({
       title: req.body.title,
@@ -73,7 +73,7 @@ router.post('/calendar', verifyToken, async (req, res ) => {
   }
 });
 
-router.get('/calendar/:mail', verifyToken, (req, res) => {
+router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
   const mail = req.decoded.mail;
   const input = encodeURIComponent(req.params.mail);
   if( mail !== input ){
