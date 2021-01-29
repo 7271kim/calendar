@@ -4,7 +4,12 @@ const devConfig = require('../devConfig');
 
 exports.verifyToken = (req, res, next) => {
   try {
-    req.decoded = jwt.verify(req.headers.authorization, devConfig.jwtSecret);
+    if(req.method === 'POST'){
+      req.decoded = jwt.verify(req.body.headers.authorization, devConfig.jwtSecret);
+    } else {
+      req.decoded = jwt.verify(req.headers.authorization, devConfig.jwtSecret);
+    }
+    
     if( req.decoded.uuid !== devConfig.uuid ){
       return res.status(401).json({
         code: 401,
