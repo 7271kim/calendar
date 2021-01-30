@@ -9,7 +9,7 @@ const app = express();
 const indexRouter = require('./routes');
 const apiRouter = require('./routes/api');
 
-app.set('port', process.env.PORT || 4000);
+app.set('port', devConfig.port);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
   express: app,

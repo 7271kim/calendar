@@ -15,7 +15,7 @@ if( !isDev ){
     currentWeb = process.env.CURRENT_WEB;
 } else {
     production = 'dev';
-    port = 'dev';
+    port = '3003';
     cookieSecret = 'dev';
     jwtSecret = 'dev';
     clientSecret = 'dev';

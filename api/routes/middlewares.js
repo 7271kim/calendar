@@ -4,20 +4,8 @@ const devConfig = require('../devConfig');
 
 exports.verifyToken = (req, res, next) => {
   try {
-    if(req.method === 'POST'){
-      req.decoded = jwt.verify(req.body.headers.authorization, devConfig.jwtSecret);
-    } else {
-      req.decoded = jwt.verify(req.headers.authorization, devConfig.jwtSecret);
-    }
-    
-    if( req.decoded.uuid !== devConfig.uuid ){
-      return res.status(401).json({
-        code: 401,
-        message: '유효하지 않은 토큰입니다',
-      });
-    } else {
-      return next();
-    }
+    req.decoded = jwt.verify(req.headers.authorization, devConfig.jwtSecret);
+    return next();
     
   } catch (error) {
     if (error.name === 'TokenExpiredError') { // 유효기간 초과

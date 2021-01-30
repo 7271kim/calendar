@@ -5,23 +5,26 @@ const devConfig = require('../devConfig');
 const router = express.Router();
 const URL = devConfig.apiURL;
 const mail = 'aa';
+const name = '이름'
 
 axios.defaults.headers.origin = devConfig.currentWeb;
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 5000;
 
 const request = async (req, api) => {
   try {
-    if (!req.session.jwt) { // 세션에 토큰이 없으면
+    if (!req.session.jwt) {
       const tokenResult = await axios.post(`${URL}/token`, {
         clientSecret: devConfig.clientSecret,
-        mail : mail
+        mail, name
+
       });
-      req.session.jwt = tokenResult.data.token; // 세션에 토큰 저장
+      req.session.jwt = tokenResult.data.token;
     }
-    req.body.headers = { authorization: req.session.jwt };
 
     if(req.method === 'POST'){
-      return await axios.post(`${URL}${api}`, req.body);
+      return await axios.post(`${URL}${api}`, req.body, {
+        headers: { authorization: req.session.jwt }
+      });
     } else {
       return await axios.get(`${URL}${api}`, {
         headers: { authorization: req.session.jwt }
@@ -77,4 +80,5 @@ router.post('/cal-one', async ( req, res, next ) => {
     }
   }
 });
+
 module.exports = router;

@@ -7,9 +7,9 @@ const router = express.Router();
 
 // jwt 토근 발급
 router.post('/token', async (req, res) => {
-  const { clientSecret, mail } = req.body;
+  const { clientSecret, mail, name } = req.body;
   try {
-    
+    // 추후 발급자 마다 해당 비밀키를 다르게 두어, DB세팅 후 거기서 확인 가능.
     if ( clientSecret !== devConfig.clientSecret ) {
       return res.status(401).json({
         code: 401,
@@ -18,10 +18,9 @@ router.post('/token', async (req, res) => {
     }
 
     const token = jwt.sign({
-      uuid: devConfig.uuid,
-      mail
+      mail, name
     }, devConfig.jwtSecret, {
-      expiresIn: '10m', // 1분
+      expiresIn: '10m', // 10분
       issuer: 'calendar',
     });
 
@@ -39,10 +38,13 @@ router.post('/token', async (req, res) => {
 });
 
 router.post('/member', verifyToken, apiLimiter, async (req, res ) => {
+  const mail = req.decoded.mail;
+  const name = req.decoded.name;
+
   try {
     Member.create({
-      mail: req.body.mail,
-      name : req.body.name
+      mail: mail,
+      name : name
     })
     return res.json({
       message: 'Member 등록이 완료되었습니다.',
@@ -56,11 +58,13 @@ router.post('/member', verifyToken, apiLimiter, async (req, res ) => {
 });
 
 router.post('/calendar', verifyToken, apiLimiter, async (req, res ) => {
+  const mail = req.decoded.mail;
+
   try {
     CalList.create({
       title: req.body.title,
       content : req.body.content,
-      mail : req.body.mail
+      mail : mail
     })
     return res.json({
       message: 'Calendar 등록이 완료되었습니다.',
