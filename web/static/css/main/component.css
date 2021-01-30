@@ -1,0 +1,548 @@
+.main-section {
+  height: 100%;
+  min-height: 100%;
+}
+.main-section .view-theme {
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(197, 224, 220, 0.2);
+}
+.main-section .view-theme .row {
+  display: flex;
+  margin: 0px 15px 0px 15px;
+}
+.main-section .view-theme .title-wrapper {
+  margin: 15px;
+}
+.main-section .view-theme .title-wrapper div {
+  flex: none;
+}
+.main-section .view-theme .title-wrapper .month {
+  display: flex;
+  flex: none;
+}
+.main-section .view-theme .title-wrapper .month .month-arrow {
+  cursor: pointer;
+  display: flex;
+}
+.main-section .view-theme .title-wrapper .month .today {
+  cursor: pointer;
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+}
+.main-section .view-theme .title-wrapper .month .today img {
+  width: 20px;
+  height: 20px;
+}
+.main-section .view-theme .title-wrapper .month .month-title {
+  cursor: pointer;
+  margin: 0 10px 0 10px;
+  line-height: 30px;
+}
+.main-section .view-theme .title-wrapper .month .container-date-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-section .view-theme .title-wrapper .month .container-date-picker .calendar-togle {
+  cursor: pointer;
+  margin-right: 10px;
+}
+.main-section .view-theme .title-wrapper .calendar-icon {
+  margin-left: auto;
+  cursor: pointer;
+  position: relative;
+}
+.main-section .view-theme .title-wrapper .calendar-icon .triangle {
+  border-style: solid;
+  border-width: 15px;
+  border-color: transparent transparent #B4C0D9 transparent;
+  position: absolute;
+  top: -30px;
+  right: 15px;
+}
+.main-section .view-theme .title-wrapper .calendar-icon .group-popup {
+  position: absolute;
+  width: 200px;
+  left: -158px;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #b4c0d9;
+  border-radius: 10px;
+  z-index: 1;
+}
+.main-section .view-theme .title-wrapper .calendar-icon .group-popup div {
+  height: 50px;
+  line-height: 50px;
+  font-family: 'NanumGothic';
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+}
+.main-section .view-theme .title-wrapper .calendar-icon .group-popup .current {
+  font-family: 'NanumGothic bold';
+  font-size: 16px;
+}
+.main-section .view-theme .title-wrapper .cross {
+  margin: 0px 10px 0px 25px;
+  cursor: pointer;
+}
+.main-section .view-theme .week {
+  display: flex;
+  background-color: rgba(236, 229, 206, 0.5);
+}
+.main-section .view-theme .week .day-of-week {
+  flex: 1;
+  text-align: center;
+  line-height: 30px;
+}
+.main-section .view-theme .day {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+  margin-bottom: 15px;
+  font-size: 15px;
+}
+.main-section .view-theme .day .one-week {
+  display: flex;
+  flex: 1;
+  height: 25%;
+  overflow: hidden;
+}
+.main-section .view-theme .day .one-week .old.day-warpper,
+.main-section .view-theme .day .one-week .new.day-warpper {
+  color: #777777;
+}
+.main-section .view-theme .day .one-week .old.day-warpper .day-dec .important,
+.main-section .view-theme .day .one-week .new.day-warpper .day-dec .important {
+  background-color: gainsboro;
+  color: #777777;
+}
+.main-section .view-theme .day .one-week .old.day-warpper .day-dec .post,
+.main-section .view-theme .day .one-week .new.day-warpper .day-dec .post {
+  background-color: gainsboro;
+  color: #777777;
+}
+.main-section .view-theme .day .one-week .old.day-warpper .day-dec .schedule,
+.main-section .view-theme .day .one-week .new.day-warpper .day-dec .schedule {
+  color: #777777;
+}
+.main-section .view-theme .day .one-week .today.day-warpper .day-title .title-text {
+  background: pink;
+  border-radius: 50px;
+  padding: 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.main-section .view-theme .day .one-week .day-warpper {
+  flex: 1;
+  max-width: 14.29%;
+  padding: 7px;
+  cursor: pointer;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-title {
+  display: flex;
+  cursor: pointer;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-title span {
+  margin-left: auto;
+  height: 20px;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-title span img {
+  width: 10px;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-title .title-text {
+  margin: 0;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-dec p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1px 0px 1px 0px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  padding-right: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-dec .post {
+  background-color: #039be5;
+  color: white;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-dec .important {
+  color: #ff8787;
+  background: #C5E0DC;
+}
+.main-section .view-theme .day .one-week .day-warpper .day-dec .schedule {
+  color: black;
+}
+.main-section .view-theme .day .one-week .day-warpper:hover {
+  background-color: #69D2E7;
+}
+.main-section .view-theme.view-year .year {
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+.main-section .view-theme.view-year .year .one-row {
+  display: flex;
+  flex: 1;
+}
+.main-section .view-theme.view-year .year .one-row .calendar-month {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 3px;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: #F2E9E1;
+  cursor: pointer;
+}
+.main-section .view-theme.view-year .year .one-row .calendar-month:hover {
+  background-color: transparent;
+}
+.main-section .view-theme.view-year .year .one-row .title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+}
+.main-section .view-theme.view-year .year .one-row .one-week {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+}
+.main-section .view-theme.view-year .year .one-row .one-week span {
+  flex: 1;
+  font-size: 10px;
+}
+.main-section .view-theme.view-year .year .one-row .one-week .old,
+.main-section .view-theme.view-year .year .one-row .one-week .new {
+  opacity: 0.4;
+  color: #777777;
+}
+.main-section .view-theme.view-year .year .one-row .one-week .check {
+  position: relative;
+  background: #C5E0DC;
+  font-weight: bold;
+}
+.main-section .view-theme.view-year .year .one-row .one-week .check.old {
+  position: relative;
+  opacity: 0.4;
+  color: #777777;
+}
+.main-section .view-theme.view-week {
+  min-width: 910px;
+}
+.main-section .view-theme.view-week .day-wrapper,
+.main-section .view-theme.view-day .day-wrapper {
+  overflow: auto;
+}
+.main-section .view-theme.view-week .day-wrapper thead,
+.main-section .view-theme.view-day .day-wrapper thead {
+  line-height: 50px;
+}
+.main-section .view-theme.view-week .day-wrapper tbody tr,
+.main-section .view-theme.view-day .day-wrapper tbody tr {
+  height: 40px;
+  border-bottom: 1px dashed;
+  border-top: 1px dashed;
+}
+.main-section .view-theme.view-week .day-wrapper tbody tr td,
+.main-section .view-theme.view-day .day-wrapper tbody tr td {
+  vertical-align: middle;
+  position: relative;
+}
+.main-section .view-theme.view-week .day-wrapper .time,
+.main-section .view-theme.view-day .day-wrapper .time {
+  width: 50px;
+}
+.month-dim-layer,
+.detail-dim-layer,
+.write-dim-layer {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.month-dim-layer .dim,
+.detail-dim-layer .dim,
+.write-dim-layer .dim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.8;
+  filter: alpha(opacity=50);
+}
+.month-dim-layer .schedule-container,
+.detail-dim-layer .schedule-container,
+.write-dim-layer .schedule-container,
+.month-dim-layer .detail-container,
+.detail-dim-layer .detail-container,
+.write-dim-layer .detail-container {
+  width: 50%;
+  height: 70%;
+  background: white;
+  z-index: 1;
+  padding: 20px;
+  border-radius: 10px;
+  overflow: auto;
+}
+.month-dim-layer .schedule-container .schedule,
+.detail-dim-layer .schedule-container .schedule,
+.write-dim-layer .schedule-container .schedule,
+.month-dim-layer .detail-container .schedule,
+.detail-dim-layer .detail-container .schedule,
+.write-dim-layer .detail-container .schedule {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 5px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 10px;
+  padding: 0 10px 0 10px;
+}
+.month-dim-layer .schedule-container .important,
+.detail-dim-layer .schedule-container .important,
+.write-dim-layer .schedule-container .important,
+.month-dim-layer .detail-container .important,
+.detail-dim-layer .detail-container .important,
+.write-dim-layer .detail-container .important {
+  color: black;
+  background: #C5E0DC;
+  cursor: pointer;
+}
+.month-dim-layer .schedule-container .post,
+.detail-dim-layer .schedule-container .post,
+.write-dim-layer .schedule-container .post,
+.month-dim-layer .detail-container .post,
+.detail-dim-layer .detail-container .post,
+.write-dim-layer .detail-container .post {
+  background-color: #039be5;
+}
+.month-dim-layer .schedule-container .normal,
+.detail-dim-layer .schedule-container .normal,
+.write-dim-layer .schedule-container .normal,
+.month-dim-layer .detail-container .normal,
+.detail-dim-layer .detail-container .normal,
+.write-dim-layer .detail-container .normal {
+  background-color: #eaeaea;
+  cursor: pointer;
+}
+.month-dim-layer .schedule-container .text,
+.detail-dim-layer .schedule-container .text,
+.write-dim-layer .schedule-container .text,
+.month-dim-layer .detail-container .text,
+.detail-dim-layer .detail-container .text,
+.write-dim-layer .detail-container .text {
+  display: flex;
+  align-items: center;
+}
+.month-dim-layer .schedule-container .today,
+.detail-dim-layer .schedule-container .today,
+.write-dim-layer .schedule-container .today,
+.month-dim-layer .detail-container .today,
+.detail-dim-layer .detail-container .today,
+.write-dim-layer .detail-container .today {
+  display: flex;
+  align-items: center;
+}
+.month-dim-layer .schedule-container .close-vertical,
+.detail-dim-layer .schedule-container .close-vertical,
+.write-dim-layer .schedule-container .close-vertical,
+.month-dim-layer .detail-container .close-vertical,
+.detail-dim-layer .detail-container .close-vertical,
+.write-dim-layer .detail-container .close-vertical {
+  margin-left: 10px;
+}
+.month-dim-layer .schedule-container .close,
+.detail-dim-layer .schedule-container .close,
+.write-dim-layer .schedule-container .close,
+.month-dim-layer .detail-container .close,
+.detail-dim-layer .detail-container .close,
+.write-dim-layer .detail-container .close {
+  margin-left: auto;
+}
+.detail-dim-layer .detail-container,
+.write-dim-layer .detail-container {
+  position: relative;
+  width: 500px;
+  background: #ebebeb;
+  padding: 12px;
+}
+.detail-dim-layer .detail-container .import,
+.write-dim-layer .detail-container .import,
+.detail-dim-layer .detail-container p,
+.write-dim-layer .detail-container p {
+  padding: 12px;
+}
+.detail-dim-layer .detail-container .close,
+.write-dim-layer .detail-container .close {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: white;
+  width: 40px;
+  height: 40px;
+}
+.detail-dim-layer .detail-container .close::before,
+.write-dim-layer .detail-container .close::before {
+  height: 40px;
+  left: 20px;
+}
+.detail-dim-layer .detail-container .close::after,
+.write-dim-layer .detail-container .close::after {
+  height: 40px;
+  left: 20px;
+}
+.detail-dim-layer .detail-container textarea,
+.write-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input,
+.write-dim-layer .detail-container input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 16px;
+  outline: 0;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+.detail-dim-layer .detail-container .out-label,
+.write-dim-layer .detail-container .out-label {
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .squaredFour,
+.write-dim-layer .detail-container .squaredFour {
+  width: 20px;
+  position: relative;
+  margin: 20px auto;
+}
+.detail-dim-layer .detail-container .squaredFour label,
+.write-dim-layer .detail-container .squaredFour label {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  background: #fcfff4;
+  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  border-radius: 4px;
+  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+.detail-dim-layer .detail-container .squaredFour label:after,
+.write-dim-layer .detail-container .squaredFour label:after {
+  content: '';
+  width: 9px;
+  height: 5px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border: 3px solid #333;
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  transform: rotate(-45deg);
+}
+.detail-dim-layer .detail-container .squaredFour label:hover::after,
+.write-dim-layer .detail-container .squaredFour label:hover::after {
+  opacity: 0.5;
+}
+.detail-dim-layer .detail-container .squaredFour input[type=checkbox],
+.write-dim-layer .detail-container .squaredFour input[type=checkbox] {
+  visibility: hidden;
+}
+.detail-dim-layer .detail-container .squaredFour input[type=checkbox]:checked + label:after,
+.write-dim-layer .detail-container .squaredFour input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+.detail-dim-layer .detail-container textarea,
+.write-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input[type="text"],
+.write-dim-layer .detail-container input[type="text"] {
+  background: #fff;
+  border-color: #bbb;
+  color: #555;
+}
+.detail-dim-layer .detail-container textarea,
+.write-dim-layer .detail-container textarea,
+.detail-dim-layer .detail-container input[type="text"]:focus,
+.write-dim-layer .detail-container input[type="text"]:focus {
+  border-color: #888;
+}
+.detail-dim-layer .detail-container textarea,
+.write-dim-layer .detail-container textarea {
+  resize: none;
+}
+.detail-dim-layer .detail-container input[type="button"],
+.write-dim-layer .detail-container input[type="button"],
+.detail-dim-layer .detail-container input[type="submit"],
+.write-dim-layer .detail-container input[type="submit"] {
+  background: #28d;
+  border-color: transparent;
+  color: #fff;
+  width: 40%;
+  float: left;
+  margin: 5%;
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container input[type="button"]:hover,
+.write-dim-layer .detail-container input[type="button"]:hover,
+.detail-dim-layer .detail-container input[type="submit"]:hover,
+.write-dim-layer .detail-container input[type="submit"]:hover {
+  background: #17c;
+}
+.detail-dim-layer .detail-container img,
+.write-dim-layer .detail-container img {
+  vertical-align: middle;
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .start span,
+.write-dim-layer .detail-container .start span,
+.detail-dim-layer .detail-container .end span,
+.write-dim-layer .detail-container .end span {
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .location span,
+.write-dim-layer .detail-container .location span {
+  cursor: pointer;
+}
+.detail-dim-layer .detail-container .day,
+.write-dim-layer .detail-container .day {
+  background: #28d;
+  padding: 20px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+}
+.write-dim-layer .detail-container input[type="submit"] {
+  width: 100%;
+  margin: 0;
+}

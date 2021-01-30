@@ -11,15 +11,23 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
+    "connect-livereload": "^0.6.1",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "livereload": "^0.9.1",
     "morgan": "^1.10.0",
     "nunjucks": "^3.2.2",
-    "passport": "^0.4.1"
+    "passport": "^0.4.1",
+    "uglify-js": "^3.12.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "js/*"
+    ]
   }
 }
