@@ -25,7 +25,7 @@ const app = express();
 
 const indexRouter = require('./routes');
 const authRouter = require('./routes/auth');
-const apiRouter = require('./routes/api');
+const {apiRouter} = require('./routes/api');
 
 
 app.set('port', devConfig.port);

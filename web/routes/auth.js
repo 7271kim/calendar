@@ -5,6 +5,7 @@ const axios = require('axios');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const devConfig = require('../devConfig');
 const router = express.Router();
+const {request} = require('./api')
 
 
 router.get('/kakao', passport.authenticate('kakao'));
@@ -18,11 +19,17 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
           req.session.name  = req.user.name;
           
           const result = await request(
-            req, `/member/${mail}`,
+            req, `/member/${req.session.email}`,
           );
-          
-          console.log(result);
+          if( result.data.list == 0 ){
+            req.method = 'POST';
+            const result = await request(
+              req, `/member/`,
+            );
+            console.log(result);
+          } 
           res.redirect('/');
+          
         }
     } catch (error) {
       if (error.code || error.message ) {

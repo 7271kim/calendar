@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const devConfig = require('../devConfig');
 
-const router = express.Router();
+const apiRouter = express.Router();
 const URL = devConfig.apiURL;
 
 axios.defaults.headers.origin = devConfig.currentWeb;
@@ -12,7 +12,7 @@ const request = async (req, api) => {
   let mail, name;
 
   try {
-    if( req.session.emai ){
+    if( req.session.email ){
       mail = req.session.email;
       name = req.session.name;
     }
@@ -43,7 +43,7 @@ const request = async (req, api) => {
   }
 };
 
-router.get('/callist', async (req, res, next) => {
+apiRouter.get('/callist', async (req, res, next) => {
   try {
       const result = await request(
         req, `/calendar/${mail}`,
@@ -57,21 +57,7 @@ router.get('/callist', async (req, res, next) => {
     }
 });
 
-router.post('/member-one', async ( req, res, next ) => {
-    try {
-      const result = await request(
-        req, `/member/`,
-      );
-      res.json(result.data);
-    } catch (error) {
-      if (error.code || error.message ) {
-        console.error(error);
-        next(error);
-      }
-    }
-});
-
-router.post('/cal-one', async ( req, res, next ) => {
+apiRouter.post('/cal-one', async ( req, res, next ) => {
   try {
     const result = await request(
       req, `/calendar`,
@@ -85,4 +71,4 @@ router.post('/cal-one', async ( req, res, next ) => {
   }
 });
 
-module.exports = { router , request };
+module.exports = { apiRouter , request };

@@ -107,7 +107,7 @@ router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
 
 router.get('/member/:mail', verifyToken, apiLimiter, (req, res) => {
   const mail = req.decoded.mail;
-  const input = encodeURIComponent(req.params.mail);
+  const input = req.params.mail;
   if( mail !== input ){
     return res.json({
       code: 200,
