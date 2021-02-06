@@ -20,6 +20,20 @@
 .main-section .view-theme .title-wrapper div {
   flex: none;
 }
+.main-section .view-theme .title-wrapper .logout {
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+}
+.main-section .view-theme .title-wrapper .logout a {
+  color: black;
+  text-decoration: none;
+  outline: none;
+}
+.main-section .view-theme .title-wrapper .logout a:hover,
+.main-section .view-theme .title-wrapper .logout a:active {
+  text-decoration: none;
+}
 .main-section .view-theme .title-wrapper .month {
   display: flex;
   flex: none;

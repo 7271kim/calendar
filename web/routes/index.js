@@ -6,13 +6,18 @@ const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', isLoggedIn, async (req, res, next) => {
   res.sendFile( path.join(__dirname,'../views/main.html') );
 });
 
-router.get('/login', async (req, res, next) => {
+router.get('/login', isNotLoggedIn, async (req, res, next) => {
   res.sendFile( path.join(__dirname,'../views/login.html') );
 });
 
+router.get('/logout', isLoggedIn, async (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.redirect('/');
+});
 
 module.exports = router;

@@ -47,11 +47,13 @@ router.post('/member', verifyToken, apiLimiter, async (req, res ) => {
       name : name
     })
     return res.json({
+      status : true,
       message: 'Member 등록이 완료되었습니다.',
     });
   } catch (error) {
     return res.status(500).json({
       code: 500,
+      status : false,
       message: '서버 에러',
     });
   }

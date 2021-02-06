@@ -8,9 +8,9 @@ const router = express.Router();
 const {request} = require('./api')
 
 
-router.get('/kakao', passport.authenticate('kakao'));
+router.get('/kakao', isNotLoggedIn, passport.authenticate('kakao'));
 
-router.get('/kakao/callback', passport.authenticate('kakao', {
+router.get('/kakao/callback', isNotLoggedIn, passport.authenticate('kakao', {
   failureRedirect: '/',
 }), async (req, res, next) => {
     try {
@@ -26,8 +26,11 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
             const result = await request(
               req, `/member/`,
             );
-            console.log(result);
-          } 
+            if( !result.data.status ) {
+              new Error(result.data.message);
+            }
+          }
+          
           res.redirect('/');
           
         }
