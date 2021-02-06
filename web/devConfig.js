@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const isDev = ( process.env.PRODUCTION || 'dev' ) === 'dev';
-let production, port, cookieSecret, jwtSecret, clientSecret, uuid, apiURL, currentWeb
+let production, port, cookieSecret, jwtSecret, clientSecret, uuid, apiURL, currentWeb,kakaoID
 
 if( !isDev ){
     production = process.env.PRODUCTION;
@@ -13,6 +13,7 @@ if( !isDev ){
     uuid = process.env.UUID;
     apiURL = process.env.API_URL;
     currentWeb = process.env.CURRENT_WEB;
+    kakaoID = process.env.KAKAO_ID;
 } else {
     production = 'dev';
     port = '3003';
@@ -22,8 +23,9 @@ if( !isDev ){
     uuid = 'dev';
     apiURL = 'http://localhost:3001/api-v1';
     currentWeb = 'http://localhost:3003';
+    kakaoID = process.env.KAKAO_ID;
 }
 
 module.exports = {
-    production, port, cookieSecret, jwtSecret, clientSecret, uuid, apiURL, currentWeb
+    production, port, cookieSecret, jwtSecret, clientSecret, uuid, apiURL, currentWeb,kakaoID
 };

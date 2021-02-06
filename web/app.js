@@ -12,11 +12,21 @@ const session = require('express-session');
 const nunjucks = require('nunjucks');
 
 const devConfig = require('./devConfig');
+
+const passport = require('passport');
+const passportConfig = require('./passport');
+
+passportConfig();
+
 const env = devConfig.production;
 const app = express();
 
+
+
 const indexRouter = require('./routes');
+const authRouter = require('./routes/auth');
 const apiRouter = require('./routes/api');
+
 
 app.set('port', devConfig.port);
 app.set('view engine', 'html');
@@ -35,6 +45,9 @@ app.use(session({
     secure: false,
   }
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -56,6 +69,7 @@ if( env === 'dev' ){
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/auth', authRouter);
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

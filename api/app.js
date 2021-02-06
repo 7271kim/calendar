@@ -1,12 +1,10 @@
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const passport = require('passport');
 const morgan = require('morgan');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const devConfig = require('./devConfig');
-
 const { sequelize } = require('./models');
 const version1 = require('./routes/version1.0.0');
 

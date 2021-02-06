@@ -4,14 +4,18 @@ const devConfig = require('../devConfig');
 
 const router = express.Router();
 const URL = devConfig.apiURL;
-const mail = 'aa';
-const name = '이름'
 
 axios.defaults.headers.origin = devConfig.currentWeb;
 axios.defaults.timeout = 5000;
 
 const request = async (req, api) => {
+  let mail, name;
+
   try {
+    if( req.session.emai ){
+      mail = req.session.email;
+      name = req.session.name;
+    }
     if (!req.session.jwt) {
       const tokenResult = await axios.post(`${URL}/token`, {
         clientSecret: devConfig.clientSecret,
@@ -40,23 +44,23 @@ const request = async (req, api) => {
 };
 
 router.get('/callist', async (req, res, next) => {
-    try {
-        const result = await request(
-          req, `/calendar/${mail}`,
-        );
-        res.json(result.data);
-      } catch (error) {
-        if (error.code || error.message ) {
-          console.error(error);
-          next(error);
-        }
+  try {
+      const result = await request(
+        req, `/calendar/${mail}`,
+      );
+      res.json(result.data);
+    } catch (error) {
+      if (error.code || error.message ) {
+        console.error(error);
+        next(error);
       }
-  });
+    }
+});
 
 router.post('/member-one', async ( req, res, next ) => {
     try {
       const result = await request(
-        req, `/member`,
+        req, `/member/`,
       );
       res.json(result.data);
     } catch (error) {
@@ -81,4 +85,4 @@ router.post('/cal-one', async ( req, res, next ) => {
   }
 });
 
-module.exports = router;
+module.exports = { router , request };

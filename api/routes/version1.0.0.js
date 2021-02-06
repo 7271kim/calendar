@@ -105,4 +105,31 @@ router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
   }
 });
 
+router.get('/member/:mail', verifyToken, apiLimiter, (req, res) => {
+  const mail = req.decoded.mail;
+  const input = encodeURIComponent(req.params.mail);
+  if( mail !== input ){
+    return res.json({
+      code: 200,
+      message: '권한이 없습니다.',
+    });
+  } else {
+    Member.findAll({ 
+      where: { 'mail': mail } })
+    .then((posts) => {
+      res.json({
+        code: 200,
+        list: posts,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        code: 500,
+        message: '서버 에러',
+      });
+    });
+  }
+});
+
 module.exports = router;
