@@ -9,7 +9,7 @@ let count = 0;
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
-    const dbTotalData = []
+    let dbTotalData = []
 
     const opts = {
         showMode : 'month', // day - 일 , week- 주 , month- 월, year- 년
@@ -99,9 +99,24 @@ let count = 0;
             }
         }
     }
-    
-    init();
+    getAPIData();
 
+    async function getAPIData(){
+        const response = await fetch('http://localhost:3003/api/callist',{ method: 'GET' })
+
+        if (response.ok) { // HTTP 상태 코드가 200~299일 경우
+            let json = await response.json();
+            if( json.code !== 500 ){
+                dbTotalData = json.list;
+                console.log(json);
+            }
+            init();
+            
+        } else {
+            new Error('DB에러');
+        }
+        
+    }
     function init(){
         getDateData();
         drawTotal();
@@ -617,12 +632,10 @@ let count = 0;
         document.querySelector('.view-week .cross img').addEventListener('click',writeDetail);
         titleUpdate();
     }
-
     function getDateData( date ){
         let startDate,endDate;
         let selectedDate = opts.defaultDate;
         sharedObj.dbTotalData={};
-        
         if( date ){
             selectedDate = getMoment(date);
         }

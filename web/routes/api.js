@@ -44,6 +44,8 @@ const request = async (req, api) => {
 };
 
 apiRouter.get('/callist', async (req, res, next) => {
+  const mail = req.session.email;
+  const name = req.session.name;
   try {
       const result = await request(
         req, `/calendar/${mail}`,

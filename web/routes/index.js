@@ -14,4 +14,8 @@ router.get('/login', isNotLoggedIn, async (req, res, next) => {
   res.sendFile( path.join(__dirname,'../views/login.html') );
 });
 
+router.get('/test', isLoggedIn, async (req, res, next) => {
+  res.sendFile( path.join(__dirname,'../views/cal-resigst.html') );
+});
+
 module.exports = router;

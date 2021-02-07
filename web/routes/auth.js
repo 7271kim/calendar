@@ -22,9 +22,9 @@ router.get('/google/callback', isNotLoggedIn, passport.authenticate('google', {
 router.get('/logout', isLoggedIn, async (req, res, next) => {
   if( req.session.loginType === 'kakao' ){
     try {
+        axios.get(`https://kauth.kakao.com/oauth/logout?client_id=${devConfig.kakaoID}&logout_redirect_uri=${devConfig.currentWeb}/`);
         axios.defaults.headers.Authorization = `Bearer ${req.session.accessToken}`
-        const tokenResult = await axios.post(`https://kapi.kakao.com/v1/user/logout`);
-        console.log(tokenResult);
+        axios.post(`https://kapi.kakao.com/v1/user/logout`);
     } catch (error) {
       console.log(error);
     }

@@ -17,12 +17,12 @@ module.exports = class Member extends Sequelize.Model {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      join_date: {
+      joinDate: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      last_login: {
+      lastLogin: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
@@ -42,7 +42,7 @@ module.exports = class Member extends Sequelize.Model {
     },{
       sequelize,
       timestamps: true,
-      underscored: true,
+      underscored: false,
       modelName: 'Member',
       tableName: 'cal_member',
       paranoid: true,

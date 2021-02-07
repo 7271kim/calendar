@@ -20,12 +20,12 @@ module.exports = class CalList extends Sequelize.Model {
         type: Sequelize.INTEGER,
         defaultValue : 0
       },
-      start_date: {
+      startDate: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      end_date: {
+      endDate: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
@@ -41,7 +41,7 @@ module.exports = class CalList extends Sequelize.Model {
     },{
       sequelize,
       timestamps: true,
-      underscored: true,
+      underscored: false,
       modelName: 'CalList',
       tableName: 'cal_list',
       paranoid: true,
