@@ -887,7 +887,7 @@ let count = 0;
             'content' : target.content,
             'important' : target.important,
             'startDate' :  startDate.format(`YYYY년 MM월 DD일(${weekdaysMin[startDate.days()]}) HH:mm:ss `),
-            'endDate' :  endDate.format(`YYYY년 MM월 DD일(${weekdaysMin[startDate.days()]}) HH:mm:ss `),
+            'endDate' :  endDate.format(`YYYY년 MM월 DD일(${weekdaysMin[endDate.days()]}) HH:mm:ss `),
             'latitude' : '',
             'longitude'  :''
         }
@@ -999,7 +999,7 @@ let count = 0;
         const startCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-start');
         const endCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-end');
         const startDate = moment(date).startOf('day');
-        const endDate = moment(date).endOf('day');
+        const endDate = moment(date).add(1,'hour');
 
         wrateDom.classList.remove('hidden');
         wrateDom.querySelector('#detailTitle').value = '';
