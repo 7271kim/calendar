@@ -66,13 +66,18 @@ router.post('/calendar', verifyToken, apiLimiter, async (req, res ) => {
     CalList.create({
       title: req.body.title,
       content : req.body.content,
+      important : req.body.important,
+      startDate : req.body.startDate,
+      endDate : req.body.endDate,
       mail : mail
     })
     return res.json({
+      status : true,
       message: 'Calendar 등록이 완료되었습니다.',
     });
   } catch (error) {
     return res.status(500).json({
+      status : false,
       code: 500,
       message: '서버 에러',
     });
@@ -85,6 +90,7 @@ router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
   if( mail !== input ){
     return res.json({
       code: 200,
+      status : false,
       message: '권한이 없습니다.',
     });
   } else {
@@ -101,6 +107,7 @@ router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
       console.error(error);
       return res.status(500).json({
         code: 500,
+        status : false,
         message: '서버 에러',
       });
     });
@@ -113,6 +120,7 @@ router.get('/member/:mail', verifyToken, apiLimiter, (req, res) => {
   if( mail !== input ){
     return res.json({
       code: 200,
+      status : false,
       message: '권한이 없습니다.',
     });
   } else {
@@ -128,6 +136,7 @@ router.get('/member/:mail', verifyToken, apiLimiter, (req, res) => {
       console.error(error);
       return res.status(500).json({
         code: 500,
+        status : false,
         message: '서버 에러',
       });
     });

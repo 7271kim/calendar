@@ -560,3 +560,17 @@
   width: 100%;
   margin: 0;
 }
+.write-dim-layer .detail-container input.validate {
+  border: red solid 1px;
+}
+.detail-container input[type="submit"] {
+  width: 100%;
+  margin: 0;
+}
+.detail-container textarea.validate,
+.detail-container input.validate {
+  border: red solid 1px;
+}
+.detail-container input[type="text"].validate:focus {
+  border: red solid 1px;
+}

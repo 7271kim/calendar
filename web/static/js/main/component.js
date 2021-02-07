@@ -9,6 +9,7 @@ let count = 0;
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
+    const apiServer = "http://localhost:3003";
     let dbTotalData = []
 
     const opts = {
@@ -102,9 +103,9 @@ let count = 0;
     getAPIData();
 
     async function getAPIData(){
-        const response = await fetch('http://localhost:3003/api/callist',{ method: 'GET' })
+        const response = await fetch(`${apiServer}/api/callist`,{ method: 'GET' })
 
-        if (response.ok) { // HTTP 상태 코드가 200~299일 경우
+        if (response.ok) {
             let json = await response.json();
             if( json.code !== 500 ){
                 dbTotalData = json.list;
@@ -891,10 +892,10 @@ let count = 0;
             'longitude'  :''
         }
 
-        templateData.injectModel( document.querySelectorAll('.detail-container'), 'detailPop' , sharedObj.drawObj.detailPop);
+        templateData.injectModel( document.querySelectorAll('#detail-layer .detail-container'), 'detailPop' , sharedObj.drawObj.detailPop);
 
         if( target.important !== '1' ){
-            document.querySelector('.detail-container #squaredFour').removeAttribute('checked');
+            document.querySelector('#detail-layer .detail-container #squaredFour').removeAttribute('checked');
         }
 
         document.querySelector('#detail-layer').classList.remove('hidden');
@@ -997,11 +998,14 @@ let count = 0;
         const wrateDom = document.querySelector('.write-dim-layer'); 
         const startCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-start');
         const endCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-end');
+        const startDate = moment(date).startOf('day');
+        const endDate = moment(date).endOf('day');
 
         wrateDom.classList.remove('hidden');
         wrateDom.querySelector('#detailTitle').value = '';
         wrateDom.querySelector('#detailContent').value = '';
         wrateDom.querySelector('#squaredFour').removeAttribute('checked');
+        wrateDom.querySelector('#squaredFour').checked = false;
         wrateDom.querySelector('#startDate').value = '';
         wrateDom.querySelector('#endDate').value = '';
         wrateDom.querySelector('#detailTitle').focus();
@@ -1018,7 +1022,7 @@ let count = 0;
             minViewMode : "",
             viewMode : "",
             stepInterval : 5,
-            defaultDate : date,
+            defaultDate : startDate,
             callBackFun : changeStart
          });
 
@@ -1034,7 +1038,7 @@ let count = 0;
             minViewMode : "",
             viewMode : "",
             stepInterval : 5,
-            defaultDate : date,
+            defaultDate : endDate,
             callBackFun : changeEnd
          });
 
@@ -1062,25 +1066,79 @@ let count = 0;
 
     }
 
-    function formSubmit(event){
+     async function formSubmit(event){
         event.preventDefault()
-
+        
         const wrateDom = document.querySelector('.write-dim-layer');
+        const titileDom = wrateDom.querySelector('#detailTitle');
+        const contentDom = wrateDom.querySelector('#detailContent');
+        const important = wrateDom.querySelector('#squaredFour').checked == true ? 1 : 0;
+        const startDateDom = wrateDom.querySelector('#startDate');
+        const endDateDom = wrateDom.querySelector('#endDate');
+        titileDom.classList.remove('validate');
+        contentDom.classList.remove('validate');
+        startDateDom.classList.remove('validate');
+        endDateDom.classList.remove('validate');
 
-        dbTotalData.push({
-            'title' : wrateDom.querySelector('#detailTitle').value,
-            'seq' : count++,
-            'content' : wrateDom.querySelector('#detailContent').value,
-            'important' : wrateDom.querySelector('#squaredFour').checked == true ? 1 : 0,
-            'startDate' : wrateDom.querySelector('#startDate').value,
-            'endDate' :  wrateDom.querySelector('#endDate').value,
-            'latitude' : '',
-            'longitude'  :''
-        })
+        if( !titileDom.value ){
+            titileDom.classList.add('validate');
+            titileDom.focus();
+        } else if( !contentDom.value ){
+            contentDom.classList.add('validate');
+            contentDom.focus();
+        } else if( !startDateDom.value ){
+            startDateDom.classList.add('validate');
+            startDateDom.focus();
+        } else if( !endDateDom.value ){
+            endDateDom.classList.add('validate');
+            endDateDom.focus();
+        } else {
+            const formData = new FormData(document.getElementById('api-write'));
+            formData.append( "important", important );
+           
+            const response = await fetch(`${apiServer}/api/cal-one`,{ 
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body : JSON.stringify(Object.fromEntries(formData))
+            })
 
-        wrateDom.classList.add('hidden');
+            if (response.ok) {
+                let json = await response.json();
+                if( json.status ){
+                    await getAPIData();
+                } else {
+                    new Error('DB에러');
+                }
+                
+                
+            } else {
+                new Error('DB에러');
+            }
 
-        init();
+            wrateDom.classList.add('hidden');
+            
+            const date =  moment(startDateDom.value).format('YYYY-MM-DD') ;
+            const daydata = sharedObj.dbTotalData[date];
+            const clickItem = sharedObj.drawObj.month.clickItem;
+            const clickList = clickItem.clickList = [];
+            
+
+            if( daydata ){
+                daydata.map( item =>{
+                    const className = item.important ==='1' ? 'important': 'normal'
+                    clickList.push({
+                        'className' : className,
+                        'title' : item.title,
+                        'seq' : item.seq
+                    })
+                })
+            }
+            
+            clickItem.today = date;
+            templateMonthPopup();
+        }
     }
     
 

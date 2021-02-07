@@ -17,8 +17,8 @@ module.exports = class CalList extends Sequelize.Model {
         allowNull: true
       },
       important: {
-        type: Sequelize.INTEGER,
-        defaultValue : 0
+        type: Sequelize.STRING(100),
+        defaultValue : '0'
       },
       startDate: {
         type: Sequelize.DATE,

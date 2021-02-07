@@ -41,17 +41,17 @@
     </div>
     <div class="detail-dim-layer hidden" id="detail-layer" >
         <div class="dim"></div>
-        <div class="detail-container"></div>
+        <div class="detail-container detail"></div>
     </div>
 
-    <div class="write-dim-layer hidden" id="detail-layer" >
+    <div class="write-dim-layer hidden" id="detail-layer-write" >
         <div class="dim"></div>
-        <div class="detail-container">
+        <div class="detail-container write">
             <span class="close left-margin"></span>
             <div class="login-container">
-                <form action="">
-                    <p><input type="text" placeholder="Title" name="detailTitle" id="detailTitle" required /></p>
-                    <p><textarea rows="10" placeholder="content" name="detailContent" id="detailContent" required></textarea></p>
+                <form id="api-write">
+                    <p><input type="text" placeholder="Title" name="title" id="detailTitle" required /></p>
+                    <p><textarea rows="10" placeholder="content" name="content" id="detailContent" required></textarea></p>
                     <p class="start">
                         <span class="container-date-picker">
                             <span id="datetimepicker-start" data-target-input="nearest">
