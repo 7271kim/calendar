@@ -18,7 +18,7 @@ if( !isDev ){
     googleClient = process.env.GOOGLE_ClientSecret;
 } else {
     production = 'dev';
-    port = '3003';
+    port = process.env.PORT;
     cookieSecret = 'dev';
     jwtSecret = 'dev';
     clientSecret = 'dev';

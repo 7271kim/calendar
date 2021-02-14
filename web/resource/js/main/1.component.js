@@ -9,7 +9,7 @@ let count = 0;
     moment.locale('ko');
     const templateData  = JTemplate.HTMLWrapperparsing( 'calendar-month' );
     const sectionTarget = document.getElementsByClassName('main-section')[0];
-    const apiServer = "http://localhost:3003";
+    const apiServer = "http://calendar.honbabzone.com";
     let dbTotalData = []
 
     const opts = {
