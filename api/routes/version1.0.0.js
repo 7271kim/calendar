@@ -33,6 +33,7 @@ router.post('/token', async (req, res) => {
     return res.status(500).json({
       code: 500,
       message: '서버 에러',
+      error : error
     });
   }
 });
@@ -55,6 +56,7 @@ router.post('/member', verifyToken, apiLimiter, async (req, res ) => {
       code: 500,
       status : false,
       message: '서버 에러',
+      error : error
     });
   }
 });
@@ -80,6 +82,7 @@ router.post('/calendar', verifyToken, apiLimiter, async (req, res ) => {
       status : false,
       code: 500,
       message: '서버 에러',
+      error : error
     });
   }
 });
@@ -109,6 +112,7 @@ router.put('/calendar', verifyToken, apiLimiter, async (req, res ) => {
       status : false,
       code: 500,
       message: '서버 에러',
+      error : error
     });
   }
 });
@@ -138,6 +142,7 @@ router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
         code: 500,
         status : false,
         message: '서버 에러',
+        error : error
       });
     });
   }
@@ -197,6 +202,7 @@ router.get('/member/:mail', verifyToken, apiLimiter, (req, res) => {
         code: 500,
         status : false,
         message: '서버 에러',
+        error : error
       });
     });
   }
