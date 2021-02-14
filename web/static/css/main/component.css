@@ -525,6 +525,12 @@
   margin: 5%;
   cursor: pointer;
 }
+.detail-dim-layer .detail-container input[type="submit"].reset-comp,
+.write-dim-layer .detail-container input[type="submit"].reset-comp {
+  width: 100%;
+  margin: 0%;
+  float: initial;
+}
 .detail-dim-layer .detail-container input[type="button"]:hover,
 .write-dim-layer .detail-container input[type="button"]:hover,
 .detail-dim-layer .detail-container input[type="submit"]:hover,
