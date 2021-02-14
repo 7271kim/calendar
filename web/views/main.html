@@ -669,7 +669,7 @@
                     <span>위치</span>
                 </p> -->
                 <p class="reset">
-                    <input type="button" value="수정"><input id="remove-cal" type="button" value="삭제">
+                    <input id="update-cal" type="button" value="수정"><input id="remove-cal" type="button" value="삭제">
                 </p>
             </div>
             <div class="del-check hidden">
@@ -678,6 +678,57 @@
                     <span id="del-yes">네</span>
                     <span id="del-no" >아니오</span>
                 </div>
+            </div>
+        </div>
+        <div class="detail-container" data-jly-template="{{ detailPopVal @ obj }}">
+            <div class="day">{{obj.today}}</div>
+            <span class="close left-margin"></span>
+            <div class="login-container">
+                <form id="api-write-re">
+                    <input type="hidden" name="seq" value="{{obj.seq}}"/>
+                    <p><input type="text" placeholder="Title" id="title-re" name="title"  value="{{obj.title}}" required/></p>
+                    <p><textarea rows="10" placeholder="content" name="content">{{obj.content @ context="HTML"}}</textarea></p>
+                    <p class="start">
+                        <span class="container-date-picker">
+                            <span id="datetimepicker-start-re" data-target-input="nearest">
+                                <input type='text' class="datetimepicker-input hidden day-data" />
+                                <span id="title-calendar-icon" class="calendar-togle" data-target="#datetimepicker-notime">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </span>
+                        </span>
+                        <span>시작일</span>
+                    </p>
+                    <p class="start-date">
+                        <input type="hidden" name="startDate" id="startDate-re" value="{{obj.today}}"/>
+                        <input type="text" placeholder="달력을 클릭하세요" value="{{obj.startDate}}" readonly/>
+                    </p>
+                    <p class="end">
+                        <span class="container-date-picker">
+                            <span id="datetimepicker-end-re" data-target-input="nearest">
+                                <input type='text' class="datetimepicker-input hidden day-data" />
+                                <span id="title-calendar-icon" class="calendar-togle" data-target="#datetimepicker-notime">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </span>
+                        </span>
+                        <span>종료일</span>
+                    </p>
+                    <p class="end-date">
+                        <input type="hidden" name="endDate" id="endDate"/>
+                        <input type="text" placeholder="달력을 클릭하세요" value="{{obj.endDate}}" readonly />
+                    </p>
+                    <div class="import">
+                        <label class="out-label" for="squaredFour-rewrite">중요 일정</label>
+                        <span class="squaredFour">
+                            <input type="checkbox" value="None" id="squaredFour-rewrite" name="checkImpotant" checked/>
+                            <label for="squaredFour-rewrite"></label>
+                        </span>
+                    </div>
+                    <p class="reset">
+                        <input type="submit" value="수정 완료">
+                    </p>
+                </form>
             </div>
         </div>
      </div>

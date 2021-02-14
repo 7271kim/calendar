@@ -29,11 +29,15 @@ const request = async (req, api) => {
       return await axios.post(`${URL}${api}`, req.body, {
         headers: { authorization: req.session.jwt }
       });
-    } else if(req.method === 'DELETE'){
+    } else if (req.method === 'DELETE'){
       return await axios.delete(`${URL}${api}`, {
         headers: { authorization: req.session.jwt }
       });
-    }else {
+    } else if (req.method === 'PUT'){
+      return await axios.put(`${URL}${api}`, req.body, {
+        headers: { authorization: req.session.jwt }
+      });
+    } else {
       return await axios.get(`${URL}${api}`, {
         headers: { authorization: req.session.jwt }
       });
@@ -83,6 +87,20 @@ apiRouter.delete('/calendar/:seq', async ( req, res, next ) => {
 
     const result = await request(
       req, `/calendar/${seq}`,
+    );
+    res.json(result.data);
+  } catch (error) {
+    if (error.code || error.message ) {
+      console.error(error);
+      next(error);
+    }
+  }
+});
+
+apiRouter.put('/calendar', async ( req, res, next ) => {
+  try {
+    const result = await request(
+      req, `/calendar/`,
     );
     res.json(result.data);
   } catch (error) {

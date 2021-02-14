@@ -902,10 +902,16 @@ let count = 0;
             document.querySelector('#detail-layer').classList.add('hidden');
         })
         
+        document.querySelector('#detail-layer #update-cal').addEventListener('click', updateDetail)
+
         document.querySelector('#detail-layer #remove-cal').addEventListener('click', ()=>{
             document.querySelector('.del-check').classList.remove('hidden');
         })
         
+        document.querySelector('#detail-layer #del-no').addEventListener('click', ()=>{
+            document.querySelector('.del-check').classList.add('hidden');
+        })
+
         document.querySelector('#detail-layer #del-no').addEventListener('click', ()=>{
             document.querySelector('.del-check').classList.add('hidden');
         })
@@ -924,6 +930,132 @@ let count = 0;
             document.querySelector('.del-check').classList.add('hidden');
         })
 
+    }
+
+    function changeEndRe(){
+        const wrateDom = document.querySelector('#detail-layer'); 
+        const endCal = wrateDom.querySelector('#datetimepicker-end-re input');
+        const hTarget = wrateDom.querySelector('.end-date input[type="hidden"]');
+        const cTarget = wrateDom.querySelector('.end-date input[type="text"]');
+        const weekdaysMin = moment.weekdaysMin();
+        const momoentC = moment(endCal.value,'YYYY-MM-DD HH:mm:ss');
+
+        hTarget.value = momoentC.format('YYYY-MM-DD HH:mm:ss');
+        cTarget.value = momoentC.format(`YYYY년 MM월 DD일 (${weekdaysMin[momoentC.days()]}) HH:mm:ss`);
+    }
+
+    function changeStartRe(){
+        const wrateDom = document.querySelector('#detail-layer'); 
+        const startCal = wrateDom.querySelector('#datetimepicker-start-re input');
+        const hTarget = wrateDom.querySelector('.start-date input[type="hidden"]');
+        const cTarget = wrateDom.querySelector('.start-date input[type="text"]');
+        const weekdaysMin = moment.weekdaysMin();
+        const momoentC = moment(startCal.value,'YYYY-MM-DD HH:mm:ss');
+
+        hTarget.value = momoentC.format('YYYY-MM-DD HH:mm:ss');
+        cTarget.value = momoentC.format(`YYYY년 MM월 DD일 (${weekdaysMin[momoentC.days()]}) HH:mm:ss`);
+    }
+
+    function updateDetail(){
+        templateData.injectModel( document.querySelectorAll('#detail-layer .detail-container'), 'detailPopVal' , sharedObj.drawObj.detailPop);
+        
+        if( sharedObj.drawObj.detailPop.important !== '1' ){
+            document.querySelector('#detail-layer .detail-container #squaredFour-rewrite').removeAttribute('checked');
+        }
+        const target = sharedObj.dbTotalDataSeq[sharedObj.drawObj.detailPop.today][sharedObj.drawObj.detailPop.seq];
+        const wrateDom = document.querySelector('#detail-layer');
+        const startCal = wrateDom.querySelector('#detail-layer #datetimepicker-start-re');
+        const endCal = wrateDom.querySelector('#detail-layer #datetimepicker-end-re');
+        const startDate = moment(target.startDate);
+        const endDate = moment(target.endDate);
+
+        const startPicker = DatePicker.datetimepicker( startCal,{ 
+            showTimeOption : true,
+            showDateOption : true,
+            showMinutes : true,
+            showSeconds : true,
+            useToday : true,
+            useTodayButton : true,
+            language : 'ko',
+            direction : 'auto',
+            minViewMode : "",
+            viewMode : "",
+            stepInterval : 5,
+            defaultDate : startDate,
+            callBackFun : changeStartRe
+         });
+        
+         const endPicker = DatePicker.datetimepicker( endCal ,{ 
+            showTimeOption : true,
+            showDateOption : true,
+            showMinutes : true,
+            showSeconds : true,
+            useToday : true,
+            useTodayButton : true,
+            language : 'ko',
+            direction : 'auto',
+            minViewMode : "",
+            viewMode : "",
+            stepInterval : 5,
+            defaultDate : endDate,
+            callBackFun : changeEndRe
+         });
+
+         const sClickPicker = ( startPicker )=>{
+            startPicker.show();
+         }
+        
+         const eClickPicker = ( endPicker )=>{
+            endPicker.show();
+         }
+         wrateDom.querySelector('.start > span:nth-child(2)').addEventListener('click' ,sClickPicker.bind(null,startPicker));
+         wrateDom.querySelector('.start-date input[type="text"]').addEventListener('click' ,sClickPicker.bind(null,startPicker));
+
+         wrateDom.querySelector('.end > span:nth-child(2)').addEventListener('click' ,eClickPicker.bind(null,endPicker));
+         wrateDom.querySelector('.end-date input[type="text"]').addEventListener('click' ,eClickPicker.bind(null,endPicker));
+         
+         wrateDom.querySelector('.reset input').addEventListener('click', formSubmitRe);
+    }
+
+    async function formSubmitRe(event){
+        event.preventDefault()
+        
+        const wrateDom = document.querySelector('#detail-layer');
+        const titileDom = wrateDom.querySelector('input[name="title"]');
+        const contentDom = wrateDom.querySelector('textarea[name="content"]');
+        const important = wrateDom.querySelector('#squaredFour-rewrite').checked == true ? 1 : 0;
+        const startDateDom = wrateDom.querySelector('input[name="startDate"]');
+        const endDateDom = wrateDom.querySelector('input[name="endDate"]');
+        titileDom.classList.remove('validate');
+        contentDom.classList.remove('validate');
+        startDateDom.classList.remove('validate');
+        endDateDom.classList.remove('validate');
+
+        if( !titileDom.value ){
+            titileDom.classList.add('validate');
+            titileDom.focus();
+        } else if( !contentDom.value ){
+            contentDom.classList.add('validate');
+            contentDom.focus();
+        } else if( !startDateDom.value ){
+            startDateDom.classList.add('validate');
+            startDateDom.focus();
+        } else if( !endDateDom.value ){
+            endDateDom.classList.add('validate');
+            endDateDom.focus();
+        } else {
+            const formData = new FormData(document.getElementById('api-write-re'));
+            formData.append( "important", important );
+            const response = await fetch(`${apiServer}/api/calendar/`,{ 
+                method: 'PUT',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body : JSON.stringify(Object.fromEntries(formData))
+            })
+
+            reDetailPop( response, 're' );
+        }
     }
 
     function updateMonthDate( isForceUpdate ){
@@ -1136,6 +1268,9 @@ let count = 0;
         if( opt === 'del' ){
             wrateDom = document.querySelector('.detail-dim-layer');
             startDateDom = wrateDom.querySelector('#startDate');
+        } else if( opt === 're') {
+            wrateDom = document.querySelector('#detail-layer');
+            startDateDom = wrateDom.querySelector('#startDate-re');
         }
 
         if (response.ok) {
