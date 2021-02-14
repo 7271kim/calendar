@@ -114,6 +114,36 @@ router.get('/calendar/:mail', verifyToken, apiLimiter, (req, res) => {
   }
 });
 
+router.delete('/calendar/:seq', verifyToken, apiLimiter, async (req, res) => {
+  const mail = req.decoded.mail;
+  const seq = req.params.seq;
+  try {
+    if( seq && mail ){
+    
+      const result = await CalList.destroy({where : { seq: seq, mail : mail }})
+      console.log(result);
+      return res.json({
+        code: 200,
+        status : true,
+        message: '삭제 되었습니다.'
+      });
+    } else {
+      return res.json({
+        code: 200,
+        status : false,
+        message: '권한이 없습니다.'
+      });
+    }
+  } catch (error) {
+    return res.json({
+      code: 200,
+      status : false,
+      message: '권한이 없습니다.'
+    });
+  }
+  
+});
+
 router.get('/member/:mail', verifyToken, apiLimiter, (req, res) => {
   const mail = req.decoded.mail;
   const input = req.params.mail;

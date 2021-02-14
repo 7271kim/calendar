@@ -109,7 +109,6 @@ let count = 0;
             let json = await response.json();
             if( json.code !== 500 ){
                 dbTotalData = json.list;
-                console.log(json);
             }
             init();
             
@@ -871,7 +870,7 @@ let count = 0;
         })
     }
 
-    function openDetail( event ){
+    async function openDetail( event ){
         const currentTarget = event.currentTarget;
         const date = currentTarget.dataset.index;
         const seq = currentTarget.dataset.seq;
@@ -902,6 +901,29 @@ let count = 0;
         document.querySelector('#detail-layer .close').addEventListener('click', ()=>{
             document.querySelector('#detail-layer').classList.add('hidden');
         })
+        
+        document.querySelector('#detail-layer #remove-cal').addEventListener('click', ()=>{
+            document.querySelector('.del-check').classList.remove('hidden');
+        })
+        
+        document.querySelector('#detail-layer #del-no').addEventListener('click', ()=>{
+            document.querySelector('.del-check').classList.add('hidden');
+        })
+
+        document.querySelector('#detail-layer #del-yes').addEventListener('click', async ()=>{
+           
+            const response = await fetch(`${apiServer}/api/calendar/${seq}`,{ 
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+
+            init();
+            reDetailPop( response, 'del' );
+            document.querySelector('.del-check').classList.add('hidden');
+        })
+
     }
 
     function updateMonthDate( isForceUpdate ){
@@ -1104,44 +1126,54 @@ let count = 0;
                 body : JSON.stringify(Object.fromEntries(formData))
             })
 
-            if (response.ok) {
-                let json = await response.json();
-                if( json.status ){
-                    await getAPIData();
-                } else {
-                    new Error('DB에러');
-                }
-                
-                
-            } else {
-                new Error('DB에러');
-            }
-
-            wrateDom.classList.add('hidden');
-            
-            const date =  moment(startDateDom.value).format('YYYY-MM-DD') ;
-            const daydata = sharedObj.dbTotalData[date];
-            const clickItem = sharedObj.drawObj.month.clickItem;
-            const clickList = clickItem.clickList = [];
-            
-
-            if( daydata ){
-                daydata.map( item =>{
-                    const className = item.important ==='1' ? 'important': 'normal'
-                    clickList.push({
-                        'className' : className,
-                        'title' : item.title,
-                        'seq' : item.seq
-                    })
-                })
-            }
-            
-            clickItem.today = date;
-            templateMonthPopup();
+            reDetailPop( response );
         }
     }
     
+     async function reDetailPop( response, opt ){
+        let wrateDom = document.querySelector('.write-dim-layer');
+        let startDateDom = wrateDom.querySelector('#startDate');
+        if( opt === 'del' ){
+            wrateDom = document.querySelector('.detail-dim-layer');
+            startDateDom = wrateDom.querySelector('#startDate');
+        }
 
+        if (response.ok) {
+            let json = await response.json();
+            if( json.status ){
+                await getAPIData();
+            } else {
+                new Error('DB에러');
+            }
+            
+            
+        } else {
+            new Error('DB에러');
+        }
+
+        wrateDom.classList.add('hidden');
+        
+        const date =  moment(startDateDom.value).format('YYYY-MM-DD') ;
+        const daydata = sharedObj.dbTotalData[date];
+        const clickItem = sharedObj.drawObj.month.clickItem;
+        const clickList = clickItem.clickList = [];
+        
+
+        if( daydata ){
+            daydata.map( item =>{
+                const className = item.important ==='1' ? 'important': 'normal'
+                clickList.push({
+                    'className' : className,
+                    'title' : item.title,
+                    'seq' : item.seq
+                })
+            })
+        }
+        
+        clickItem.today = date;
+        templateMonthPopup();
+    }
+    
     function changeStart(){
         const wrateDom = document.querySelector('.write-dim-layer'); 
         const startCal = wrateDom.querySelector('.write-dim-layer #datetimepicker-start input');

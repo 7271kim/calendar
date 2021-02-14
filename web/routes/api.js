@@ -29,7 +29,11 @@ const request = async (req, api) => {
       return await axios.post(`${URL}${api}`, req.body, {
         headers: { authorization: req.session.jwt }
       });
-    } else {
+    } else if(req.method === 'DELETE'){
+      return await axios.delete(`${URL}${api}`, {
+        headers: { authorization: req.session.jwt }
+      });
+    }else {
       return await axios.get(`${URL}${api}`, {
         headers: { authorization: req.session.jwt }
       });
@@ -63,6 +67,22 @@ apiRouter.post('/cal-one', async ( req, res, next ) => {
   try {
     const result = await request(
       req, `/calendar`,
+    );
+    res.json(result.data);
+  } catch (error) {
+    if (error.code || error.message ) {
+      console.error(error);
+      next(error);
+    }
+  }
+});
+
+apiRouter.delete('/calendar/:seq', async ( req, res, next ) => {
+  try {
+    const seq = req.params.seq;
+
+    const result = await request(
+      req, `/calendar/${seq}`,
     );
     res.json(result.data);
   } catch (error) {

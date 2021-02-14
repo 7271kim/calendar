@@ -647,6 +647,7 @@
                     <span>시작일</span>
                 </p>
                 <p class="start-date">
+                    <input type="hidden" name="startDate" id="startDate" value="{{obj.today}}"/>
                     <input type="text" placeholder="Title" readonly value="{{obj.startDate}}" />
                 </p>
                 <p class="end">
@@ -668,8 +669,15 @@
                     <span>위치</span>
                 </p> -->
                 <p class="reset">
-                    <input type="button" value="수정"><input type="button" value="삭제">
+                    <input type="button" value="수정"><input id="remove-cal" type="button" value="삭제">
                 </p>
+            </div>
+            <div class="del-check hidden">
+                <p>삭제 하시겠습니까??</p>
+                <div class="button-wrap">
+                    <span id="del-yes">네</span>
+                    <span id="del-no" >아니오</span>
+                </div>
             </div>
         </div>
      </div>
