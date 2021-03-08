@@ -9,7 +9,7 @@ $ cd publish
 
 $ npm install
 
-$ npm start
+$ npm start 
 ```
 
 #### 괜찮았던 참고 사이트들 정리 
